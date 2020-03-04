@@ -135,8 +135,11 @@ At the current low-level shader documentation of the HDRP this task seems more t
 
 # Packages available @ release section.
 
+Feedback and bugfix requests please leave @ issues or [here](https://forum.unity.com/threads/an-almost-complete-hdrp-speedtree-v6-port-via-ase.840517/)
+
 Pine is made with SpeedTree Modeler (in ~2017 with v6).
 
 ## License: **MIT** for my part of the code. 
 **SpeedTree** and **Unity** license applies to the according parts / sources. 
 **ASE license** applies for the ASE made shaders.
+
