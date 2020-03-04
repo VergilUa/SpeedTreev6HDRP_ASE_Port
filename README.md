@@ -53,7 +53,82 @@ This is in a no way complete, or bug free solution. No guarantees thing applies 
 So don't expect everything to be 1:1 as in built-in SpeedTree v6 shader.
 
 I've spent 10h+ on trying to figure out what's wrong with GlobalWind node. 
-So if anyone got an idea why it doesn't work, please let me know.
+
+This is related part of the code:
+
+Taken from official SpeedTreeWind.cginc:
+`
+///////////////////////////////////////////////////////////////////////
+//  GlobalWind
+//
+//  This function positions any tree geometry based on their untransformed
+//  position and 4 wind floats.
+
+float3 GlobalWind(float3 vPos, float3 vInstancePos, float3 vRotatedWindVector, float time)
+{
+    // WIND_LOD_GLOBAL may be on, but if the global wind effect (WIND_EFFECT_GLOBAL_ST_Wind)
+    // was disabled for the tree in the Modeler, we should skip it
+
+    float fLength = length(vPos.xyz);
+
+    float4 windGlobal = UNITY_ACCESS_INSTANCED_PROP(SpeedTreeWind, _ST_WindGlobal);
+    
+    // compute how much the height contributes
+    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+
+    if (fAdjust != 0.0)
+        fAdjust = pow(fAdjust, windGlobal.w);
+
+    // primary oscillation
+    float4 vOscillations = TrigApproximate(float4(vInstancePos.x + time, vInstancePos.y + time * 0.8, 0.0, 0.0));
+    float fOsc = vOscillations.x + (vOscillations.y * vOscillations.y);
+    float fMoveAmount = windGlobal.y * fOsc;
+
+    float4 windBranchAdherences = UNITY_ACCESS_INSTANCED_PROP(SpeedTreeWind, _ST_WindBranchAdherences);
+    
+    // move a minimum amount based on direction adherence
+    fMoveAmount += windBranchAdherences.x / windGlobal.z;
+
+    // adjust based on how high up the tree this vertex is
+    fMoveAmount *= fAdjust;
+
+    // xy component
+    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+    vPos.xyz = normalize(vPos.xyz) * fLength;
+
+    return vPos;
+}
+`
+
+Called from SpeedTreeVertex.cginc:
+`
+...
+
+ #ifdef ENABLE_WIND
+        float3 treePos = float3(unity_ObjectToWorld[0].w, unity_ObjectToWorld[1].w, unity_ObjectToWorld[2].w);
+
+        #ifndef GEOM_TYPE_MESH
+            if (windQuality >= WIND_QUALITY_BETTER)
+            {
+                // branch wind (applies to all 3D geometry)
+                finalPosition = BranchWind(windQuality == WIND_QUALITY_PALM, finalPosition, treePos, float4(data.texcoord.zw, 0, 0), rotatedWindVector, rotatedBranchAnchor);
+            }
+        #endif
+
+        if (windQuality > WIND_QUALITY_NONE)
+        {
+            // global wind
+            // ... time
+            
+            finalPosition = GlobalWind(finalPosition, treePos, rotatedWindVector, time);
+        }
+    #endif
+    
+    ... output vertex pos here
+`
+
+So, if anyone got an idea why GlobalWind node doesn't work, please let me know.
+
 
 Also, use official shaders from SpeedTree once they release them (or if they will do that).
 
