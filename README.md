@@ -31,7 +31,7 @@ This shader is ported from the fork I've made in ~2017 to modify and inject cust
 So complicated wind is missing (only simple wind part is ported). 
 Also, any changes to the SpeedTree v6 original shader changes is probably missing.
 
-#This shader also supports custom time fed via float4 _GlobalTimers[] array to control time (from C# script).
+# This shader also supports custom time fed via float4 _GlobalTimers[] array to control time (from C# script).
 Specify _GlobalTimerId to fetch according time from the array.
 
 Or just override the **FetchEternityTime** function to the basic Time node and replace the output, that should feed
