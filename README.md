@@ -59,5 +59,5 @@ Also, use official shaders from SpeedTree once they release them (or if they wil
 Pine is made with SpeedTree Modeler (in ~2017 with v6).
 
 ## License: **MIT** for my part of the code. 
-**SpeedTree** and **Unity** license applies to the according parts. 
+**SpeedTree** and **Unity** license applies to the according parts / sources. 
 **ASE license** applies for the ASE made shaders.
