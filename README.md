@@ -43,6 +43,7 @@ default Unity's wind time.
 # Why override SpeedTreeMaterialInspector
 
 Because it contains some parts of the code that doesn't translate well.
+
 Plus ASE doesn't have a built-in way to override _CullMode / _CullModeForward properties w/o overring templates atm.
 
 So, if your culling is broken, reapply _Cull property, it should override hidden _CullMode / _CullModeForward
