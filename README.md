@@ -57,18 +57,9 @@ I've spent 10h+ on trying to figure out what's wrong with GlobalWind node.
 This is related part of the code:
 
 Taken from official SpeedTreeWind.cginc:
-`
-///////////////////////////////////////////////////////////////////////
-//  GlobalWind
-//
-//  This function positions any tree geometry based on their untransformed
-//  position and 4 wind floats.
 
-float3 GlobalWind(float3 vPos, float3 vInstancePos, float3 vRotatedWindVector, float time)
-{
-    // WIND_LOD_GLOBAL may be on, but if the global wind effect (WIND_EFFECT_GLOBAL_ST_Wind)
-    // was disabled for the tree in the Modeler, we should skip it
-
+``` 
+float3 GlobalWind(float3 vPos, float3 vInstancePos, float3 vRotatedWindVector, float time) {
     float fLength = length(vPos.xyz);
 
     float4 windGlobal = UNITY_ACCESS_INSTANCED_PROP(SpeedTreeWind, _ST_WindGlobal);
@@ -98,12 +89,11 @@ float3 GlobalWind(float3 vPos, float3 vInstancePos, float3 vRotatedWindVector, f
 
     return vPos;
 }
-`
+```
 
 Called from SpeedTreeVertex.cginc:
-`
-...
 
+```
  #ifdef ENABLE_WIND
         float3 treePos = float3(unity_ObjectToWorld[0].w, unity_ObjectToWorld[1].w, unity_ObjectToWorld[2].w);
 
@@ -125,7 +115,7 @@ Called from SpeedTreeVertex.cginc:
     #endif
     
     ... output vertex pos here
-`
+```
 
 So, if anyone got an idea why GlobalWind node doesn't work, please let me know.
 
