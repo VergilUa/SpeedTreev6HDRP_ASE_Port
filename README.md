@@ -10,7 +10,7 @@ Done by using [Amplify Shader Editor](https://assetstore.unity.com/packages/tool
 
 So if you don't have one - you probably won't be able to edit it.
 
-#Requirements:
+# Requirements:
 -- SpeedTree v6; (Other versions of trees untested)
 -- HDRP 7.1.8 package;
 -- Unity 2019.3.1.x+;
@@ -18,7 +18,7 @@ So if you don't have one - you probably won't be able to edit it.
 
 (Other versions untested)
 
-#What's done, and what's missing:
+# What's done, and what's missing:
 - Frag shader is complete (at least I hope so);
 - Vertex shader is complete (with exception of Global Wind, which for some reason don't translate correctly).
 - Most of the code is represented as ASE node graph / functions. 
@@ -37,7 +37,7 @@ Specify _GlobalTimerId to fetch according time from the array.
 Or just override the **FetchEternityTime** function to the basic Time node and replace the output, that should feed
 default Unity's wind time.
 
-#Potential FAQ:
+# Potential FAQ:
 Q: Why not Shader Graph?
 A: Because it sucks (compared to ASE) right now
 
@@ -58,6 +58,6 @@ Also, use official shaders from SpeedTree once they release them (or if they wil
 
 Pine is made with SpeedTree Modeler (in ~2017 with v6).
 
-##License: **MIT** for my part of the code. 
+## License: **MIT** for my part of the code. 
 **SpeedTree** and **Unity** license applies to the according parts. 
-ASE license applies for the ASE made shaders.
+**ASE license** applies for the ASE made shaders.
