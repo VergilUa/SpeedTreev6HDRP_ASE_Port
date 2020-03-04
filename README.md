@@ -123,11 +123,14 @@ So, if anyone got an idea why GlobalWind node doesn't work, please let me know.
 Also, use official shaders from SpeedTree once they release them (or if they will do that).
 
 # Potential FAQ:
+```
 Q: Why not Shader Graph?
 A: Because it sucks (compared to ASE) right now
 
 Q: Why not port manually via templates and shader code?
 A: I've tried and failed miserably. 
+```
+
 At the current low-level shader documentation of the HDRP this task seems more than impossible for a single person to accomplish over single weekend.
 
 # Packages available @ release section.
