@@ -1,7 +1,7 @@
-# SpeedTreev6HDRP_ASE_Port
-SpeedTree v6 HDRP pot (via Amplify Shader Editor)
+# SpeedTree v6 HDRP pot (via Amplify Shader Editor)
 
-# An (almost complete) attempt at porting SpeedTree v6 to the HDRP Unity SRP (as a temporary missing shader solution).
+# An (almost complete) attempt at porting SpeedTree v6 to the HDRP Unity SRP 
+(as a temporary replacent for the missing shader solution)
 
 Rationale behind this madness? -- I've needed a SpeedTree v6 shader for my trees to work with HDRP. 
 
