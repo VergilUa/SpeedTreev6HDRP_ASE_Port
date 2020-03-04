@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: LOD_OffsetBranchesAndFronds
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity
+    Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=17700\n82;76;1697;868;711.7139;488.6549;1.30634;True;False\nNode;AmplifyShaderEditor.FunctionInput;1;-221.5,-188;Inherit;False;Vertex
+    Pos;3;0;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.LerpOp;13;368.3925,-0.8602194;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.StaticSwitch;14;535.197,-164.3446;Inherit;False;Property;_Keyword0;Keyword
+    0;2;0;Create;True;0;0;False;0;0;0;0;False;LOD_FADE_PERCENTAGE;Toggle;2;LOD_FADE_PERCENTAGE3;;Fetch;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionInput;5;-95.43398,-22.94711;Inherit;False;texCoord1;3;1;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.LODFadeNode;2;71.26852,115.2219;Inherit;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.FunctionOutput;0;992.7264,-152.2742;Inherit;False;True;-1;Vertex
+    Pos;0;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nWireConnection;13;0;1;0\nWireConnection;13;1;5;0\nWireConnection;13;2;2;1\nWireConnection;14;1;1;0\nWireConnection;14;0;13;0\nWireConnection;0;0;14;0\nASEEND*/\n//CHKSM=E6AC6BB4B5481B833967A4F672DC1B3490CD9392"
+  m_functionName: 
+  m_description: Offsets Branches and Fronds based on the LOD Fade percentage
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 3
+  m_customNodeCategory: 
+  m_previewPosition: 0
+  m_hidden: 0
