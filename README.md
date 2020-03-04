@@ -18,6 +18,7 @@ So if you don't have one - you probably won't be able to edit it.
 
 (Other versions untested)
 
+# Tech info
 # What's done, and what's missing:
 - Frag shader is complete (at least I hope so);
 - Vertex shader is complete (with exception of Global Wind, which for some reason don't translate correctly).
@@ -31,19 +32,20 @@ This shader is ported from the fork I've made in ~2017 to modify and inject cust
 So complicated wind is missing (only simple wind part is ported). 
 Also, any changes to the SpeedTree v6 original shader changes is probably missing.
 
-# This shader also supports custom time fed via float4 _GlobalTimers[] global array to control time (from C# script, not included)
+# This shader also supports custom time fed via float4 _GlobalTimers[] global array to control time 
+(from C# script, not included)
+
 Specify _GlobalTimerId to fetch according time from the array.
 
 Or just override the **FetchEternityTime** function to the basic Time node and replace the output, that should feed
 default Unity's wind time.
 
-# Potential FAQ:
-Q: Why not Shader Graph?
-A: Because it sucks (compared to ASE) right now
+# Why override SpeedTreeMaterialInspector
 
-Q: Why not port manually via templates and shader code?
-A: I've tried and failed miserably. 
-At the current low-level shader documentation of the HDRP this task seems more than impossible for a single person to accomplish over single weekend.
+Because it contains some parts of the code that doesn't translate well.
+Plus ASE doesn't have a built-in way to override _CullMode / _CullModeForward properties w/o overring templates atm.
+
+So, if your culling is broken, reapply _Cull property, it should override hidden _CullMode / _CullModeForward
 
 # Other points
 This is in a no way complete, or bug free solution. No guarantees thing applies here. 
@@ -53,6 +55,14 @@ I've spent 10h+ on trying to figure out what's wrong with GlobalWind node.
 So if anyone got an idea why it doesn't work, please let me know.
 
 Also, use official shaders from SpeedTree once they release them (or if they will do that).
+
+# Potential FAQ:
+Q: Why not Shader Graph?
+A: Because it sucks (compared to ASE) right now
+
+Q: Why not port manually via templates and shader code?
+A: I've tried and failed miserably. 
+At the current low-level shader documentation of the HDRP this task seems more than impossible for a single person to accomplish over single weekend.
 
 # Packages available @ release section.
 
