@@ -45,7 +45,7 @@ Q: Why not port manually via templates and shader code?
 A: I've tried and failed miserably. 
 At the current low-level shader documentation of the HDRP this task seems more than impossible for a single person to accomplish over single weekend.
 
-#Other points
+# Other points
 This is in a no way complete, or bug free solution. No guarantees thing applies here. 
 So don't expect everything to be 1:1 as in built-in SpeedTree v6 shader.
 
@@ -54,7 +54,7 @@ So if anyone got an idea why it doesn't work, please let me know.
 
 Also, use official shaders from SpeedTree once they release them (or if they will do that).
 
-#Packages available @ release section.
+# Packages available @ release section.
 
 Pine is made with SpeedTree Modeler (in ~2017 with v6).
 
