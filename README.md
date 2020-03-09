@@ -49,9 +49,7 @@ Plus ASE doesn't have a built-in way to override _CullMode / _CullModeForward pr
 So, if your culling is broken, reapply _Cull property, it should override hidden _CullMode / _CullModeForward
 
 # Other points
-This is in a no way complete, or bug free solution. No guarantees thing applies here. 
-So don't expect everything to be 1:1 as in built-in SpeedTree v6 shader.
-
+Don't expect everything to be 1:1 as in built-in SpeedTree v6 shader. 
 
 Also, use official shaders from SpeedTree once they're released. Or don't.
 Because you know. They don't support custom time :P
