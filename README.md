@@ -11,7 +11,7 @@ So if you don't have one - you probably won't be able to edit it.
 
 # Requirements:
 - SpeedTree v6; (Other versions of trees untested)
-- HDRP 7.1.8 package;
+- HDRP 7.1.8 package+;
 - Unity 2019.3.1.x+;
 - For the wind to work - don't forget to add ShaderTimeControlExample.cs to the scene;
 
