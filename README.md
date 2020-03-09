@@ -13,7 +13,7 @@ So if you don't have one - you probably won't be able to edit it.
 - SpeedTree v6; (Other versions of trees untested)
 - HDRP 7.1.8 package;
 - Unity 2019.3.1.x+;
-- For the wind to work - don't forget to add ShaderTimeControlExample to the scene;
+- For the wind to work - don't forget to add ShaderTimeControlExample.cs to the scene;
 
 - (Optional) Amplify Shader Editor (for editing and tweaking the shader, and potential bugfixes. Also, its amazing)
 
