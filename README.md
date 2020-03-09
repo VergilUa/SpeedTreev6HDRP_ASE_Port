@@ -42,7 +42,7 @@ default Unity's wind time. (if you feel risky)
 
 # Why override SpeedTreeMaterialInspector
 
-Because it contains some parts of the code that doesn't translate well.
+Because it contains some parts of the code that doesn't translate to HDRP / ASE well.
 
 Plus ASE doesn't have a built-in way to override _CullMode / _CullModeForward properties w/o overring templates atm.
 
