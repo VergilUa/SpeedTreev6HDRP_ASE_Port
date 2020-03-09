@@ -65,7 +65,7 @@ Q: Why not port manually via templates and shader code?
 A: I've tried and failed miserably. 
 ```
 
-At the current low-level shader documentation of the HDRP this task seems more than impossible for a single person to accomplish over single weekend.
+As of current time, due to the lack of low-level shader documentation of the HDRP, this task seems more than impossible for a single person to accomplish over short period of time.
 
 # Packages available @ release section.
 
