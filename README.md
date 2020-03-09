@@ -23,8 +23,9 @@ So if you don't have one - you probably won't be able to edit it.
 - Vertex shader complete;
 - Most of the code is represented as ASE node graph / functions or custom expression injects. 
 - Time is controlled via ShaderTimeControlExample;
-- Smoothness and Metallic can be tweaked 
-(No mask maps. Can be added pretty easily, just swap output for the tex sampler)
+- Smoothness and Metallic can be tweaked via inspector;
+
+(No mask maps though. Can be added pretty easily, just swap output for the tex sampler)
 
 Which should (in theory) simplify heavylifting done to port / change shader for other pipelines (e.g. URP)
 
