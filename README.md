@@ -14,7 +14,7 @@ So if you don't have one - you probably won't be able to edit it.
 - HDRP 7.1.8 package+;
 - Unity 2019.3.1.x+;
 - For the wind to work - don't forget to add ShaderTimeControlExample.cs to the scene;
-
+- Smoothness and Metallic can be tweaked (no mask maps, can be added pretty easily, just swap output for the tex sampler)
 - (Optional) Amplify Shader Editor (for editing and tweaking the shader, and potential bugfixes. Also, its amazing)
 
 (Other versions untested)
