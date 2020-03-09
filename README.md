@@ -27,7 +27,7 @@ So if you don't have one - you probably won't be able to edit it.
 
 Which should (in theory) simplify heavylifting done to port / change shader for other pipelines (e.g. URP)
 
-Contains GBuffer as main pass. Depth, Meta and forward as autogen via ASE)
+Contains GBuffer as main pass. (Depth, Meta and forward as autogen via ASE)
 
 This shader is ported from the fork I've made in ~2017 to modify and inject custom time. 
 Also, any changes to the SpeedTree v6 original shader changes is probably missing from that past time to current.
