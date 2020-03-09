@@ -27,7 +27,7 @@ So if you don't have one - you probably won't be able to edit it.
 
 (No mask maps though. Can be added pretty easily, just swap output for the tex sampler)
 
-Which should (in theory) simplify heavylifting done to port / change shader for other pipelines (e.g. URP)
+ASE should (in theory) simplify heavylifting done to port / change shader for other pipelines (e.g. URP)
 
 Contains GBuffer as main pass. (Depth, Meta and forward as autogen via ASE)
 
