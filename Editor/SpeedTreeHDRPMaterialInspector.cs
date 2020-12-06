@@ -34,6 +34,7 @@ namespace UnityEditor
         private static readonly int CullModeForward = Shader.PropertyToID("_CullModeForward");
 
         private const string EFFECT_HUE_VARIATION = "EFFECT_HUE_VARIATION";
+        private const string _ALPHATEST_ON = "_ALPHATEST_ON";
 
         private bool ShouldEnableAlphaTest(SpeedTreeGeometryType geomType)
         {
@@ -187,6 +188,15 @@ namespace UnityEditor
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
+
+            foreach (Object t in targets) {
+                Material mat = t as Material;
+                if (mat == null) continue;
+
+                if (!mat.IsKeywordEnabled(_ALPHATEST_ON)) {
+                    mat.EnableKeyword(_ALPHATEST_ON);
+                }
+            }
 
             EnableInstancingField();
             DoubleSidedGIField();

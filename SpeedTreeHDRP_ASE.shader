@@ -6,8 +6,13 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 	{
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
 		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
+		[HideInInspector]_ST_WindBranchWhip("_ST_WindBranchWhip", Vector) = (0,0,0,0)
+		[HideInInspector]_ST_WindBranchTwitch("_ST_WindBranchTwitch", Vector) = (0,0,0,0)
+		[HideInInspector]_ST_WindBranchAdherences("_ST_WindBranchAdherences", Vector) = (0,0,0,0)
+		[HideInInspector]_ST_WindTurbulences("_ST_WindTurbulences", Vector) = (0,0,0,0)
+		[HideInInspector]_ST_WindBranch("_ST_WindBranch", Vector) = (0,0,0,0)
+		[ASEBegin]_GlobalTimerId("GlobalTimerId", Int) = 0
 		[HideInInspector]_ST_WindFrondRipple("_ST_WindFrondRipple", Vector) = (0,0,0,0)
-		_GlobalTimerId("GlobalTimerId", Int) = 0
 		_MainTex("Base (RGB) Trans (A)", 2D) = "white" {}
 		_Color("Main Color", Color) = (1,1,1,1)
 		_Cutoff("Alpha Cutoff", Range( 0 , 1)) = 0.333
@@ -16,34 +21,30 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 		_Metallic("Metallic", Range( 0 , 1)) = 1
 		_Smoothness("Smoothness", Range( 0 , 1)) = 0
 		[Enum(UnityEngine.Rendering.CullMode)]_Cull("Cull", Int) = 0
-		[Enum(None,0,Fastest,1,Fast,2,Better,3,Best,4,Palm,5)]_WindQuality("Wind Quality", Int) = 0
+		[ASEEnd][Enum(None,0,Fastest,1,Fast,2,Better,3,Best,4,Palm,5)]_WindQuality("Wind Quality", Int) = 0
 		[HideInInspector]_ST_WindLeaf2Twitch("_ST_WindLeaf2Twitch", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindLeaf2Tumble("_ST_WindLeaf2Tumble", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindLeaf2Ripple("_ST_WindLeaf2Ripple", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindLeaf1Twitch("_ST_WindLeaf1Twitch", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindLeaf1Tumble("_ST_WindLeaf1Tumble", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindLeaf1Ripple("_ST_WindLeaf1Ripple", Vector) = (0,0,0,0)
-		[HideInInspector]_ST_WindBranchTwitch("_ST_WindBranchTwitch", Vector) = (0,0,0,0)
-		[HideInInspector]_ST_WindBranchAdherences("_ST_WindBranchAdherences", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindBranchAnchor("_ST_WindBranchAnchor", Vector) = (0,0,0,0)
-		[HideInInspector]_ST_WindBranchWhip("_ST_WindBranchWhip", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindAnimation("_ST_WindAnimation", Vector) = (0,0,0,0)
-		[HideInInspector]_ST_WindBranch("_ST_WindBranch", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindGlobal("_ST_WindGlobal", Vector) = (0,0,0,0)
-		[HideInInspector]_ST_WindTurbulences("_ST_WindTurbulences", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindVector("_ST_WindVector", Vector) = (0,0,0,0)
 
 		[HideInInspector] _RenderQueueType("Render Queue Type", Float) = 1
+		[HideInInspector] [ToggleUI] _AddPrecomputedVelocity("Add Precomputed Velocity", Float) = 1
 		[HideInInspector] _StencilRef("Stencil Ref", Int) = 0
-		[HideInInspector] _StencilWriteMask("Stencil Write Mask", Int) = 3
-		[HideInInspector] _StencilRefDepth("Stencil Ref Depth", Int) = 0
-		[HideInInspector] _StencilWriteMaskDepth("Stencil Write Mask Depth", Int) = 32
-		[HideInInspector] _StencilRefMV("Stencil Ref MV", Int) = 128
-		[HideInInspector] _StencilWriteMaskMV("Stencil Write Mask MV", Int) = 128
-		[HideInInspector] _StencilRefDistortionVec("Stencil Ref Distortion Vec", Int) = 64
-		[HideInInspector] _StencilWriteMaskDistortionVec("Stencil Write Mask Distortion Vec", Int) = 64
-		[HideInInspector] _StencilWriteMaskGBuffer("Stencil Write Mask GBuffer", Int) = 3
-		[HideInInspector] _StencilRefGBuffer("Stencil Ref GBuffer", Int) = 2
+		[HideInInspector] _StencilWriteMask("Stencil Write Mask", Int) = 6
+		[HideInInspector] _StencilRefDepth("Stencil Ref Depth", Int) = 8
+		[HideInInspector] _StencilWriteMaskDepth("Stencil Write Mask Depth", Int) = 8
+		[HideInInspector] _StencilRefMV("Stencil Ref MV", Int) = 40
+		[HideInInspector] _StencilWriteMaskMV("Stencil Write Mask MV", Int) = 40
+		[HideInInspector] _StencilRefDistortionVec("Stencil Ref Distortion Vec", Int) = 4
+		[HideInInspector] _StencilWriteMaskDistortionVec("Stencil Write Mask Distortion Vec", Int) = 4
+		[HideInInspector] _StencilWriteMaskGBuffer("Stencil Write Mask GBuffer", Int) = 14
+		[HideInInspector] _StencilRefGBuffer("Stencil Ref GBuffer", Int) = 10
 		[HideInInspector] _ZTestGBuffer("ZTest GBuffer", Int) = 4
 		[HideInInspector] [ToggleUI] _RequireSplitLighting("Require Split Lighting", Float) = 0
 		[HideInInspector] [ToggleUI] _ReceivesSSR("Receives SSR", Float) = 1
@@ -53,9 +54,11 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 		[HideInInspector] _DstBlend("Dst Blend", Float) = 0
 		[HideInInspector] _AlphaSrcBlend("Alpha Src Blend", Float) = 1
 		[HideInInspector] _AlphaDstBlend("Alpha Dst Blend", Float) = 0
-		[HideInInspector] [ToggleUI] _ZWrite("ZWrite", Float) = 0
+		[HideInInspector] [ToggleUI] _ZWrite("ZWrite", Float) = 1
+		[HideInInspector] [ToggleUI] _TransparentZWrite("Transparent ZWrite", Float) = 1
 		[HideInInspector] _CullMode("Cull Mode", Float) = 2
 		[HideInInspector] _TransparentSortPriority("Transparent Sort Priority", Int) = 0
+		[HideInInspector] [ToggleUI] _EnableFogOnTransparent("Enable Fog On Transparent", Float) = 1
 		[HideInInspector] _CullModeForward("Cull Mode Forward", Float) = 2
 		[HideInInspector] [Enum(Front, 1, Back, 2)] _TransparentCullMode("Transparent Cull Mode", Float) = 2
 		[HideInInspector] _ZTestDepthEqualForOpaque("ZTest Depth Equal For Opaque", Int) = 4
@@ -66,6 +69,12 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 		[HideInInspector] [ToggleUI] _DoubleSidedEnable("Double Sided Enable", Float) = 0
 		[HideInInspector] [Enum(Flip, 0, Mirror, 1, None, 2)] _DoubleSidedNormalMode("Double Sided Normal Mode", Float) = 2
 		[HideInInspector] _DoubleSidedConstants("DoubleSidedConstants", Vector) = (1,1,-1,0)
+		//_TessPhongStrength( "Tess Phong Strength", Range( 0, 1 ) ) = 0.5
+		//_TessValue( "Tess Max Tessellation", Range( 1, 32 ) ) = 16
+		//_TessMin( "Tess Min Distance", Float ) = 10
+		//_TessMax( "Tess Max Distance", Float ) = 25
+		//_TessEdgeLength ( "Tess Edge length", Range( 2, 50 ) ) = 16
+		//_TessMaxDisp( "Tess Max Displacement", Float ) = 25
 	}
 
 	SubShader
@@ -80,9 +89,9 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 		#pragma target 4.5
 		#pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 		#pragma multi_compile_instancing
-		#pragma multi_compile _ LOD_FADE_CROSSFADE
+		#pragma instancing_options renderinglayer
 
-		struct GlobalSurfaceDescription
+		struct GlobalSurfaceDescription // GBuffer Forward META TransparentBackface
 		{
 			float3 Albedo;
 			float3 Normal;
@@ -121,7 +130,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float3 BakedBackGI;
 		};
 
-		struct AlphaSurfaceDescription
+		struct AlphaSurfaceDescription // ShadowCaster
 		{
 			float Alpha;
 			float AlphaClipThreshold;
@@ -129,31 +138,37 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float DepthOffset;
 		};
 
-		struct PrePassSurfaceDescription
+		struct SceneSurfaceDescription // SceneSelection
 		{
-			float Smoothness;
+			float Alpha;
+			float AlphaClipThreshold;
+			float DepthOffset;
+		};
+
+		struct PrePassSurfaceDescription // DepthPrePass
+		{
 			float Alpha;
 			float AlphaClipThresholdDepthPrepass;
 			float DepthOffset;
 		};
 
-		struct PostPassSurfaceDescription
+		struct PostPassSurfaceDescription //DepthPostPass
 		{
-			float Smoothness;
 			float Alpha;
 			float AlphaClipThresholdDepthPostpass;
 			float DepthOffset;
 		};
 
-		struct SmoothSurfaceDescription
+		struct SmoothSurfaceDescription // MotionVectors DepthOnly
 		{
+			float3 Normal;
 			float Smoothness;
 			float Alpha;
 			float AlphaClipThreshold;
 			float DepthOffset;
 		};
 
-		struct DistortionSurfaceDescription
+		struct DistortionSurfaceDescription //Distortion
 		{
 			float Alpha;
 			float2 Distortion;
@@ -161,6 +176,103 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float AlphaClipThreshold;
 		};
 
+		float4 FixedTess( float tessValue )
+		{
+			return tessValue;
+		}
+		
+		float CalcDistanceTessFactor (float4 vertex, float minDist, float maxDist, float tess, float4x4 o2w, float3 cameraPos )
+		{
+			float3 wpos = mul(o2w,vertex).xyz;
+			float dist = distance (wpos, cameraPos);
+			float f = clamp(1.0 - (dist - minDist) / (maxDist - minDist), 0.01, 1.0) * tess;
+			return f;
+		}
+
+		float4 CalcTriEdgeTessFactors (float3 triVertexFactors)
+		{
+			float4 tess;
+			tess.x = 0.5 * (triVertexFactors.y + triVertexFactors.z);
+			tess.y = 0.5 * (triVertexFactors.x + triVertexFactors.z);
+			tess.z = 0.5 * (triVertexFactors.x + triVertexFactors.y);
+			tess.w = (triVertexFactors.x + triVertexFactors.y + triVertexFactors.z) / 3.0f;
+			return tess;
+		}
+
+		float CalcEdgeTessFactor (float3 wpos0, float3 wpos1, float edgeLen, float3 cameraPos, float4 scParams )
+		{
+			float dist = distance (0.5 * (wpos0+wpos1), cameraPos);
+			float len = distance(wpos0, wpos1);
+			float f = max(len * scParams.y / (edgeLen * dist), 1.0);
+			return f;
+		}
+
+		float DistanceFromPlaneASE (float3 pos, float4 plane)
+		{
+			return dot (float4(pos,1.0f), plane);
+		}
+
+		bool WorldViewFrustumCull (float3 wpos0, float3 wpos1, float3 wpos2, float cullEps, float4 planes[6] )
+		{
+			float4 planeTest;
+			planeTest.x = (( DistanceFromPlaneASE(wpos0, planes[0]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos1, planes[0]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos2, planes[0]) > -cullEps) ? 1.0f : 0.0f );
+			planeTest.y = (( DistanceFromPlaneASE(wpos0, planes[1]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos1, planes[1]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos2, planes[1]) > -cullEps) ? 1.0f : 0.0f );
+			planeTest.z = (( DistanceFromPlaneASE(wpos0, planes[2]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos1, planes[2]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos2, planes[2]) > -cullEps) ? 1.0f : 0.0f );
+			planeTest.w = (( DistanceFromPlaneASE(wpos0, planes[3]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos1, planes[3]) > -cullEps) ? 1.0f : 0.0f ) +
+						  (( DistanceFromPlaneASE(wpos2, planes[3]) > -cullEps) ? 1.0f : 0.0f );
+			return !all (planeTest);
+		}
+
+		float4 DistanceBasedTess( float4 v0, float4 v1, float4 v2, float tess, float minDist, float maxDist, float4x4 o2w, float3 cameraPos )
+		{
+			float3 f;
+			f.x = CalcDistanceTessFactor (v0,minDist,maxDist,tess,o2w,cameraPos);
+			f.y = CalcDistanceTessFactor (v1,minDist,maxDist,tess,o2w,cameraPos);
+			f.z = CalcDistanceTessFactor (v2,minDist,maxDist,tess,o2w,cameraPos);
+
+			return CalcTriEdgeTessFactors (f);
+		}
+
+		float4 EdgeLengthBasedTess( float4 v0, float4 v1, float4 v2, float edgeLength, float4x4 o2w, float3 cameraPos, float4 scParams )
+		{
+			float3 pos0 = mul(o2w,v0).xyz;
+			float3 pos1 = mul(o2w,v1).xyz;
+			float3 pos2 = mul(o2w,v2).xyz;
+			float4 tess;
+			tess.x = CalcEdgeTessFactor (pos1, pos2, edgeLength, cameraPos, scParams);
+			tess.y = CalcEdgeTessFactor (pos2, pos0, edgeLength, cameraPos, scParams);
+			tess.z = CalcEdgeTessFactor (pos0, pos1, edgeLength, cameraPos, scParams);
+			tess.w = (tess.x + tess.y + tess.z) / 3.0f;
+			return tess;
+		}
+
+		float4 EdgeLengthBasedTessCull( float4 v0, float4 v1, float4 v2, float edgeLength, float maxDisplacement, float4x4 o2w, float3 cameraPos, float4 scParams, float4 planes[6] )
+		{
+			float3 pos0 = mul(o2w,v0).xyz;
+			float3 pos1 = mul(o2w,v1).xyz;
+			float3 pos2 = mul(o2w,v2).xyz;
+			float4 tess;
+
+			if (WorldViewFrustumCull(pos0, pos1, pos2, maxDisplacement, planes))
+			{
+				tess = 0.0f;
+			}
+			else
+			{
+				tess.x = CalcEdgeTessFactor (pos1, pos2, edgeLength, cameraPos, scParams);
+				tess.y = CalcEdgeTessFactor (pos2, pos0, edgeLength, cameraPos, scParams);
+				tess.z = CalcEdgeTessFactor (pos0, pos1, edgeLength, cameraPos, scParams);
+				tess.w = (tess.x + tess.y + tess.z) / 3.0f;
+			}
+			return tess;
+		}
 		ENDHLSL
 		
 		Pass
@@ -185,25 +297,34 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			HLSLPROGRAM
 
-			#define SHADERPASS_GBUFFER_BYPASS_ALPHA_TEST 1
-			#define _ALPHATEST_ON 1
+			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
-			#define ASE_SRP_VERSION 70108
+			#define HAVE_MESH_MODIFICATION
+			#define ASE_SRP_VERSION 999999
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
 			#pragma shader_feature_local _DOUBLESIDED_ON
 			#pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
+			#pragma shader_feature_local _ENABLE_FOG_ON_TRANSPARENT
+			#pragma shader_feature_local _ALPHATEST_ON
+
+			#if !defined(DEBUG_DISPLAY) && defined(_ALPHATEST_ON)
+			#define SHADERPASS_GBUFFER_BYPASS_ALPHA_TEST
+			#endif
+
+			#define SHADERPASS SHADERPASS_GBUFFER
+			#pragma multi_compile _ DEBUG_DISPLAY
+			#pragma multi_compile _ LIGHTMAP_ON
+			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
+			#pragma multi_compile _ DYNAMICLIGHTMAP_ON
+			#pragma multi_compile _ SHADOWS_SHADOWMASK
+			#pragma multi_compile DECALS_OFF DECALS_3RT DECALS_4RT
+			#pragma multi_compile _ LIGHT_LAYERS
 
 			#pragma vertex Vert
 			#pragma fragment Frag
 
-			#if defined(_DOTS_INSTANCING)
-			#pragma instancing_options nolightprobe
-			#pragma instancing_options nolodfade
-			#else
-			#pragma instancing_options renderinglayer
-			#endif
 			//#define UNITY_MATERIAL_LIT
 
 			#if defined(_MATERIAL_FEATURE_SUBSURFACE_SCATTERING) && !defined(_SURFACE_TYPE_TRANSPARENT)
@@ -212,28 +333,13 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
 
-			#define SHADERPASS SHADERPASS_GBUFFER
-			#pragma multi_compile _ LIGHTMAP_ON
-			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
-			#pragma multi_compile _ DYNAMICLIGHTMAP_ON
-			#pragma multi_compile _ SHADOWS_SHADOWMASK
-			#pragma multi_compile DECALS_OFF DECALS_3RT DECALS_4RT
-			#pragma multi_compile _ LIGHT_LAYERS
-
-			#define ATTRIBUTES_NEED_NORMAL
-			#define ATTRIBUTES_NEED_TANGENT
-			#define ATTRIBUTES_NEED_TEXCOORD1
-			#define ATTRIBUTES_NEED_TEXCOORD2
-			#define VARYINGS_NEED_POSITION_WS
-			#define VARYINGS_NEED_TANGENT_TO_WORLD
-			#define VARYINGS_NEED_TEXCOORD1
-			#define VARYINGS_NEED_TEXCOORD2
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+			#ifdef DEBUG_DISPLAY
+				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
+			#endif
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
@@ -242,6 +348,10 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_NORMAL
+			#define ASE_NEEDS_FRAG_COLOR
 			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
 			#pragma shader_feature_local EFFECT_HUE_VARIATION
 			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
@@ -285,31 +395,35 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			};
 
 			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindBranchAdherences;
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindLeaf1Twitch;
 			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindBranchWhip;
-			int _Cull;
-			float4 _ST_WindFrondRipple;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float4 _Color;
-			float4 _ST_WindVector;
 			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindVector;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindGlobal;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _Color;
 			float _Cutoff;
+			int _Cull;
+			int _WindQuality;
 			float _Metallic;
+			int _GlobalTimerId;
 			float _Smoothness;
 			float4 _EmissionColor;
+			float _AlphaCutoff;
 			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
 			float _StencilRef;
 			float _StencilWriteMask;
 			float _StencilRefDepth;
@@ -330,19 +444,28 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float _AlphaSrcBlend;
 			float _AlphaDstBlend;
 			float _ZWrite;
+			float _TransparentZWrite;
 			float _CullMode;
 			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
 			float _CullModeForward;
 			float _TransparentCullMode;
 			float _ZTestDepthEqualForOpaque;
 			float _ZTestTransparent;
 			float _TransparentBackfaceEnable;
 			float _AlphaCutoffEnable;
-			float _AlphaCutoff;
 			float _UseShadowThreshold;
 			float _DoubleSidedEnable;
 			float _DoubleSidedNormalMode;
 			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
 			CBUFFER_END
 			float4 _GlobalTimers[100];
 			sampler2D _MainTex;
@@ -350,7 +473,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _BumpMap;
 
 
-			void CalculateWindInputs( float windQuality , out float3 rotatedWindVector , out float3 rotatedBranchAnchor , float4 windVector , float4 windBranchAnchor )
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
 			{
 				if (windQuality <= 0) // WIND_QUALITY_NONE
 				{
@@ -369,7 +492,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float3 OffsetLeavesVertex( float3 VertexPos , float ColorAlpha , float3 texcoord1 , float2 texcoord3 )
+			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
 				VertexPos -= texcoord1.xyz;
@@ -404,26 +527,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				return abs((frac(vData + 0.5) * 2.0) - 1.0);
 			}
 			
-			float ComputeWindAdjust( float3 vPos , float4 windGlobal )
-			{
-				    // compute how much the height contributes
-				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
-				    if (fAdjust != 0.0) {
-				        float s = sign(fAdjust);
-				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
-				    }
-				    return fAdjust;
-			}
-			
-			float3 SwizzleCombineMoveAmount( float3 vPos , float3 vRotatedWindVector , float fMoveAmount )
-			{
-				    float fLength = length(vPos);
-				 
-				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
-				    vPos.xyz = normalize(vPos.xyz) * fLength;
-				    return vPos;
-			}
-			
 			float3 UnpackNormalFromFloat( float3 fValue )
 			{
 				     float3 vDecodeKey = float3(16.0, 1.0, 0.0625);
@@ -442,7 +545,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 ComplexOscillationInputs( float fTime , float fOffset , float fTwitchFreqScale , float fWeight , int bWhip )
+			float4 ComplexOscillationInputs( float fTime, float fOffset, float fTwitchFreqScale, float fWeight, int bWhip )
 			{
 				if (bWhip > 0) {
 				    return float4(fTime + fOffset, fTime * fTwitchFreqScale + fOffset, fTwitchFreqScale * 0.5 * (fTime + fOffset), fTime + fOffset + (1.0 - fWeight));
@@ -451,7 +554,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 SimpleOscillationInputs( float fTime , float fOffset , float fWeight , int bWhip )
+			float4 SimpleOscillationInputs( float fTime, float fOffset, float fWeight, int bWhip )
 			{
 				if (bWhip)
 				  return float4(fTime + fOffset, fTime * 0.689 + fOffset, 0.0, fTime + fOffset + (1.0 - fWeight));
@@ -464,7 +567,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				 return GetAbsolutePositionWS(float3(UNITY_MATRIX_M[0].w, UNITY_MATRIX_M[1].w, UNITY_MATRIX_M[2].w));
 			}
 			
-			float3x3 RotationMatrix( float3 vAxis , float fAngle )
+			float ComputeWindAdjust( float3 vPos, float4 windGlobal )
+			{
+				    // compute how much the height contributes
+				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+				    if (fAdjust != 0.0) {
+				        float s = sign(fAdjust);
+				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
+				    }
+				    return fAdjust;
+			}
+			
+			float3 SwizzleCombineMoveAmount( float3 vPos, float3 vRotatedWindVector, float fMoveAmount )
+			{
+				    float fLength = length(vPos);
+				 
+				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+				    vPos.xyz = normalize(vPos.xyz) * fLength;
+				    return vPos;
+			}
+			
+			float3x3 RotationMatrix( float3 vAxis, float fAngle )
 			{
 				    // compute sin/cos of fAngle
 				    float2 vSinCos;
@@ -486,70 +609,43 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			}
 			
 
-			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, out SurfaceData surfaceData, out float3 bentNormalWS)
+			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
 
-				surfaceData.baseColor =                 surfaceDescription.Albedo;
-				surfaceData.perceptualSmoothness =      surfaceDescription.Smoothness;
+				surfaceData.specularOcclusion = 1.0;
+
+				// surface data
+				surfaceData.baseColor =					surfaceDescription.Albedo;
+				surfaceData.perceptualSmoothness =		surfaceDescription.Smoothness;
+				surfaceData.ambientOcclusion =			surfaceDescription.Occlusion;
+				surfaceData.metallic =					surfaceDescription.Metallic;
+				surfaceData.coatMask =					surfaceDescription.CoatMask;
+
 				#ifdef _SPECULAR_OCCLUSION_CUSTOM
-				surfaceData.specularOcclusion = surfaceDescription.SpecularOcclusion;
+				surfaceData.specularOcclusion =			surfaceDescription.SpecularOcclusion;
 				#endif
-				surfaceData.ambientOcclusion = surfaceDescription.Occlusion;
-				surfaceData.metallic = surfaceDescription.Metallic;
-				surfaceData.coatMask = surfaceDescription.CoatMask;
-
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.iridescenceMask = surfaceDescription.IridescenceMask;
-				surfaceData.iridescenceThickness = surfaceDescription.IridescenceThickness;
-				#endif
-				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
 				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				surfaceData.subsurfaceMask =			surfaceDescription.SubsurfaceMask;
 				#endif
-				#ifdef _MATERIAL_FEATURE_TRANSMISSION
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#if defined(_HAS_REFRACTION) || defined(_MATERIAL_FEATURE_TRANSMISSION)
+				surfaceData.thickness =					surfaceDescription.Thickness;
 				#endif
-				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
-				#endif
-
-				#ifdef ASE_LIT_CLEAR_COAT
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
-				#endif
-
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#if defined( _MATERIAL_FEATURE_SUBSURFACE_SCATTERING ) || defined( _MATERIAL_FEATURE_TRANSMISSION )
+				surfaceData.diffusionProfileHash =		asuint(surfaceDescription.DiffusionProfile);
 				#endif
 				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
-				surfaceData.specularColor = surfaceDescription.Specular;
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
+				surfaceData.specularColor =				surfaceDescription.Specular;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.anisotropy =				surfaceDescription.Anisotropy;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.iridescenceMask =			surfaceDescription.IridescenceMask;
+				surfaceData.iridescenceThickness =		surfaceDescription.IridescenceThickness;
 				#endif
 
-				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
-				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
-				#endif
-
-				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
-				normalTS = surfaceDescription.Normal;
-				#ifdef _DOUBLESIDED_ON
-				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
-				#else
-				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
-				#endif
-				GetNormalWS(fragInputs, normalTS, surfaceData.normalWS,doubleSidedConstants);
-
-				bentNormalWS = surfaceData.normalWS;
-				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
-
-				#ifdef ASE_BENT_NORMAL
-				GetNormalWS( fragInputs, surfaceDescription.BentNormal, bentNormalWS, doubleSidedConstants );
-				#endif
-
-				#if defined(_HAS_REFRACTION) || defined(_MATERIAL_FEATURE_TRANSMISSION)
-				surfaceData.thickness = surfaceDescription.Thickness;
-				#endif
-
+				// refraction
 				#ifdef _HAS_REFRACTION
 				if( _EnableSSRefraction )
 				{
@@ -575,42 +671,90 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceData.transmittanceMask = 0.0;
 				#endif
 
-				#if defined(_HAS_REFRACTION) || defined(_MATERIAL_FEATURE_TRANSMISSION)
-				surfaceData.thickness = surfaceDescription.Thickness;
-				#endif
 
+				// material features
+				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
 				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.subsurfaceMask = surfaceDescription.SubsurfaceMask;
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				#endif
+				#ifdef _MATERIAL_FEATURE_TRANSMISSION
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
+				#endif
+				#ifdef ASE_LIT_CLEAR_COAT
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#endif
+				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
 				#endif
 
-				#if defined( _MATERIAL_FEATURE_SUBSURFACE_SCATTERING ) || defined( _MATERIAL_FEATURE_TRANSMISSION )
-				surfaceData.diffusionProfileHash = asuint(surfaceDescription.DiffusionProfile);
+				// others
+				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
+				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
 				#endif
-				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );    // The tangent is not normalize in tangentToWorld for mikkt. TODO: Check if it expected that we normalize with Morten. Tag: SURFACE_GRADIENT
+				#ifdef _DOUBLESIDED_ON
+				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
+				#else
+				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
+				#endif
+
+				// normals
+				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
+				normalTS = surfaceDescription.Normal;
+				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
+
+				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
+
+				bentNormalWS = surfaceData.normalWS;
+				#ifdef ASE_BENT_NORMAL
+				GetNormalWS( fragInputs, surfaceDescription.BentNormal, bentNormalWS, doubleSidedConstants );
+				#endif
+
+				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );
 				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.anisotropy = surfaceDescription.Anisotropy;
 				surfaceData.tangentWS = TransformTangentToWorld( surfaceDescription.Tangent, fragInputs.tangentToWorld );
 				#endif
 				surfaceData.tangentWS = Orthonormalize( surfaceData.tangentWS, surfaceData.normalWS );
+
+				// decals
+				#if HAVE_DECALS
+				if( _EnableDecals )
+				{
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
+					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+				}
+				#endif
 
 				#if defined(_SPECULAR_OCCLUSION_CUSTOM)
 				#elif defined(_SPECULAR_OCCLUSION_FROM_AO_BENT_NORMAL)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromBentAO( V, bentNormalWS, surfaceData.normalWS, surfaceData.ambientOcclusion, PerceptualSmoothnessToPerceptualRoughness( surfaceData.perceptualSmoothness ) );
 				#elif defined(_AMBIENT_OCCLUSION) && defined(_SPECULAR_OCCLUSION_FROM_AO)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion( ClampNdotV( dot( surfaceData.normalWS, V ) ), surfaceData.ambientOcclusion, PerceptualSmoothnessToRoughness( surfaceData.perceptualSmoothness ) );
-				#else
-				surfaceData.specularOcclusion = 1.0;
 				#endif
+
 				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
 				surfaceData.perceptualSmoothness = GeometricNormalFiltering( surfaceData.perceptualSmoothness, fragInputs.tangentToWorld[ 2 ], surfaceDescription.SpecularAAScreenSpaceVariance, surfaceDescription.SpecularAAThreshold );
+				#endif
+
+				// debug
+				#if defined(DEBUG_DISPLAY)
+				if (_DebugMipMapMode != DEBUGMIPMAPMODE_NONE)
+				{
+					surfaceData.metallic = 0;
+				}
+				ApplyDebugToSurfaceData(fragInputs.tangentToWorld, surfaceData);
 				#endif
 			}
 
 			void GetSurfaceAndBuiltinData(GlobalSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
 			{
 				#ifdef LOD_FADE_CROSSFADE
-				uint3 fadeMaskSeed = asuint( (int3)( V * _ScreenSize.xyx ) );
-				LODDitheringTransition( fadeMaskSeed, unity_LODFade.x );
+				LODDitheringTransition(ComputeFadeMaskSeed(V, posInput.positionSS), unity_LODFade.x);
 				#endif
 
 				#ifdef _DOUBLESIDED_ON
@@ -631,15 +775,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 
 				float3 bentNormalWS;
-				BuildSurfaceData( fragInputs, surfaceDescription, V, surfaceData, bentNormalWS );
-
-				#if HAVE_DECALS
-				if( _EnableDecals )
-				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
-				}
-				#endif
+				BuildSurfaceData( fragInputs, surfaceDescription, V, posInput, surfaceData, bentNormalWS );
 
 				InitBuiltinData( posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[ 2 ], fragInputs.texCoord1, fragInputs.texCoord2, builtinData );
 
@@ -656,19 +792,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				builtinData.distortion = surfaceDescription.Distortion;
 				builtinData.distortionBlur = surfaceDescription.DistortionBlur;
 				#else
-				builtinData.distortion = float2( 0.0, 0.0 );
+				builtinData.distortion = float2(0.0, 0.0);
 				builtinData.distortionBlur = 0.0;
 				#endif
 
 				PostInitBuiltinData(V, posInput, surfaceData, builtinData);
 			}
 
-			PackedVaryingsMeshToPS Vert(AttributesMesh inputMesh )
+			PackedVaryingsMeshToPS VertexFunction(AttributesMesh inputMesh )
 			{
 				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS;
 
 				UNITY_SETUP_INSTANCE_ID(inputMesh);
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 
 				float3 temp_output_1_0_g4 = inputMesh.positionOS;
 				float3 appendResult213 = (float3(inputMesh.uv1.xyz));
@@ -698,7 +835,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
-				int temp_output_40_0_g189 = _WindQuality;
+				int temp_output_40_0_g300 = _WindQuality;
 				float3 VertexPos286 = inputMesh.positionOS;
 				float3 appendResult112 = (float3(_Color.r , _Color.g , _Color.b));
 				float4 appendResult281 = (float4(( appendResult112 * inputMesh.ase_color.r ) , _Color.a));
@@ -707,58 +844,59 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 texcoord1286 = appendResult213;
 				float2 texcoord3286 = inputMesh.ase_texcoord3.xy;
 				float3 localOffsetLeavesVertex286 = OffsetLeavesVertex( VertexPos286 , ColorAlpha286 , texcoord1286 , texcoord3286 );
-				float3 temp_output_6_0_g189 = localOffsetLeavesVertex286;
-				int temp_output_2_0_g264 = temp_output_40_0_g189;
-				float4 break25_g189 = inputMesh.uv2;
-				float3 temp_cast_5 = (break25_g189.z).xxx;
-				float3 fValue10_g268 = temp_cast_5;
-				float3 localUnpackNormalFromFloat10_g268 = UnpackNormalFromFloat( fValue10_g268 );
-				float temp_output_4_0_g264 = break25_g189.w;
-				float ifLocalVar19_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar19_g264 = _ST_WindLeaf1Ripple.y;
+				float3 temp_output_6_0_g300 = localOffsetLeavesVertex286;
+				int temp_output_2_0_g301 = temp_output_40_0_g300;
+				float4 break25_g300 = inputMesh.uv2;
+				float3 temp_cast_5 = (break25_g300.z).xxx;
+				float3 fValue10_g305 = temp_cast_5;
+				float3 localUnpackNormalFromFloat10_g305 = UnpackNormalFromFloat( fValue10_g305 );
+				float temp_output_4_0_g301 = break25_g300.w;
+				float ifLocalVar19_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar19_g301 = _ST_WindLeaf1Ripple.y;
 				else
-				ifLocalVar19_g264 = _ST_WindLeaf2Ripple.y;
-				float2 break24_g189 = appendResult213.xy;
-				float4 break18_g264 = _GlobalTimers[_GlobalTimerId];
-				float4 appendResult10_g266 = (float4(( ( break24_g189.x + break24_g189.y ) + break18_g264.y ) , 0.0 , 0.0 , 0.0));
-				float4 vData7_g267 = appendResult10_g266;
-				float4 localTriangleWave7_g267 = TriangleWave( vData7_g267 );
-				float4 vData6_g267 = localTriangleWave7_g267;
-				float4 localCubicSmooth6_g267 = CubicSmooth( vData6_g267 );
-				float temp_output_8_0_g264 = break25_g189.x;
-				float3 temp_output_52_0_g264 = ( temp_output_6_0_g189 + ( localUnpackNormalFromFloat10_g268 * ( ifLocalVar19_g264 * ( ( localCubicSmooth6_g267 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g264 ) );
-				float temp_output_10_0_g264 = break25_g189.y;
-				float3 temp_cast_7 = (temp_output_10_0_g264).xxx;
-				float3 fValue10_g276 = temp_cast_7;
-				float3 localUnpackNormalFromFloat10_g276 = UnpackNormalFromFloat( fValue10_g276 );
-				float3 temp_output_5_0_g269 = localUnpackNormalFromFloat10_g276;
-				float3 vAxis6_g272 = temp_output_5_0_g269;
-				float temp_output_3_0_g269 = temp_output_8_0_g264;
-				float4 ifLocalVar32_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar32_g264 = _ST_WindLeaf1Tumble;
+				ifLocalVar19_g301 = _ST_WindLeaf2Ripple.y;
+				float2 break24_g300 = appendResult213.xy;
+				float4 break18_g301 = _GlobalTimers[_GlobalTimerId];
+				float4 appendResult10_g303 = (float4(( ( break24_g300.x + break24_g300.y ) + break18_g301.y ) , 0.0 , 0.0 , 0.0));
+				float4 vData7_g304 = appendResult10_g303;
+				float4 localTriangleWave7_g304 = TriangleWave( vData7_g304 );
+				float4 vData6_g304 = localTriangleWave7_g304;
+				float4 localCubicSmooth6_g304 = CubicSmooth( vData6_g304 );
+				float temp_output_8_0_g301 = break25_g300.x;
+				float3 temp_output_52_0_g301 = ( temp_output_6_0_g300 + ( localUnpackNormalFromFloat10_g305 * ( ifLocalVar19_g301 * ( ( localCubicSmooth6_g304 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g301 ) );
+				float temp_output_10_0_g301 = break25_g300.y;
+				float3 temp_cast_7 = (temp_output_10_0_g301).xxx;
+				float3 fValue10_g313 = temp_cast_7;
+				float3 localUnpackNormalFromFloat10_g313 = UnpackNormalFromFloat( fValue10_g313 );
+				float3 temp_output_5_0_g306 = localUnpackNormalFromFloat10_g313;
+				float3 vAxis6_g309 = temp_output_5_0_g306;
+				float temp_output_3_0_g306 = temp_output_8_0_g301;
+				float4 ifLocalVar32_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar32_g301 = _ST_WindLeaf1Tumble;
 				else
-				ifLocalVar32_g264 = _ST_WindLeaf2Tumble;
-				float4 break34_g264 = ifLocalVar32_g264;
-				float temp_output_22_0_g269 = frac( ( temp_output_10_0_g264 * 30.3 ) );
-				float temp_output_25_0_g269 = ( temp_output_22_0_g269 + temp_output_22_0_g269 + temp_output_22_0_g269 );
-				float temp_output_7_0_g269 = break18_g264.z;
-				float4 appendResult34_g269 = (float4(( temp_output_25_0_g269 + temp_output_7_0_g269 ) , ( ( temp_output_7_0_g269 * 0.75 ) + ( temp_output_25_0_g269 * -1.0 ) ) , ( ( temp_output_7_0_g269 * 0.01 ) + temp_output_25_0_g269 ) , ( temp_output_25_0_g269 + ( temp_output_7_0_g269 * 1.0 ) )));
-				float4 vData7_g271 = appendResult34_g269;
-				float4 localTriangleWave7_g271 = TriangleWave( vData7_g271 );
-				float4 vData6_g271 = localTriangleWave7_g271;
-				float4 localCubicSmooth6_g271 = CubicSmooth( vData6_g271 );
-				float4 temp_output_27_0_g269 = ( ( localCubicSmooth6_g271 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break47_g269 = temp_output_27_0_g269;
-				float fAngle6_g272 = ( temp_output_3_0_g269 * break34_g264.z * ( break47_g269.x + ( break47_g269.y * break47_g269.y ) ) );
-				float3x3 localRotationMatrix6_g272 = RotationMatrix( vAxis6_g272 , fAngle6_g272 );
+				ifLocalVar32_g301 = _ST_WindLeaf2Tumble;
+				float4 break34_g301 = ifLocalVar32_g301;
+				float temp_output_22_0_g306 = frac( ( temp_output_10_0_g301 * 30.3 ) );
+				float temp_output_25_0_g306 = ( temp_output_22_0_g306 + temp_output_22_0_g306 + temp_output_22_0_g306 );
+				float temp_output_7_0_g306 = break18_g301.z;
+				float4 appendResult34_g306 = (float4(( temp_output_25_0_g306 + temp_output_7_0_g306 ) , ( ( temp_output_7_0_g306 * 0.75 ) + ( temp_output_25_0_g306 * -1.0 ) ) , ( ( temp_output_7_0_g306 * 0.01 ) + temp_output_25_0_g306 ) , ( temp_output_25_0_g306 + ( temp_output_7_0_g306 * 1.0 ) )));
+				float4 vData7_g308 = appendResult34_g306;
+				float4 localTriangleWave7_g308 = TriangleWave( vData7_g308 );
+				float4 vData6_g308 = localTriangleWave7_g308;
+				float4 localCubicSmooth6_g308 = CubicSmooth( vData6_g308 );
+				float4 temp_output_27_0_g306 = ( ( localCubicSmooth6_g308 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break47_g306 = temp_output_27_0_g306;
+				float fAngle6_g309 = ( temp_output_3_0_g306 * break34_g301.z * ( break47_g306.x + ( break47_g306.y * break47_g306.y ) ) );
+				float3x3 localRotationMatrix6_g309 = RotationMatrix( vAxis6_g309 , fAngle6_g309 );
 				int localCalculateWindInputs291 = ( 0 );
 				float windQuality291 = (float)_WindQuality;
 				float3 rotatedWindVector291 = float3( 0,0,0 );
 				float3 rotatedBranchAnchor291 = float3( 0,0,0 );
 				float4 windVector291 = _ST_WindVector;
 				float4 windBranchAnchor291 = _ST_WindBranchAnchor;
+				{
 				if (windQuality291 <= 0) // WIND_QUALITY_NONE
 				{
 				    rotatedWindVector291 = float3(0.0f, 0.0f, 0.0f);
@@ -774,268 +912,269 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    }
 				    rotatedBranchAnchor291 = normalize(mul(windBranchAnchor291.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor291.w;
 				}
-				float3 data116_g269 = rotatedWindVector291;
-				float3 localClampToNonZero116_g269 = ClampToNonZero( data116_g269 );
-				float3 break57_g269 = cross( temp_output_5_0_g269 , localClampToNonZero116_g269 );
-				float dotResult55_g269 = dot( float3( 0,0,0 ) , temp_output_5_0_g269 );
-				float clampResult56_g269 = clamp( dotResult55_g269 , -1.0 , 1.0 );
-				float3 appendResult59_g269 = (float3(break57_g269.x , ( clampResult56_g269 + break57_g269.y ) , break57_g269.z));
-				float3 normalizeResult60_g269 = normalize( appendResult59_g269 );
-				float3 vAxis6_g275 = normalizeResult60_g269;
-				float3 break9_g273 = float3( 0,0,0 );
-				float temp_output_4_0_g273 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g269 );
-				float4 appendResult12_g273 = (float4(( break9_g273.x + break9_g273.z + temp_output_4_0_g273 ) , ( ( 0.87 * temp_output_4_0_g273 ) + break9_g273.y ) , 0.0 , 0.0));
-				float4 vData7_g274 = appendResult12_g273;
-				float4 localTriangleWave7_g274 = TriangleWave( vData7_g274 );
-				float4 vData6_g274 = localTriangleWave7_g274;
-				float4 localCubicSmooth6_g274 = CubicSmooth( vData6_g274 );
-				float4 break14_g273 = ( ( localCubicSmooth6_g274 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar35_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar35_g264 = _ST_WindLeaf1Twitch;
+				}
+				float3 data116_g306 = rotatedWindVector291;
+				float3 localClampToNonZero116_g306 = ClampToNonZero( data116_g306 );
+				float3 break57_g306 = cross( temp_output_5_0_g306 , localClampToNonZero116_g306 );
+				float dotResult55_g306 = dot( float3( 0,0,0 ) , temp_output_5_0_g306 );
+				float clampResult56_g306 = clamp( dotResult55_g306 , -1.0 , 1.0 );
+				float3 appendResult59_g306 = (float3(break57_g306.x , ( clampResult56_g306 + break57_g306.y ) , break57_g306.z));
+				float3 normalizeResult60_g306 = normalize( appendResult59_g306 );
+				float3 vAxis6_g312 = normalizeResult60_g306;
+				float3 break9_g310 = float3( 0,0,0 );
+				float temp_output_4_0_g310 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g306 );
+				float4 appendResult12_g310 = (float4(( break9_g310.x + break9_g310.z + temp_output_4_0_g310 ) , ( ( 0.87 * temp_output_4_0_g310 ) + break9_g310.y ) , 0.0 , 0.0));
+				float4 vData7_g311 = appendResult12_g310;
+				float4 localTriangleWave7_g311 = TriangleWave( vData7_g311 );
+				float4 vData6_g311 = localTriangleWave7_g311;
+				float4 localCubicSmooth6_g311 = CubicSmooth( vData6_g311 );
+				float4 break14_g310 = ( ( localCubicSmooth6_g311 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar35_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar35_g301 = _ST_WindLeaf1Twitch;
 				else
-				ifLocalVar35_g264 = _ST_WindLeaf2Twitch;
-				float3 appendResult37_g264 = (float3(ifLocalVar35_g264.xyz));
-				float3 break76_g269 = appendResult37_g264;
-				float4 break109_g269 = temp_output_27_0_g269;
-				float fAngle6_g275 = ( temp_output_3_0_g269 * ( ( acos( clampResult56_g269 ) * break34_g264.w ) + ( pow( saturate( ( ( ( break14_g273.x * break14_g273.y * break14_g273.y ) + 1.0 ) * 0.5 ) ) , break76_g269.y ) * break76_g269.x ) + ( ( break109_g269.y + ( ( break109_g269.x * break109_g269.x ) * -1.0 ) ) * break34_g264.y ) ) );
-				float3x3 localRotationMatrix6_g275 = RotationMatrix( vAxis6_g275 , fAngle6_g275 );
-				float3x3 temp_output_86_0_g269 = mul( localRotationMatrix6_g272, localRotationMatrix6_g275 );
-				float3 temp_output_1_0_g269 = temp_output_52_0_g264;
-				float3 normalizeResult91_g269 = normalize( mul( temp_output_86_0_g269, temp_output_1_0_g269 ) );
-				float3 ifLocalVar27_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar27_g264 = ( normalizeResult91_g269 * length( temp_output_1_0_g269 ) );
+				ifLocalVar35_g301 = _ST_WindLeaf2Twitch;
+				float3 appendResult37_g301 = (float3(ifLocalVar35_g301.xyz));
+				float3 break76_g306 = appendResult37_g301;
+				float4 break109_g306 = temp_output_27_0_g306;
+				float fAngle6_g312 = ( temp_output_3_0_g306 * ( ( acos( clampResult56_g306 ) * break34_g301.w ) + ( pow( saturate( ( ( ( break14_g310.x * break14_g310.y * break14_g310.y ) + 1.0 ) * 0.5 ) ) , break76_g306.y ) * break76_g306.x ) + ( ( break109_g306.y + ( ( break109_g306.x * break109_g306.x ) * -1.0 ) ) * break34_g301.y ) ) );
+				float3x3 localRotationMatrix6_g312 = RotationMatrix( vAxis6_g312 , fAngle6_g312 );
+				float3x3 temp_output_86_0_g306 = mul( localRotationMatrix6_g309, localRotationMatrix6_g312 );
+				float3 temp_output_1_0_g306 = temp_output_52_0_g301;
+				float3 normalizeResult91_g306 = normalize( mul( temp_output_86_0_g306, temp_output_1_0_g306 ) );
+				float3 ifLocalVar27_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar27_g301 = ( normalizeResult91_g306 * length( temp_output_1_0_g306 ) );
 				else
-				ifLocalVar27_g264 = temp_output_52_0_g264;
-				float3 ifLocalVar2_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar2_g189 = temp_output_6_0_g189;
+				ifLocalVar27_g301 = temp_output_52_0_g301;
+				float3 ifLocalVar2_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar2_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar2_g189 = ifLocalVar27_g264;
-				float3 ifLocalVar1_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar1_g189 = temp_output_6_0_g189;
+				ifLocalVar2_g300 = ifLocalVar27_g301;
+				float3 ifLocalVar1_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar1_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar1_g189 = ifLocalVar2_g189;
+				ifLocalVar1_g300 = ifLocalVar2_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g189 );
+				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g300 );
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch214 = staticSwitch343;
 				#else
 				float3 staticSwitch214 = staticSwitch343;
 				#endif
-				float3 temp_output_3_0_g277 = staticSwitch214;
-				int temp_output_24_0_g277 = _WindQuality;
-				float4 break32_g277 = inputMesh.ase_texcoord;
-				float2 appendResult31_g277 = (float2(break32_g277.z , break32_g277.w));
-				float2 break34_g277 = appendResult31_g277;
-				float temp_output_5_0_g278 = break34_g277.y;
-				float3 temp_cast_10 = (temp_output_5_0_g278).xxx;
-				float3 fValue10_g279 = temp_cast_10;
-				float3 localUnpackNormalFromFloat10_g279 = UnpackNormalFromFloat( fValue10_g279 );
-				float temp_output_4_0_g278 = break34_g277.x;
-				int temp_output_7_0_g280 = 0;
-				int temp_output_10_0_g280 = 1;
-				float3 localGetInstancePos40_g277 = GetInstancePos();
-				float3 break17_g278 = localGetInstancePos40_g277;
-				float temp_output_3_0_g280 = ( break17_g278.x + break17_g278.y + _GlobalTimers[_GlobalTimerId].y );
-				float fTime28_g280 = temp_output_3_0_g280;
-				float temp_output_4_0_g280 = temp_output_5_0_g278;
-				float fOffset28_g280 = temp_output_4_0_g280;
-				float fTwitchFreqScale28_g280 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g280 = temp_output_4_0_g278;
-				float fWeight28_g280 = temp_output_5_0_g280;
-				int bWhip28_g280 = temp_output_7_0_g280;
-				float4 localComplexOscillationInputs28_g280 = ComplexOscillationInputs( fTime28_g280 , fOffset28_g280 , fTwitchFreqScale28_g280 , fWeight28_g280 , bWhip28_g280 );
-				float4 vData7_g282 = localComplexOscillationInputs28_g280;
-				float4 localTriangleWave7_g282 = TriangleWave( vData7_g282 );
-				float4 vData6_g282 = localTriangleWave7_g282;
-				float4 localCubicSmooth6_g282 = CubicSmooth( vData6_g282 );
-				float4 temp_output_29_0_g280 = ( ( localCubicSmooth6_g282 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g280 = temp_output_29_0_g280;
-				float temp_output_31_0_g280 = ( break30_g280.y * break30_g280.z );
-				float ifLocalVar36_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar36_g280 = 1.0;
+				float3 temp_output_3_0_g314 = staticSwitch214;
+				int temp_output_24_0_g314 = _WindQuality;
+				float4 break32_g314 = inputMesh.ase_texcoord;
+				float2 appendResult31_g314 = (float2(break32_g314.z , break32_g314.w));
+				float2 break34_g314 = appendResult31_g314;
+				float temp_output_5_0_g315 = break34_g314.y;
+				float3 temp_cast_10 = (temp_output_5_0_g315).xxx;
+				float3 fValue10_g316 = temp_cast_10;
+				float3 localUnpackNormalFromFloat10_g316 = UnpackNormalFromFloat( fValue10_g316 );
+				float temp_output_4_0_g315 = break34_g314.x;
+				int temp_output_7_0_g317 = 0;
+				int temp_output_10_0_g317 = 1;
+				float3 localGetInstancePos40_g314 = GetInstancePos();
+				float3 break17_g315 = localGetInstancePos40_g314;
+				float temp_output_3_0_g317 = ( break17_g315.x + break17_g315.y + _GlobalTimers[_GlobalTimerId].y );
+				float fTime28_g317 = temp_output_3_0_g317;
+				float temp_output_4_0_g317 = temp_output_5_0_g315;
+				float fOffset28_g317 = temp_output_4_0_g317;
+				float fTwitchFreqScale28_g317 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g317 = temp_output_4_0_g315;
+				float fWeight28_g317 = temp_output_5_0_g317;
+				int bWhip28_g317 = temp_output_7_0_g317;
+				float4 localComplexOscillationInputs28_g317 = ComplexOscillationInputs( fTime28_g317 , fOffset28_g317 , fTwitchFreqScale28_g317 , fWeight28_g317 , bWhip28_g317 );
+				float4 vData7_g319 = localComplexOscillationInputs28_g317;
+				float4 localTriangleWave7_g319 = TriangleWave( vData7_g319 );
+				float4 vData6_g319 = localTriangleWave7_g319;
+				float4 localCubicSmooth6_g319 = CubicSmooth( vData6_g319 );
+				float4 temp_output_29_0_g317 = ( ( localCubicSmooth6_g319 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g317 = temp_output_29_0_g317;
+				float temp_output_31_0_g317 = ( break30_g317.y * break30_g317.z );
+				float ifLocalVar36_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar36_g317 = 1.0;
 				else
-				ifLocalVar36_g280 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar35_g280 = temp_output_31_0_g280;
+				ifLocalVar36_g317 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar35_g317 = temp_output_31_0_g317;
 				else
-				ifLocalVar35_g280 = ( temp_output_31_0_g280 * -1.0 );
-				float lerpResult41_g280 = lerp( temp_output_31_0_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float lerpResult42_g280 = lerp( lerpResult41_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float temp_output_11_0_g280 = _ST_WindBranchTwitch.x;
-				float fTime61_g280 = temp_output_3_0_g280;
-				float fOffset61_g280 = temp_output_4_0_g280;
-				float fWeight61_g280 = temp_output_5_0_g280;
-				int bWhip61_g280 = temp_output_7_0_g280;
-				float4 localSimpleOscillationInputs61_g280 = SimpleOscillationInputs( fTime61_g280 , fOffset61_g280 , fWeight61_g280 , bWhip61_g280 );
-				float4 vData7_g281 = localSimpleOscillationInputs61_g280;
-				float4 localTriangleWave7_g281 = TriangleWave( vData7_g281 );
-				float4 vData6_g281 = localTriangleWave7_g281;
-				float4 localCubicSmooth6_g281 = CubicSmooth( vData6_g281 );
-				float4 temp_output_66_0_g280 = ( ( localCubicSmooth6_g281 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g280 = temp_output_66_0_g280;
-				float temp_output_64_0_g280 = ( break62_g280.x + ( break62_g280.x * break62_g280.y ) );
-				float ifLocalVar17_g280 = 0;
-				if( temp_output_10_0_g280 <= 0.0 )
-				ifLocalVar17_g280 = temp_output_64_0_g280;
+				ifLocalVar35_g317 = ( temp_output_31_0_g317 * -1.0 );
+				float lerpResult41_g317 = lerp( temp_output_31_0_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float lerpResult42_g317 = lerp( lerpResult41_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float temp_output_11_0_g317 = _ST_WindBranchTwitch.x;
+				float fTime61_g317 = temp_output_3_0_g317;
+				float fOffset61_g317 = temp_output_4_0_g317;
+				float fWeight61_g317 = temp_output_5_0_g317;
+				int bWhip61_g317 = temp_output_7_0_g317;
+				float4 localSimpleOscillationInputs61_g317 = SimpleOscillationInputs( fTime61_g317 , fOffset61_g317 , fWeight61_g317 , bWhip61_g317 );
+				float4 vData7_g318 = localSimpleOscillationInputs61_g317;
+				float4 localTriangleWave7_g318 = TriangleWave( vData7_g318 );
+				float4 vData6_g318 = localTriangleWave7_g318;
+				float4 localCubicSmooth6_g318 = CubicSmooth( vData6_g318 );
+				float4 temp_output_66_0_g317 = ( ( localCubicSmooth6_g318 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g317 = temp_output_66_0_g317;
+				float temp_output_64_0_g317 = ( break62_g317.x + ( break62_g317.x * break62_g317.y ) );
+				float ifLocalVar17_g317 = 0;
+				if( temp_output_10_0_g317 <= 0.0 )
+				ifLocalVar17_g317 = temp_output_64_0_g317;
 				else
-				ifLocalVar17_g280 = ( ( lerpResult42_g280 * temp_output_11_0_g280 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g280.x * ( 1.0 - temp_output_11_0_g280 ) ) );
-				float ifLocalVar52_g280 = 0;
-				if( temp_output_7_0_g280 <= 0.0 )
-				ifLocalVar52_g280 = ifLocalVar17_g280;
+				ifLocalVar17_g317 = ( ( lerpResult42_g317 * temp_output_11_0_g317 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g317.x * ( 1.0 - temp_output_11_0_g317 ) ) );
+				float ifLocalVar52_g317 = 0;
+				if( temp_output_7_0_g317 <= 0.0 )
+				ifLocalVar52_g317 = ifLocalVar17_g317;
 				else
-				ifLocalVar52_g280 = ( ifLocalVar17_g280 * ( 1.0 + ( break30_g280.w * (int)_ST_WindBranchWhip.x ) ) );
-				float3 temp_output_45_0_g277 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g279 * temp_output_4_0_g278 ) * ifLocalVar52_g280 * _ST_WindBranch.y ) );
-				float temp_output_4_0_g284 = break34_g277.y;
-				float3 temp_cast_12 = (temp_output_4_0_g284).xxx;
-				float3 fValue10_g287 = temp_cast_12;
-				float3 localUnpackNormalFromFloat10_g287 = UnpackNormalFromFloat( fValue10_g287 );
-				float temp_output_3_0_g284 = break34_g277.x;
-				int temp_output_7_0_g288 = 1;
-				int temp_output_10_0_g288 = 1;
-				float3 break17_g284 = localGetInstancePos40_g277;
-				float temp_output_16_0_g284 = ( _GlobalTimers[_GlobalTimerId].y + break17_g284.x + break17_g284.y );
-				float temp_output_3_0_g288 = temp_output_16_0_g284;
-				float fTime28_g288 = temp_output_3_0_g288;
-				float temp_output_4_0_g288 = temp_output_4_0_g284;
-				float fOffset28_g288 = temp_output_4_0_g288;
-				float fTwitchFreqScale28_g288 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g288 = temp_output_3_0_g284;
-				float fWeight28_g288 = temp_output_5_0_g288;
-				int bWhip28_g288 = temp_output_7_0_g288;
-				float4 localComplexOscillationInputs28_g288 = ComplexOscillationInputs( fTime28_g288 , fOffset28_g288 , fTwitchFreqScale28_g288 , fWeight28_g288 , bWhip28_g288 );
-				float4 vData7_g290 = localComplexOscillationInputs28_g288;
-				float4 localTriangleWave7_g290 = TriangleWave( vData7_g290 );
-				float4 vData6_g290 = localTriangleWave7_g290;
-				float4 localCubicSmooth6_g290 = CubicSmooth( vData6_g290 );
-				float4 temp_output_29_0_g288 = ( ( localCubicSmooth6_g290 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g288 = temp_output_29_0_g288;
-				float temp_output_31_0_g288 = ( break30_g288.y * break30_g288.z );
-				float ifLocalVar36_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar36_g288 = 1.0;
+				ifLocalVar52_g317 = ( ifLocalVar17_g317 * ( 1.0 + ( break30_g317.w * (int)_ST_WindBranchWhip.x ) ) );
+				float3 temp_output_45_0_g314 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g316 * temp_output_4_0_g315 ) * ifLocalVar52_g317 * _ST_WindBranch.y ) );
+				float temp_output_4_0_g321 = break34_g314.y;
+				float3 temp_cast_12 = (temp_output_4_0_g321).xxx;
+				float3 fValue10_g324 = temp_cast_12;
+				float3 localUnpackNormalFromFloat10_g324 = UnpackNormalFromFloat( fValue10_g324 );
+				float temp_output_3_0_g321 = break34_g314.x;
+				int temp_output_7_0_g325 = 1;
+				int temp_output_10_0_g325 = 1;
+				float3 break17_g321 = localGetInstancePos40_g314;
+				float temp_output_16_0_g321 = ( _GlobalTimers[_GlobalTimerId].y + break17_g321.x + break17_g321.y );
+				float temp_output_3_0_g325 = temp_output_16_0_g321;
+				float fTime28_g325 = temp_output_3_0_g325;
+				float temp_output_4_0_g325 = temp_output_4_0_g321;
+				float fOffset28_g325 = temp_output_4_0_g325;
+				float fTwitchFreqScale28_g325 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g325 = temp_output_3_0_g321;
+				float fWeight28_g325 = temp_output_5_0_g325;
+				int bWhip28_g325 = temp_output_7_0_g325;
+				float4 localComplexOscillationInputs28_g325 = ComplexOscillationInputs( fTime28_g325 , fOffset28_g325 , fTwitchFreqScale28_g325 , fWeight28_g325 , bWhip28_g325 );
+				float4 vData7_g327 = localComplexOscillationInputs28_g325;
+				float4 localTriangleWave7_g327 = TriangleWave( vData7_g327 );
+				float4 vData6_g327 = localTriangleWave7_g327;
+				float4 localCubicSmooth6_g327 = CubicSmooth( vData6_g327 );
+				float4 temp_output_29_0_g325 = ( ( localCubicSmooth6_g327 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g325 = temp_output_29_0_g325;
+				float temp_output_31_0_g325 = ( break30_g325.y * break30_g325.z );
+				float ifLocalVar36_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar36_g325 = 1.0;
 				else
-				ifLocalVar36_g288 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar35_g288 = temp_output_31_0_g288;
+				ifLocalVar36_g325 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar35_g325 = temp_output_31_0_g325;
 				else
-				ifLocalVar35_g288 = ( temp_output_31_0_g288 * -1.0 );
-				float lerpResult41_g288 = lerp( temp_output_31_0_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float lerpResult42_g288 = lerp( lerpResult41_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float temp_output_11_0_g288 = _ST_WindBranchTwitch.x;
-				float fTime61_g288 = temp_output_3_0_g288;
-				float fOffset61_g288 = temp_output_4_0_g288;
-				float fWeight61_g288 = temp_output_5_0_g288;
-				int bWhip61_g288 = temp_output_7_0_g288;
-				float4 localSimpleOscillationInputs61_g288 = SimpleOscillationInputs( fTime61_g288 , fOffset61_g288 , fWeight61_g288 , bWhip61_g288 );
-				float4 vData7_g289 = localSimpleOscillationInputs61_g288;
-				float4 localTriangleWave7_g289 = TriangleWave( vData7_g289 );
-				float4 vData6_g289 = localTriangleWave7_g289;
-				float4 localCubicSmooth6_g289 = CubicSmooth( vData6_g289 );
-				float4 temp_output_66_0_g288 = ( ( localCubicSmooth6_g289 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g288 = temp_output_66_0_g288;
-				float temp_output_64_0_g288 = ( break62_g288.x + ( break62_g288.x * break62_g288.y ) );
-				float ifLocalVar17_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar17_g288 = temp_output_64_0_g288;
+				ifLocalVar35_g325 = ( temp_output_31_0_g325 * -1.0 );
+				float lerpResult41_g325 = lerp( temp_output_31_0_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float lerpResult42_g325 = lerp( lerpResult41_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float temp_output_11_0_g325 = _ST_WindBranchTwitch.x;
+				float fTime61_g325 = temp_output_3_0_g325;
+				float fOffset61_g325 = temp_output_4_0_g325;
+				float fWeight61_g325 = temp_output_5_0_g325;
+				int bWhip61_g325 = temp_output_7_0_g325;
+				float4 localSimpleOscillationInputs61_g325 = SimpleOscillationInputs( fTime61_g325 , fOffset61_g325 , fWeight61_g325 , bWhip61_g325 );
+				float4 vData7_g326 = localSimpleOscillationInputs61_g325;
+				float4 localTriangleWave7_g326 = TriangleWave( vData7_g326 );
+				float4 vData6_g326 = localTriangleWave7_g326;
+				float4 localCubicSmooth6_g326 = CubicSmooth( vData6_g326 );
+				float4 temp_output_66_0_g325 = ( ( localCubicSmooth6_g326 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g325 = temp_output_66_0_g325;
+				float temp_output_64_0_g325 = ( break62_g325.x + ( break62_g325.x * break62_g325.y ) );
+				float ifLocalVar17_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar17_g325 = temp_output_64_0_g325;
 				else
-				ifLocalVar17_g288 = ( ( lerpResult42_g288 * temp_output_11_0_g288 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g288.x * ( 1.0 - temp_output_11_0_g288 ) ) );
-				float temp_output_11_0_g284 = _ST_WindBranchWhip.x;
-				float ifLocalVar52_g288 = 0;
-				if( temp_output_7_0_g288 <= 0.0 )
-				ifLocalVar52_g288 = ifLocalVar17_g288;
+				ifLocalVar17_g325 = ( ( lerpResult42_g325 * temp_output_11_0_g325 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g325.x * ( 1.0 - temp_output_11_0_g325 ) ) );
+				float temp_output_11_0_g321 = _ST_WindBranchWhip.x;
+				float ifLocalVar52_g325 = 0;
+				if( temp_output_7_0_g325 <= 0.0 )
+				ifLocalVar52_g325 = ifLocalVar17_g325;
 				else
-				ifLocalVar52_g288 = ( ifLocalVar17_g288 * ( 1.0 + ( break30_g288.w * (int)temp_output_11_0_g284 ) ) );
-				float3 temp_output_23_0_g284 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g287 * temp_output_3_0_g284 ) * ifLocalVar52_g288 * _ST_WindBranch.y ) );
-				float temp_output_3_0_g285 = temp_output_4_0_g284;
-				float temp_output_6_0_g285 = _ST_WindTurbulences.y;
-				float4 appendResult9_g285 = (float4(( ( temp_output_16_0_g284 * 0.1 ) + temp_output_3_0_g285 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g285 * 0.1 ) + temp_output_3_0_g285 ) , 0.0 , 0.0));
-				float4 vData7_g286 = appendResult9_g285;
-				float4 localTriangleWave7_g286 = TriangleWave( vData7_g286 );
-				float4 vData6_g286 = localTriangleWave7_g286;
-				float4 localCubicSmooth6_g286 = CubicSmooth( vData6_g286 );
-				float4 break16_g285 = ( ( localCubicSmooth6_g286 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar59_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar59_g288 = temp_output_66_0_g288;
+				ifLocalVar52_g325 = ( ifLocalVar17_g325 * ( 1.0 + ( break30_g325.w * (int)temp_output_11_0_g321 ) ) );
+				float3 temp_output_23_0_g321 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g324 * temp_output_3_0_g321 ) * ifLocalVar52_g325 * _ST_WindBranch.y ) );
+				float temp_output_3_0_g322 = temp_output_4_0_g321;
+				float temp_output_6_0_g322 = _ST_WindTurbulences.y;
+				float4 appendResult9_g322 = (float4(( ( temp_output_16_0_g321 * 0.1 ) + temp_output_3_0_g322 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g322 * 0.1 ) + temp_output_3_0_g322 ) , 0.0 , 0.0));
+				float4 vData7_g323 = appendResult9_g322;
+				float4 localTriangleWave7_g323 = TriangleWave( vData7_g323 );
+				float4 vData6_g323 = localTriangleWave7_g323;
+				float4 localCubicSmooth6_g323 = CubicSmooth( vData6_g323 );
+				float4 break16_g322 = ( ( localCubicSmooth6_g323 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar59_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar59_g325 = temp_output_66_0_g325;
 				else
-				ifLocalVar59_g288 = temp_output_29_0_g288;
-				float3 ifLocalVar29_g277 = 0;
-				if( temp_output_24_0_g277 == 5 )
-				ifLocalVar29_g277 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g284 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g285.x * break16_g285.y * break16_g285.x * break16_g285.y * temp_output_6_0_g285 ) ) + ( ifLocalVar59_g288.w * _ST_WindVector.w * temp_output_11_0_g284 ) ) * temp_output_3_0_g284 ) + temp_output_23_0_g284 );
+				ifLocalVar59_g325 = temp_output_29_0_g325;
+				float3 ifLocalVar29_g314 = 0;
+				if( temp_output_24_0_g314 == 5 )
+				ifLocalVar29_g314 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g321 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g322.x * break16_g322.y * break16_g322.x * break16_g322.y * temp_output_6_0_g322 ) ) + ( ifLocalVar59_g325.w * _ST_WindVector.w * temp_output_11_0_g321 ) ) * temp_output_3_0_g321 ) + temp_output_23_0_g321 );
 				else
-				ifLocalVar29_g277 = temp_output_45_0_g277;
-				float3 ifLocalVar26_g277 = 0;
-				if( temp_output_24_0_g277 >= 3 )
-				ifLocalVar26_g277 = ifLocalVar29_g277;
+				ifLocalVar29_g314 = temp_output_45_0_g314;
+				float3 ifLocalVar26_g314 = 0;
+				if( temp_output_24_0_g314 >= 3 )
+				ifLocalVar26_g314 = ifLocalVar29_g314;
 				else
-				ifLocalVar26_g277 = temp_output_3_0_g277;
+				ifLocalVar26_g314 = temp_output_3_0_g314;
 				#ifdef GEOM_TYPE_MESH
-				float3 staticSwitch9_g277 = ifLocalVar26_g277;
+				float3 staticSwitch9_g314 = ifLocalVar26_g314;
 				#else
-				float3 staticSwitch9_g277 = temp_output_3_0_g277;
+				float3 staticSwitch9_g314 = temp_output_3_0_g314;
 				#endif
-				float3 temp_output_111_0_g187 = staticSwitch9_g277;
-				float3 vPos140_g187 = temp_output_111_0_g187;
-				float3 vRotatedWindVector140_g187 = rotatedWindVector291;
-				float3 vPos145_g187 = temp_output_111_0_g187;
-				float4 windGlobal145_g187 = _ST_WindGlobal;
-				float localComputeWindAdjust145_g187 = ComputeWindAdjust( vPos145_g187 , windGlobal145_g187 );
-				float3 break122_g187 = localGetInstancePos40_g277;
-				float temp_output_125_0_g187 = _GlobalTimers[_GlobalTimerId].x;
-				float4 appendResult126_g187 = (float4(( break122_g187.x + temp_output_125_0_g187 ) , ( break122_g187.y + ( temp_output_125_0_g187 * 0.8 ) ) , 0.0 , 0.0));
-				float4 vData7_g188 = appendResult126_g187;
-				float4 localTriangleWave7_g188 = TriangleWave( vData7_g188 );
-				float4 vData6_g188 = localTriangleWave7_g188;
-				float4 localCubicSmooth6_g188 = CubicSmooth( vData6_g188 );
-				float4 break117_g187 = ( ( localCubicSmooth6_g188 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float temp_output_90_0_g187 = ( localComputeWindAdjust145_g187 * ( ( _ST_WindGlobal.y * ( break117_g187.x + ( break117_g187.y * break117_g187.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
-				float ifLocalVar142_g187 = 0;
+				float3 temp_output_111_0_g844 = staticSwitch9_g314;
+				float3 vPos140_g844 = temp_output_111_0_g844;
+				float3 vRotatedWindVector140_g844 = rotatedWindVector291;
+				float3 vPos145_g844 = temp_output_111_0_g844;
+				float4 windGlobal145_g844 = _ST_WindGlobal;
+				float localComputeWindAdjust145_g844 = ComputeWindAdjust( vPos145_g844 , windGlobal145_g844 );
+				float3 break122_g844 = localGetInstancePos40_g314;
+				float temp_output_125_0_g844 = _GlobalTimers[_GlobalTimerId].x;
+				float4 appendResult126_g844 = (float4(( break122_g844.x + temp_output_125_0_g844 ) , ( break122_g844.y + ( temp_output_125_0_g844 * 0.8 ) ) , 0.0 , 0.0));
+				float4 vData7_g845 = appendResult126_g844;
+				float4 localTriangleWave7_g845 = TriangleWave( vData7_g845 );
+				float4 vData6_g845 = localTriangleWave7_g845;
+				float4 localCubicSmooth6_g845 = CubicSmooth( vData6_g845 );
+				float4 break117_g844 = ( ( localCubicSmooth6_g845 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float temp_output_90_0_g844 = ( localComputeWindAdjust145_g844 * ( ( _ST_WindGlobal.y * ( break117_g844.x + ( break117_g844.y * break117_g844.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
+				float ifLocalVar142_g844 = 0;
 				if( _ST_WindGlobal.w == 0.0 )
-				ifLocalVar142_g187 = 0.0;
+				ifLocalVar142_g844 = 0.0;
 				else
-				ifLocalVar142_g187 = temp_output_90_0_g187;
-				float fMoveAmount140_g187 = ifLocalVar142_g187;
-				float3 localSwizzleCombineMoveAmount140_g187 = SwizzleCombineMoveAmount( vPos140_g187 , vRotatedWindVector140_g187 , fMoveAmount140_g187 );
-				float3 ifLocalVar132_g187 = 0;
+				ifLocalVar142_g844 = temp_output_90_0_g844;
+				float fMoveAmount140_g844 = ifLocalVar142_g844;
+				float3 localSwizzleCombineMoveAmount140_g844 = SwizzleCombineMoveAmount( vPos140_g844 , vRotatedWindVector140_g844 , fMoveAmount140_g844 );
+				float3 ifLocalVar132_g844 = 0;
 				if( _WindQuality <= 0 )
-				ifLocalVar132_g187 = temp_output_111_0_g187;
+				ifLocalVar132_g844 = temp_output_111_0_g844;
 				else
-				ifLocalVar132_g187 = localSwizzleCombineMoveAmount140_g187;
+				ifLocalVar132_g844 = localSwizzleCombineMoveAmount140_g844;
 				
-				float3 temp_output_9_0_g189 = inputMesh.normalOS;
-				float3 temp_output_7_0_g264 = temp_output_9_0_g189;
-				float3 ifLocalVar30_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar30_g264 = mul( temp_output_86_0_g269, temp_output_7_0_g264 );
+				float3 temp_output_9_0_g300 = inputMesh.normalOS;
+				float3 temp_output_7_0_g301 = temp_output_9_0_g300;
+				float3 ifLocalVar30_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar30_g301 = mul( temp_output_86_0_g306, temp_output_7_0_g301 );
 				else
-				ifLocalVar30_g264 = temp_output_7_0_g264;
-				float3 ifLocalVar10_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar10_g189 = temp_output_9_0_g189;
+				ifLocalVar30_g301 = temp_output_7_0_g301;
+				float3 ifLocalVar10_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar10_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar10_g189 = ifLocalVar30_g264;
-				float3 ifLocalVar14_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar14_g189 = temp_output_9_0_g189;
+				ifLocalVar10_g300 = ifLocalVar30_g301;
+				float3 ifLocalVar14_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar14_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar14_g189 = ifLocalVar10_g189;
+				ifLocalVar14_g300 = ifLocalVar10_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch348 = ifLocalVar14_g189;
+				float3 staticSwitch348 = ifLocalVar14_g300;
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#else
@@ -1052,7 +1191,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 defaultVertexValue = float3( 0, 0, 0 );
 				#endif
-				float3 vertexValue = ifLocalVar132_g187;
+				float3 vertexValue = ifLocalVar132_g844;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				inputMesh.positionOS.xyz = vertexValue;
@@ -1068,16 +1207,115 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 tangentWS = float4(TransformObjectToWorldDir(inputMesh.tangentOS.xyz), inputMesh.tangentOS.w);
 
 				outputPackedVaryingsMeshToPS.positionCS = TransformWorldToHClip(positionRWS);
-				outputPackedVaryingsMeshToPS.interp00.xyz =	positionRWS;
-				outputPackedVaryingsMeshToPS.interp01.xyz =	normalWS;
+				outputPackedVaryingsMeshToPS.interp00.xyz = positionRWS;
+				outputPackedVaryingsMeshToPS.interp01.xyz = normalWS;
 				outputPackedVaryingsMeshToPS.interp02.xyzw = tangentWS;
 				outputPackedVaryingsMeshToPS.interp03.xyzw = inputMesh.uv1;
 				outputPackedVaryingsMeshToPS.interp04.xyzw = inputMesh.uv2;
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 				return outputPackedVaryingsMeshToPS;
 			}
 
-			void Frag(  PackedVaryingsMeshToPS packedInput,
+			#if defined(TESSELLATION_ON)
+			struct VertexControl
+			{
+				float3 positionOS : INTERNALTESSPOS;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
+				float4 uv1 : TEXCOORD1;
+				float4 uv2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl Vert ( AttributesMesh v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.positionOS = v.positionOS;
+				o.normalOS = v.normalOS;
+				o.tangentOS = v.tangentOS;
+				o.uv1 = v.uv1;
+				o.uv2 = v.uv2;
+				o.ase_texcoord = v.ase_texcoord;
+				o.ase_color = v.ase_color;
+				o.ase_texcoord3 = v.ase_texcoord3;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				float3 cameraPos = 0;
+				#else
+				float3 cameraPos = _WorldSpaceCameraPos;
+				#endif
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), cameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, GetObjectToWorldMatrix(), cameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), cameraPos, _ScreenParams, _FrustumPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			PackedVaryingsMeshToPS DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				AttributesMesh o = (AttributesMesh) 0;
+				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
+				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
+				o.tangentOS = patch[0].tangentOS * bary.x + patch[1].tangentOS * bary.y + patch[2].tangentOS * bary.z;
+				o.uv1 = patch[0].uv1 * bary.x + patch[1].uv1 * bary.y + patch[2].uv1 * bary.z;
+				o.uv2 = patch[0].uv2 * bary.x + patch[1].uv2 * bary.y + patch[2].uv2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
+				o.ase_texcoord3 = patch[0].ase_texcoord3 * bary.x + patch[1].ase_texcoord3 * bary.y + patch[2].ase_texcoord3 * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.positionOS.xyz - patch[i].normalOS * (dot(o.positionOS.xyz, patch[i].normalOS) - dot(patch[i].positionOS.xyz, patch[i].normalOS));
+				float phongStrength = _TessPhongStrength;
+				o.positionOS.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.positionOS.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			PackedVaryingsMeshToPS Vert ( AttributesMesh v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+
+			void Frag( PackedVaryingsMeshToPS packedInput,
 						OUTPUT_GBUFFER(outGBuffer)
 						#ifdef _DEPTHOFFSET_ON
 						, out float outputDepth : SV_Depth
@@ -1110,7 +1348,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				half isFrontFace = input.isFrontFace;
 
 				PositionInputs posInput = GetPositionInput(input.positionSS.xy, _ScreenSize.zw, input.positionSS.z, input.positionSS.w, input.positionRWS);
-				float3 normalizedWorldViewDir = GetWorldSpaceNormalizeViewDir(input.positionRWS);
+				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 				SurfaceData surfaceData;
 				BuiltinData builtinData;
 
@@ -1169,8 +1407,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 appendResult155 = (float4(break158.r , break158.g , break158.b , staticSwitch143.r));
 				
 				float3 _ZNormal = float3(0,0,1);
-				float3 tex2DNode166 = UnpackNormalmapRGorAG( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
-				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalmapRGorAG( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
+				float3 tex2DNode166 = UnpackNormalScale( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
+				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalScale( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
 				#ifdef GEOM_TYPE_BRANCH_DETAIL
 				float3 staticSwitch183 = lerpResult184;
 				#else
@@ -1210,13 +1448,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceDescription.AlphaClipThresholdShadow = 0.5;
 				#endif
 
-				#ifdef _ALPHATEST_PREPASS_ON
 				surfaceDescription.AlphaClipThresholdDepthPrepass = 0.5;
-				#endif
-
-				#ifdef _ALPHATEST_POSTPASS_ON
 				surfaceDescription.AlphaClipThresholdDepthPostpass = 0.5;
-				#endif
 
 				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
 				surfaceDescription.SpecularAAScreenSpaceVariance = 0;
@@ -1271,7 +1504,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceDescription.DepthOffset = 0;
 				#endif
 
-				GetSurfaceAndBuiltinData( surfaceDescription, input, normalizedWorldViewDir, posInput, surfaceData, builtinData );
+				GetSurfaceAndBuiltinData( surfaceDescription, input, V, posInput, surfaceData, builtinData );
 				ENCODE_INTO_GBUFFER( surfaceData, builtinData, posInput.positionSS, outGBuffer );
 				#ifdef _DEPTHOFFSET_ON
 				outputDepth = posInput.deviceDepth;
@@ -1292,24 +1525,22 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			HLSLPROGRAM
 
-			#define _ALPHATEST_ON 1
+			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
-			#define ASE_SRP_VERSION 70108
+			#define HAVE_MESH_MODIFICATION
+			#define ASE_SRP_VERSION 999999
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
 			#pragma shader_feature_local _DOUBLESIDED_ON
 			#pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
+			#pragma shader_feature_local _ENABLE_FOG_ON_TRANSPARENT
+			#pragma shader_feature_local _ALPHATEST_ON
+
+			#define SHADERPASS SHADERPASS_LIGHT_TRANSPORT
 
 			#pragma vertex Vert
 			#pragma fragment Frag
-
-			#if defined(_DOTS_INSTANCING)
-			#pragma instancing_options nolightprobe
-			#pragma instancing_options nolodfade
-			#else
-			#pragma instancing_options renderinglayer
-			#endif
 
 			//#define UNITY_MATERIAL_LIT
 
@@ -1319,20 +1550,13 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
 
-			#define SHADERPASS SHADERPASS_LIGHT_TRANSPORT
-
-			#define ATTRIBUTES_NEED_NORMAL
-			#define ATTRIBUTES_NEED_TANGENT
-			#define ATTRIBUTES_NEED_TEXCOORD0
-			#define ATTRIBUTES_NEED_TEXCOORD1
-			#define ATTRIBUTES_NEED_TEXCOORD2
-			#define ATTRIBUTES_NEED_COLOR
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+			#ifdef DEBUG_DISPLAY
+				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
+			#endif
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
@@ -1341,11 +1565,14 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_NORMAL
+			#define ASE_NEEDS_FRAG_COLOR
 			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
 			#pragma shader_feature_local EFFECT_HUE_VARIATION
 			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
 			#pragma shader_feature_local EFFECT_BUMP
-
 
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
@@ -1360,7 +1587,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 uv0 : TEXCOORD0;
 				float4 uv1 : TEXCOORD1;
 				float4 uv2 : TEXCOORD2;
-				float4 color : COLOR;
+				float4 ase_color : COLOR;
 				float4 ase_texcoord3 : TEXCOORD3;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -1380,31 +1607,35 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			};
 
 			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindBranchAdherences;
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindLeaf1Twitch;
 			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindBranchWhip;
-			int _Cull;
-			float4 _ST_WindFrondRipple;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float4 _Color;
-			float4 _ST_WindVector;
 			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindVector;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindGlobal;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _Color;
 			float _Cutoff;
+			int _Cull;
+			int _WindQuality;
 			float _Metallic;
+			int _GlobalTimerId;
 			float _Smoothness;
 			float4 _EmissionColor;
+			float _AlphaCutoff;
 			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
 			float _StencilRef;
 			float _StencilWriteMask;
 			float _StencilRefDepth;
@@ -1425,19 +1656,28 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float _AlphaSrcBlend;
 			float _AlphaDstBlend;
 			float _ZWrite;
+			float _TransparentZWrite;
 			float _CullMode;
 			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
 			float _CullModeForward;
 			float _TransparentCullMode;
 			float _ZTestDepthEqualForOpaque;
 			float _ZTestTransparent;
 			float _TransparentBackfaceEnable;
 			float _AlphaCutoffEnable;
-			float _AlphaCutoff;
 			float _UseShadowThreshold;
 			float _DoubleSidedEnable;
 			float _DoubleSidedNormalMode;
 			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
 			CBUFFER_END
 			float4 _GlobalTimers[100];
 			sampler2D _MainTex;
@@ -1445,7 +1685,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _BumpMap;
 
 
-			void CalculateWindInputs( float windQuality , out float3 rotatedWindVector , out float3 rotatedBranchAnchor , float4 windVector , float4 windBranchAnchor )
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
 			{
 				if (windQuality <= 0) // WIND_QUALITY_NONE
 				{
@@ -1464,7 +1704,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float3 OffsetLeavesVertex( float3 VertexPos , float ColorAlpha , float3 texcoord1 , float2 texcoord3 )
+			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
 				VertexPos -= texcoord1.xyz;
@@ -1499,26 +1739,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				return abs((frac(vData + 0.5) * 2.0) - 1.0);
 			}
 			
-			float ComputeWindAdjust( float3 vPos , float4 windGlobal )
-			{
-				    // compute how much the height contributes
-				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
-				    if (fAdjust != 0.0) {
-				        float s = sign(fAdjust);
-				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
-				    }
-				    return fAdjust;
-			}
-			
-			float3 SwizzleCombineMoveAmount( float3 vPos , float3 vRotatedWindVector , float fMoveAmount )
-			{
-				    float fLength = length(vPos);
-				 
-				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
-				    vPos.xyz = normalize(vPos.xyz) * fLength;
-				    return vPos;
-			}
-			
 			float3 UnpackNormalFromFloat( float3 fValue )
 			{
 				     float3 vDecodeKey = float3(16.0, 1.0, 0.0625);
@@ -1537,7 +1757,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 ComplexOscillationInputs( float fTime , float fOffset , float fTwitchFreqScale , float fWeight , int bWhip )
+			float4 ComplexOscillationInputs( float fTime, float fOffset, float fTwitchFreqScale, float fWeight, int bWhip )
 			{
 				if (bWhip > 0) {
 				    return float4(fTime + fOffset, fTime * fTwitchFreqScale + fOffset, fTwitchFreqScale * 0.5 * (fTime + fOffset), fTime + fOffset + (1.0 - fWeight));
@@ -1546,7 +1766,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 SimpleOscillationInputs( float fTime , float fOffset , float fWeight , int bWhip )
+			float4 SimpleOscillationInputs( float fTime, float fOffset, float fWeight, int bWhip )
 			{
 				if (bWhip)
 				  return float4(fTime + fOffset, fTime * 0.689 + fOffset, 0.0, fTime + fOffset + (1.0 - fWeight));
@@ -1559,7 +1779,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				 return GetAbsolutePositionWS(float3(UNITY_MATRIX_M[0].w, UNITY_MATRIX_M[1].w, UNITY_MATRIX_M[2].w));
 			}
 			
-			float3x3 RotationMatrix( float3 vAxis , float fAngle )
+			float ComputeWindAdjust( float3 vPos, float4 windGlobal )
+			{
+				    // compute how much the height contributes
+				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+				    if (fAdjust != 0.0) {
+				        float s = sign(fAdjust);
+				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
+				    }
+				    return fAdjust;
+			}
+			
+			float3 SwizzleCombineMoveAmount( float3 vPos, float3 vRotatedWindVector, float fMoveAmount )
+			{
+				    float fLength = length(vPos);
+				 
+				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+				    vPos.xyz = normalize(vPos.xyz) * fLength;
+				    return vPos;
+			}
+			
+			float3x3 RotationMatrix( float3 vAxis, float fAngle )
 			{
 				    // compute sin/cos of fAngle
 				    float2 vSinCos;
@@ -1581,64 +1821,43 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			}
 			
 
-			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, out SurfaceData surfaceData, out float3 bentNormalWS)
+			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
-				surfaceData.baseColor =                 surfaceDescription.Albedo;
-				surfaceData.perceptualSmoothness =      surfaceDescription.Smoothness;
+
+				surfaceData.specularOcclusion = 1.0;
+
+				// surface data
+				surfaceData.baseColor =					surfaceDescription.Albedo;
+				surfaceData.perceptualSmoothness =		surfaceDescription.Smoothness;
+				surfaceData.ambientOcclusion =			surfaceDescription.Occlusion;
+				surfaceData.metallic =					surfaceDescription.Metallic;
+				surfaceData.coatMask =					surfaceDescription.CoatMask;
+
 				#ifdef _SPECULAR_OCCLUSION_CUSTOM
-				surfaceData.specularOcclusion = surfaceDescription.SpecularOcclusion;
+				surfaceData.specularOcclusion =			surfaceDescription.SpecularOcclusion;
 				#endif
-				surfaceData.ambientOcclusion = surfaceDescription.Occlusion;
-				surfaceData.metallic = surfaceDescription.Metallic;
-				surfaceData.coatMask = surfaceDescription.CoatMask;
-
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.iridescenceMask = surfaceDescription.IridescenceMask;
-				surfaceData.iridescenceThickness = surfaceDescription.IridescenceThickness;
-				#endif
-				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
 				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				surfaceData.subsurfaceMask =			surfaceDescription.SubsurfaceMask;
 				#endif
-				#ifdef _MATERIAL_FEATURE_TRANSMISSION
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#if defined(_HAS_REFRACTION) || defined(_MATERIAL_FEATURE_TRANSMISSION)
+				surfaceData.thickness =					surfaceDescription.Thickness;
 				#endif
-				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
-				#endif
-
-				#ifdef ASE_LIT_CLEAR_COAT
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
-				#endif
-
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#if defined( _MATERIAL_FEATURE_SUBSURFACE_SCATTERING ) || defined( _MATERIAL_FEATURE_TRANSMISSION )
+				surfaceData.diffusionProfileHash =		asuint(surfaceDescription.DiffusionProfile);
 				#endif
 				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
-				surfaceData.specularColor = surfaceDescription.Specular;
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
+				surfaceData.specularColor =				surfaceDescription.Specular;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.anisotropy =				surfaceDescription.Anisotropy;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.iridescenceMask =			surfaceDescription.IridescenceMask;
+				surfaceData.iridescenceThickness =		surfaceDescription.IridescenceThickness;
 				#endif
 
-				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
-				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
-				#endif
-				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
-				normalTS = surfaceDescription.Normal;
-				#ifdef _DOUBLESIDED_ON
-				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
-				#else
-				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
-				#endif
-
-				GetNormalWS(fragInputs, normalTS, surfaceData.normalWS,doubleSidedConstants);
-				bentNormalWS = surfaceData.normalWS;
-				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
-
-				#ifdef ASE_BENT_NORMAL
-				GetNormalWS( fragInputs, surfaceDescription.BentNormal, bentNormalWS, doubleSidedConstants );
-				#endif
-
+				// refraction
 				#ifdef _HAS_REFRACTION
 				if( _EnableSSRefraction )
 				{
@@ -1664,42 +1883,90 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceData.transmittanceMask = 0.0;
 				#endif
 
-				#if defined(_HAS_REFRACTION) || defined(_MATERIAL_FEATURE_TRANSMISSION)
-				surfaceData.thickness = surfaceDescription.Thickness;
-				#endif
 
+				// material features
+				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
 				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.subsurfaceMask = surfaceDescription.SubsurfaceMask;
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				#endif
+				#ifdef _MATERIAL_FEATURE_TRANSMISSION
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
+				#endif
+				#ifdef ASE_LIT_CLEAR_COAT
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#endif
+				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
 				#endif
 
-				#if defined( _MATERIAL_FEATURE_SUBSURFACE_SCATTERING ) || defined( _MATERIAL_FEATURE_TRANSMISSION )
-				surfaceData.diffusionProfileHash = asuint(surfaceDescription.DiffusionProfile);
+				// others
+				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
+				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
 				#endif
-				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );    // The tangent is not normalize in tangentToWorld for mikkt. TODO: Check if it expected that we normalize with Morten. Tag: SURFACE_GRADIENT
+				#ifdef _DOUBLESIDED_ON
+				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
+				#else
+				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
+				#endif
+
+				// normals
+				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
+				normalTS = surfaceDescription.Normal;
+				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
+
+				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
+
+				bentNormalWS = surfaceData.normalWS;
+				#ifdef ASE_BENT_NORMAL
+				GetNormalWS( fragInputs, surfaceDescription.BentNormal, bentNormalWS, doubleSidedConstants );
+				#endif
+
+				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );
 				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.anisotropy = surfaceDescription.Anisotropy;
 				surfaceData.tangentWS = TransformTangentToWorld( surfaceDescription.Tangent, fragInputs.tangentToWorld );
 				#endif
 				surfaceData.tangentWS = Orthonormalize( surfaceData.tangentWS, surfaceData.normalWS );
+
+				// decals
+				#if HAVE_DECALS
+				if( _EnableDecals )
+				{
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
+					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+				}
+				#endif
+
 				#if defined(_SPECULAR_OCCLUSION_CUSTOM)
 				#elif defined(_SPECULAR_OCCLUSION_FROM_AO_BENT_NORMAL)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromBentAO( V, bentNormalWS, surfaceData.normalWS, surfaceData.ambientOcclusion, PerceptualSmoothnessToPerceptualRoughness( surfaceData.perceptualSmoothness ) );
 				#elif defined(_AMBIENT_OCCLUSION) && defined(_SPECULAR_OCCLUSION_FROM_AO)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion( ClampNdotV( dot( surfaceData.normalWS, V ) ), surfaceData.ambientOcclusion, PerceptualSmoothnessToRoughness( surfaceData.perceptualSmoothness ) );
-				#else
-				surfaceData.specularOcclusion = 1.0;
 				#endif
+
 				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
 				surfaceData.perceptualSmoothness = GeometricNormalFiltering( surfaceData.perceptualSmoothness, fragInputs.tangentToWorld[ 2 ], surfaceDescription.SpecularAAScreenSpaceVariance, surfaceDescription.SpecularAAThreshold );
 				#endif
 
+				// debug
+				#if defined(DEBUG_DISPLAY)
+				if (_DebugMipMapMode != DEBUGMIPMAPMODE_NONE)
+				{
+					surfaceData.metallic = 0;
+				}
+				ApplyDebugToSurfaceData(fragInputs.tangentToWorld, surfaceData);
+				#endif
 			}
 
-			void GetSurfaceAndBuiltinData(GlobalSurfaceDescription surfaceDescription,FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
+			void GetSurfaceAndBuiltinData(GlobalSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
 			{
 				#ifdef LOD_FADE_CROSSFADE
-				uint3 fadeMaskSeed = asuint( (int3)( V * _ScreenSize.xyx ) ); // Quantize V to _ScreenSize values
-				LODDitheringTransition( fadeMaskSeed, unity_LODFade.x );
+				LODDitheringTransition(ComputeFadeMaskSeed(V, posInput.positionSS), unity_LODFade.x);
 				#endif
 
 				#ifdef _DOUBLESIDED_ON
@@ -1714,28 +1981,23 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				DoAlphaTest( surfaceDescription.Alpha, surfaceDescription.AlphaClipThreshold );
 				#endif
 
-				float3 bentNormalWS;
-				BuildSurfaceData( fragInputs, surfaceDescription, V, surfaceData, bentNormalWS );
-
-				#if HAVE_DECALS
-				if( _EnableDecals )
-				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
-				}
+				#ifdef _DEPTHOFFSET_ON
+				builtinData.depthOffset = surfaceDescription.DepthOffset;
+				ApplyDepthOffsetPositionInput( V, surfaceDescription.DepthOffset, GetViewForwardDir(), GetWorldToHClipMatrix(), posInput );
 				#endif
 
-				InitBuiltinData (posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[2], fragInputs.texCoord1, fragInputs.texCoord2, builtinData);
+				float3 bentNormalWS;
+				BuildSurfaceData( fragInputs, surfaceDescription, V, posInput, surfaceData, bentNormalWS );
+
+				InitBuiltinData( posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[ 2 ], fragInputs.texCoord1, fragInputs.texCoord2, builtinData );
 
 				builtinData.emissiveColor = surfaceDescription.Emission;
-
-				builtinData.depthOffset = 0.0;
 
 				#if (SHADERPASS == SHADERPASS_DISTORTION)
 				builtinData.distortion = surfaceDescription.Distortion;
 				builtinData.distortionBlur = surfaceDescription.DistortionBlur;
 				#else
-				builtinData.distortion = float2( 0.0, 0.0 );
+				builtinData.distortion = float2(0.0, 0.0);
 				builtinData.distortionBlur = 0.0;
 				#endif
 
@@ -1750,7 +2012,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float unity_OneOverOutputBoost;
 			float unity_MaxOutputValue;
 
-			PackedVaryingsMeshToPS Vert(AttributesMesh inputMesh  )
+			PackedVaryingsMeshToPS VertexFunction(AttributesMesh inputMesh  )
 			{
 				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS;
 
@@ -1785,67 +2047,68 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
-				int temp_output_40_0_g189 = _WindQuality;
+				int temp_output_40_0_g300 = _WindQuality;
 				float3 VertexPos286 = inputMesh.positionOS;
 				float3 appendResult112 = (float3(_Color.r , _Color.g , _Color.b));
-				float4 appendResult281 = (float4(( appendResult112 * inputMesh.color.r ) , _Color.a));
+				float4 appendResult281 = (float4(( appendResult112 * inputMesh.ase_color.r ) , _Color.a));
 				float4 appendResult243 = (float4(appendResult281));
 				float ColorAlpha286 = appendResult243.a;
 				float3 texcoord1286 = appendResult213;
 				float2 texcoord3286 = inputMesh.ase_texcoord3.xy;
 				float3 localOffsetLeavesVertex286 = OffsetLeavesVertex( VertexPos286 , ColorAlpha286 , texcoord1286 , texcoord3286 );
-				float3 temp_output_6_0_g189 = localOffsetLeavesVertex286;
-				int temp_output_2_0_g264 = temp_output_40_0_g189;
-				float4 break25_g189 = inputMesh.uv2;
-				float3 temp_cast_5 = (break25_g189.z).xxx;
-				float3 fValue10_g268 = temp_cast_5;
-				float3 localUnpackNormalFromFloat10_g268 = UnpackNormalFromFloat( fValue10_g268 );
-				float temp_output_4_0_g264 = break25_g189.w;
-				float ifLocalVar19_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar19_g264 = _ST_WindLeaf1Ripple.y;
+				float3 temp_output_6_0_g300 = localOffsetLeavesVertex286;
+				int temp_output_2_0_g301 = temp_output_40_0_g300;
+				float4 break25_g300 = inputMesh.uv2;
+				float3 temp_cast_5 = (break25_g300.z).xxx;
+				float3 fValue10_g305 = temp_cast_5;
+				float3 localUnpackNormalFromFloat10_g305 = UnpackNormalFromFloat( fValue10_g305 );
+				float temp_output_4_0_g301 = break25_g300.w;
+				float ifLocalVar19_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar19_g301 = _ST_WindLeaf1Ripple.y;
 				else
-				ifLocalVar19_g264 = _ST_WindLeaf2Ripple.y;
-				float2 break24_g189 = appendResult213.xy;
-				float4 break18_g264 = _GlobalTimers[_GlobalTimerId];
-				float4 appendResult10_g266 = (float4(( ( break24_g189.x + break24_g189.y ) + break18_g264.y ) , 0.0 , 0.0 , 0.0));
-				float4 vData7_g267 = appendResult10_g266;
-				float4 localTriangleWave7_g267 = TriangleWave( vData7_g267 );
-				float4 vData6_g267 = localTriangleWave7_g267;
-				float4 localCubicSmooth6_g267 = CubicSmooth( vData6_g267 );
-				float temp_output_8_0_g264 = break25_g189.x;
-				float3 temp_output_52_0_g264 = ( temp_output_6_0_g189 + ( localUnpackNormalFromFloat10_g268 * ( ifLocalVar19_g264 * ( ( localCubicSmooth6_g267 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g264 ) );
-				float temp_output_10_0_g264 = break25_g189.y;
-				float3 temp_cast_7 = (temp_output_10_0_g264).xxx;
-				float3 fValue10_g276 = temp_cast_7;
-				float3 localUnpackNormalFromFloat10_g276 = UnpackNormalFromFloat( fValue10_g276 );
-				float3 temp_output_5_0_g269 = localUnpackNormalFromFloat10_g276;
-				float3 vAxis6_g272 = temp_output_5_0_g269;
-				float temp_output_3_0_g269 = temp_output_8_0_g264;
-				float4 ifLocalVar32_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar32_g264 = _ST_WindLeaf1Tumble;
+				ifLocalVar19_g301 = _ST_WindLeaf2Ripple.y;
+				float2 break24_g300 = appendResult213.xy;
+				float4 break18_g301 = _GlobalTimers[_GlobalTimerId];
+				float4 appendResult10_g303 = (float4(( ( break24_g300.x + break24_g300.y ) + break18_g301.y ) , 0.0 , 0.0 , 0.0));
+				float4 vData7_g304 = appendResult10_g303;
+				float4 localTriangleWave7_g304 = TriangleWave( vData7_g304 );
+				float4 vData6_g304 = localTriangleWave7_g304;
+				float4 localCubicSmooth6_g304 = CubicSmooth( vData6_g304 );
+				float temp_output_8_0_g301 = break25_g300.x;
+				float3 temp_output_52_0_g301 = ( temp_output_6_0_g300 + ( localUnpackNormalFromFloat10_g305 * ( ifLocalVar19_g301 * ( ( localCubicSmooth6_g304 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g301 ) );
+				float temp_output_10_0_g301 = break25_g300.y;
+				float3 temp_cast_7 = (temp_output_10_0_g301).xxx;
+				float3 fValue10_g313 = temp_cast_7;
+				float3 localUnpackNormalFromFloat10_g313 = UnpackNormalFromFloat( fValue10_g313 );
+				float3 temp_output_5_0_g306 = localUnpackNormalFromFloat10_g313;
+				float3 vAxis6_g309 = temp_output_5_0_g306;
+				float temp_output_3_0_g306 = temp_output_8_0_g301;
+				float4 ifLocalVar32_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar32_g301 = _ST_WindLeaf1Tumble;
 				else
-				ifLocalVar32_g264 = _ST_WindLeaf2Tumble;
-				float4 break34_g264 = ifLocalVar32_g264;
-				float temp_output_22_0_g269 = frac( ( temp_output_10_0_g264 * 30.3 ) );
-				float temp_output_25_0_g269 = ( temp_output_22_0_g269 + temp_output_22_0_g269 + temp_output_22_0_g269 );
-				float temp_output_7_0_g269 = break18_g264.z;
-				float4 appendResult34_g269 = (float4(( temp_output_25_0_g269 + temp_output_7_0_g269 ) , ( ( temp_output_7_0_g269 * 0.75 ) + ( temp_output_25_0_g269 * -1.0 ) ) , ( ( temp_output_7_0_g269 * 0.01 ) + temp_output_25_0_g269 ) , ( temp_output_25_0_g269 + ( temp_output_7_0_g269 * 1.0 ) )));
-				float4 vData7_g271 = appendResult34_g269;
-				float4 localTriangleWave7_g271 = TriangleWave( vData7_g271 );
-				float4 vData6_g271 = localTriangleWave7_g271;
-				float4 localCubicSmooth6_g271 = CubicSmooth( vData6_g271 );
-				float4 temp_output_27_0_g269 = ( ( localCubicSmooth6_g271 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break47_g269 = temp_output_27_0_g269;
-				float fAngle6_g272 = ( temp_output_3_0_g269 * break34_g264.z * ( break47_g269.x + ( break47_g269.y * break47_g269.y ) ) );
-				float3x3 localRotationMatrix6_g272 = RotationMatrix( vAxis6_g272 , fAngle6_g272 );
+				ifLocalVar32_g301 = _ST_WindLeaf2Tumble;
+				float4 break34_g301 = ifLocalVar32_g301;
+				float temp_output_22_0_g306 = frac( ( temp_output_10_0_g301 * 30.3 ) );
+				float temp_output_25_0_g306 = ( temp_output_22_0_g306 + temp_output_22_0_g306 + temp_output_22_0_g306 );
+				float temp_output_7_0_g306 = break18_g301.z;
+				float4 appendResult34_g306 = (float4(( temp_output_25_0_g306 + temp_output_7_0_g306 ) , ( ( temp_output_7_0_g306 * 0.75 ) + ( temp_output_25_0_g306 * -1.0 ) ) , ( ( temp_output_7_0_g306 * 0.01 ) + temp_output_25_0_g306 ) , ( temp_output_25_0_g306 + ( temp_output_7_0_g306 * 1.0 ) )));
+				float4 vData7_g308 = appendResult34_g306;
+				float4 localTriangleWave7_g308 = TriangleWave( vData7_g308 );
+				float4 vData6_g308 = localTriangleWave7_g308;
+				float4 localCubicSmooth6_g308 = CubicSmooth( vData6_g308 );
+				float4 temp_output_27_0_g306 = ( ( localCubicSmooth6_g308 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break47_g306 = temp_output_27_0_g306;
+				float fAngle6_g309 = ( temp_output_3_0_g306 * break34_g301.z * ( break47_g306.x + ( break47_g306.y * break47_g306.y ) ) );
+				float3x3 localRotationMatrix6_g309 = RotationMatrix( vAxis6_g309 , fAngle6_g309 );
 				int localCalculateWindInputs291 = ( 0 );
 				float windQuality291 = (float)_WindQuality;
 				float3 rotatedWindVector291 = float3( 0,0,0 );
 				float3 rotatedBranchAnchor291 = float3( 0,0,0 );
 				float4 windVector291 = _ST_WindVector;
 				float4 windBranchAnchor291 = _ST_WindBranchAnchor;
+				{
 				if (windQuality291 <= 0) // WIND_QUALITY_NONE
 				{
 				    rotatedWindVector291 = float3(0.0f, 0.0f, 0.0f);
@@ -1861,268 +2124,269 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    }
 				    rotatedBranchAnchor291 = normalize(mul(windBranchAnchor291.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor291.w;
 				}
-				float3 data116_g269 = rotatedWindVector291;
-				float3 localClampToNonZero116_g269 = ClampToNonZero( data116_g269 );
-				float3 break57_g269 = cross( temp_output_5_0_g269 , localClampToNonZero116_g269 );
-				float dotResult55_g269 = dot( float3( 0,0,0 ) , temp_output_5_0_g269 );
-				float clampResult56_g269 = clamp( dotResult55_g269 , -1.0 , 1.0 );
-				float3 appendResult59_g269 = (float3(break57_g269.x , ( clampResult56_g269 + break57_g269.y ) , break57_g269.z));
-				float3 normalizeResult60_g269 = normalize( appendResult59_g269 );
-				float3 vAxis6_g275 = normalizeResult60_g269;
-				float3 break9_g273 = float3( 0,0,0 );
-				float temp_output_4_0_g273 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g269 );
-				float4 appendResult12_g273 = (float4(( break9_g273.x + break9_g273.z + temp_output_4_0_g273 ) , ( ( 0.87 * temp_output_4_0_g273 ) + break9_g273.y ) , 0.0 , 0.0));
-				float4 vData7_g274 = appendResult12_g273;
-				float4 localTriangleWave7_g274 = TriangleWave( vData7_g274 );
-				float4 vData6_g274 = localTriangleWave7_g274;
-				float4 localCubicSmooth6_g274 = CubicSmooth( vData6_g274 );
-				float4 break14_g273 = ( ( localCubicSmooth6_g274 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar35_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar35_g264 = _ST_WindLeaf1Twitch;
+				}
+				float3 data116_g306 = rotatedWindVector291;
+				float3 localClampToNonZero116_g306 = ClampToNonZero( data116_g306 );
+				float3 break57_g306 = cross( temp_output_5_0_g306 , localClampToNonZero116_g306 );
+				float dotResult55_g306 = dot( float3( 0,0,0 ) , temp_output_5_0_g306 );
+				float clampResult56_g306 = clamp( dotResult55_g306 , -1.0 , 1.0 );
+				float3 appendResult59_g306 = (float3(break57_g306.x , ( clampResult56_g306 + break57_g306.y ) , break57_g306.z));
+				float3 normalizeResult60_g306 = normalize( appendResult59_g306 );
+				float3 vAxis6_g312 = normalizeResult60_g306;
+				float3 break9_g310 = float3( 0,0,0 );
+				float temp_output_4_0_g310 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g306 );
+				float4 appendResult12_g310 = (float4(( break9_g310.x + break9_g310.z + temp_output_4_0_g310 ) , ( ( 0.87 * temp_output_4_0_g310 ) + break9_g310.y ) , 0.0 , 0.0));
+				float4 vData7_g311 = appendResult12_g310;
+				float4 localTriangleWave7_g311 = TriangleWave( vData7_g311 );
+				float4 vData6_g311 = localTriangleWave7_g311;
+				float4 localCubicSmooth6_g311 = CubicSmooth( vData6_g311 );
+				float4 break14_g310 = ( ( localCubicSmooth6_g311 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar35_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar35_g301 = _ST_WindLeaf1Twitch;
 				else
-				ifLocalVar35_g264 = _ST_WindLeaf2Twitch;
-				float3 appendResult37_g264 = (float3(ifLocalVar35_g264.xyz));
-				float3 break76_g269 = appendResult37_g264;
-				float4 break109_g269 = temp_output_27_0_g269;
-				float fAngle6_g275 = ( temp_output_3_0_g269 * ( ( acos( clampResult56_g269 ) * break34_g264.w ) + ( pow( saturate( ( ( ( break14_g273.x * break14_g273.y * break14_g273.y ) + 1.0 ) * 0.5 ) ) , break76_g269.y ) * break76_g269.x ) + ( ( break109_g269.y + ( ( break109_g269.x * break109_g269.x ) * -1.0 ) ) * break34_g264.y ) ) );
-				float3x3 localRotationMatrix6_g275 = RotationMatrix( vAxis6_g275 , fAngle6_g275 );
-				float3x3 temp_output_86_0_g269 = mul( localRotationMatrix6_g272, localRotationMatrix6_g275 );
-				float3 temp_output_1_0_g269 = temp_output_52_0_g264;
-				float3 normalizeResult91_g269 = normalize( mul( temp_output_86_0_g269, temp_output_1_0_g269 ) );
-				float3 ifLocalVar27_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar27_g264 = ( normalizeResult91_g269 * length( temp_output_1_0_g269 ) );
+				ifLocalVar35_g301 = _ST_WindLeaf2Twitch;
+				float3 appendResult37_g301 = (float3(ifLocalVar35_g301.xyz));
+				float3 break76_g306 = appendResult37_g301;
+				float4 break109_g306 = temp_output_27_0_g306;
+				float fAngle6_g312 = ( temp_output_3_0_g306 * ( ( acos( clampResult56_g306 ) * break34_g301.w ) + ( pow( saturate( ( ( ( break14_g310.x * break14_g310.y * break14_g310.y ) + 1.0 ) * 0.5 ) ) , break76_g306.y ) * break76_g306.x ) + ( ( break109_g306.y + ( ( break109_g306.x * break109_g306.x ) * -1.0 ) ) * break34_g301.y ) ) );
+				float3x3 localRotationMatrix6_g312 = RotationMatrix( vAxis6_g312 , fAngle6_g312 );
+				float3x3 temp_output_86_0_g306 = mul( localRotationMatrix6_g309, localRotationMatrix6_g312 );
+				float3 temp_output_1_0_g306 = temp_output_52_0_g301;
+				float3 normalizeResult91_g306 = normalize( mul( temp_output_86_0_g306, temp_output_1_0_g306 ) );
+				float3 ifLocalVar27_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar27_g301 = ( normalizeResult91_g306 * length( temp_output_1_0_g306 ) );
 				else
-				ifLocalVar27_g264 = temp_output_52_0_g264;
-				float3 ifLocalVar2_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar2_g189 = temp_output_6_0_g189;
+				ifLocalVar27_g301 = temp_output_52_0_g301;
+				float3 ifLocalVar2_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar2_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar2_g189 = ifLocalVar27_g264;
-				float3 ifLocalVar1_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar1_g189 = temp_output_6_0_g189;
+				ifLocalVar2_g300 = ifLocalVar27_g301;
+				float3 ifLocalVar1_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar1_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar1_g189 = ifLocalVar2_g189;
+				ifLocalVar1_g300 = ifLocalVar2_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g189 );
+				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g300 );
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch214 = staticSwitch343;
 				#else
 				float3 staticSwitch214 = staticSwitch343;
 				#endif
-				float3 temp_output_3_0_g277 = staticSwitch214;
-				int temp_output_24_0_g277 = _WindQuality;
-				float4 break32_g277 = inputMesh.uv0;
-				float2 appendResult31_g277 = (float2(break32_g277.z , break32_g277.w));
-				float2 break34_g277 = appendResult31_g277;
-				float temp_output_5_0_g278 = break34_g277.y;
-				float3 temp_cast_10 = (temp_output_5_0_g278).xxx;
-				float3 fValue10_g279 = temp_cast_10;
-				float3 localUnpackNormalFromFloat10_g279 = UnpackNormalFromFloat( fValue10_g279 );
-				float temp_output_4_0_g278 = break34_g277.x;
-				int temp_output_7_0_g280 = 0;
-				int temp_output_10_0_g280 = 1;
-				float3 localGetInstancePos40_g277 = GetInstancePos();
-				float3 break17_g278 = localGetInstancePos40_g277;
-				float temp_output_3_0_g280 = ( break17_g278.x + break17_g278.y + _GlobalTimers[_GlobalTimerId].y );
-				float fTime28_g280 = temp_output_3_0_g280;
-				float temp_output_4_0_g280 = temp_output_5_0_g278;
-				float fOffset28_g280 = temp_output_4_0_g280;
-				float fTwitchFreqScale28_g280 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g280 = temp_output_4_0_g278;
-				float fWeight28_g280 = temp_output_5_0_g280;
-				int bWhip28_g280 = temp_output_7_0_g280;
-				float4 localComplexOscillationInputs28_g280 = ComplexOscillationInputs( fTime28_g280 , fOffset28_g280 , fTwitchFreqScale28_g280 , fWeight28_g280 , bWhip28_g280 );
-				float4 vData7_g282 = localComplexOscillationInputs28_g280;
-				float4 localTriangleWave7_g282 = TriangleWave( vData7_g282 );
-				float4 vData6_g282 = localTriangleWave7_g282;
-				float4 localCubicSmooth6_g282 = CubicSmooth( vData6_g282 );
-				float4 temp_output_29_0_g280 = ( ( localCubicSmooth6_g282 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g280 = temp_output_29_0_g280;
-				float temp_output_31_0_g280 = ( break30_g280.y * break30_g280.z );
-				float ifLocalVar36_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar36_g280 = 1.0;
+				float3 temp_output_3_0_g314 = staticSwitch214;
+				int temp_output_24_0_g314 = _WindQuality;
+				float4 break32_g314 = inputMesh.uv0;
+				float2 appendResult31_g314 = (float2(break32_g314.z , break32_g314.w));
+				float2 break34_g314 = appendResult31_g314;
+				float temp_output_5_0_g315 = break34_g314.y;
+				float3 temp_cast_10 = (temp_output_5_0_g315).xxx;
+				float3 fValue10_g316 = temp_cast_10;
+				float3 localUnpackNormalFromFloat10_g316 = UnpackNormalFromFloat( fValue10_g316 );
+				float temp_output_4_0_g315 = break34_g314.x;
+				int temp_output_7_0_g317 = 0;
+				int temp_output_10_0_g317 = 1;
+				float3 localGetInstancePos40_g314 = GetInstancePos();
+				float3 break17_g315 = localGetInstancePos40_g314;
+				float temp_output_3_0_g317 = ( break17_g315.x + break17_g315.y + _GlobalTimers[_GlobalTimerId].y );
+				float fTime28_g317 = temp_output_3_0_g317;
+				float temp_output_4_0_g317 = temp_output_5_0_g315;
+				float fOffset28_g317 = temp_output_4_0_g317;
+				float fTwitchFreqScale28_g317 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g317 = temp_output_4_0_g315;
+				float fWeight28_g317 = temp_output_5_0_g317;
+				int bWhip28_g317 = temp_output_7_0_g317;
+				float4 localComplexOscillationInputs28_g317 = ComplexOscillationInputs( fTime28_g317 , fOffset28_g317 , fTwitchFreqScale28_g317 , fWeight28_g317 , bWhip28_g317 );
+				float4 vData7_g319 = localComplexOscillationInputs28_g317;
+				float4 localTriangleWave7_g319 = TriangleWave( vData7_g319 );
+				float4 vData6_g319 = localTriangleWave7_g319;
+				float4 localCubicSmooth6_g319 = CubicSmooth( vData6_g319 );
+				float4 temp_output_29_0_g317 = ( ( localCubicSmooth6_g319 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g317 = temp_output_29_0_g317;
+				float temp_output_31_0_g317 = ( break30_g317.y * break30_g317.z );
+				float ifLocalVar36_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar36_g317 = 1.0;
 				else
-				ifLocalVar36_g280 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar35_g280 = temp_output_31_0_g280;
+				ifLocalVar36_g317 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar35_g317 = temp_output_31_0_g317;
 				else
-				ifLocalVar35_g280 = ( temp_output_31_0_g280 * -1.0 );
-				float lerpResult41_g280 = lerp( temp_output_31_0_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float lerpResult42_g280 = lerp( lerpResult41_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float temp_output_11_0_g280 = _ST_WindBranchTwitch.x;
-				float fTime61_g280 = temp_output_3_0_g280;
-				float fOffset61_g280 = temp_output_4_0_g280;
-				float fWeight61_g280 = temp_output_5_0_g280;
-				int bWhip61_g280 = temp_output_7_0_g280;
-				float4 localSimpleOscillationInputs61_g280 = SimpleOscillationInputs( fTime61_g280 , fOffset61_g280 , fWeight61_g280 , bWhip61_g280 );
-				float4 vData7_g281 = localSimpleOscillationInputs61_g280;
-				float4 localTriangleWave7_g281 = TriangleWave( vData7_g281 );
-				float4 vData6_g281 = localTriangleWave7_g281;
-				float4 localCubicSmooth6_g281 = CubicSmooth( vData6_g281 );
-				float4 temp_output_66_0_g280 = ( ( localCubicSmooth6_g281 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g280 = temp_output_66_0_g280;
-				float temp_output_64_0_g280 = ( break62_g280.x + ( break62_g280.x * break62_g280.y ) );
-				float ifLocalVar17_g280 = 0;
-				if( temp_output_10_0_g280 <= 0.0 )
-				ifLocalVar17_g280 = temp_output_64_0_g280;
+				ifLocalVar35_g317 = ( temp_output_31_0_g317 * -1.0 );
+				float lerpResult41_g317 = lerp( temp_output_31_0_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float lerpResult42_g317 = lerp( lerpResult41_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float temp_output_11_0_g317 = _ST_WindBranchTwitch.x;
+				float fTime61_g317 = temp_output_3_0_g317;
+				float fOffset61_g317 = temp_output_4_0_g317;
+				float fWeight61_g317 = temp_output_5_0_g317;
+				int bWhip61_g317 = temp_output_7_0_g317;
+				float4 localSimpleOscillationInputs61_g317 = SimpleOscillationInputs( fTime61_g317 , fOffset61_g317 , fWeight61_g317 , bWhip61_g317 );
+				float4 vData7_g318 = localSimpleOscillationInputs61_g317;
+				float4 localTriangleWave7_g318 = TriangleWave( vData7_g318 );
+				float4 vData6_g318 = localTriangleWave7_g318;
+				float4 localCubicSmooth6_g318 = CubicSmooth( vData6_g318 );
+				float4 temp_output_66_0_g317 = ( ( localCubicSmooth6_g318 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g317 = temp_output_66_0_g317;
+				float temp_output_64_0_g317 = ( break62_g317.x + ( break62_g317.x * break62_g317.y ) );
+				float ifLocalVar17_g317 = 0;
+				if( temp_output_10_0_g317 <= 0.0 )
+				ifLocalVar17_g317 = temp_output_64_0_g317;
 				else
-				ifLocalVar17_g280 = ( ( lerpResult42_g280 * temp_output_11_0_g280 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g280.x * ( 1.0 - temp_output_11_0_g280 ) ) );
-				float ifLocalVar52_g280 = 0;
-				if( temp_output_7_0_g280 <= 0.0 )
-				ifLocalVar52_g280 = ifLocalVar17_g280;
+				ifLocalVar17_g317 = ( ( lerpResult42_g317 * temp_output_11_0_g317 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g317.x * ( 1.0 - temp_output_11_0_g317 ) ) );
+				float ifLocalVar52_g317 = 0;
+				if( temp_output_7_0_g317 <= 0.0 )
+				ifLocalVar52_g317 = ifLocalVar17_g317;
 				else
-				ifLocalVar52_g280 = ( ifLocalVar17_g280 * ( 1.0 + ( break30_g280.w * (int)_ST_WindBranchWhip.x ) ) );
-				float3 temp_output_45_0_g277 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g279 * temp_output_4_0_g278 ) * ifLocalVar52_g280 * _ST_WindBranch.y ) );
-				float temp_output_4_0_g284 = break34_g277.y;
-				float3 temp_cast_12 = (temp_output_4_0_g284).xxx;
-				float3 fValue10_g287 = temp_cast_12;
-				float3 localUnpackNormalFromFloat10_g287 = UnpackNormalFromFloat( fValue10_g287 );
-				float temp_output_3_0_g284 = break34_g277.x;
-				int temp_output_7_0_g288 = 1;
-				int temp_output_10_0_g288 = 1;
-				float3 break17_g284 = localGetInstancePos40_g277;
-				float temp_output_16_0_g284 = ( _GlobalTimers[_GlobalTimerId].y + break17_g284.x + break17_g284.y );
-				float temp_output_3_0_g288 = temp_output_16_0_g284;
-				float fTime28_g288 = temp_output_3_0_g288;
-				float temp_output_4_0_g288 = temp_output_4_0_g284;
-				float fOffset28_g288 = temp_output_4_0_g288;
-				float fTwitchFreqScale28_g288 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g288 = temp_output_3_0_g284;
-				float fWeight28_g288 = temp_output_5_0_g288;
-				int bWhip28_g288 = temp_output_7_0_g288;
-				float4 localComplexOscillationInputs28_g288 = ComplexOscillationInputs( fTime28_g288 , fOffset28_g288 , fTwitchFreqScale28_g288 , fWeight28_g288 , bWhip28_g288 );
-				float4 vData7_g290 = localComplexOscillationInputs28_g288;
-				float4 localTriangleWave7_g290 = TriangleWave( vData7_g290 );
-				float4 vData6_g290 = localTriangleWave7_g290;
-				float4 localCubicSmooth6_g290 = CubicSmooth( vData6_g290 );
-				float4 temp_output_29_0_g288 = ( ( localCubicSmooth6_g290 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g288 = temp_output_29_0_g288;
-				float temp_output_31_0_g288 = ( break30_g288.y * break30_g288.z );
-				float ifLocalVar36_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar36_g288 = 1.0;
+				ifLocalVar52_g317 = ( ifLocalVar17_g317 * ( 1.0 + ( break30_g317.w * (int)_ST_WindBranchWhip.x ) ) );
+				float3 temp_output_45_0_g314 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g316 * temp_output_4_0_g315 ) * ifLocalVar52_g317 * _ST_WindBranch.y ) );
+				float temp_output_4_0_g321 = break34_g314.y;
+				float3 temp_cast_12 = (temp_output_4_0_g321).xxx;
+				float3 fValue10_g324 = temp_cast_12;
+				float3 localUnpackNormalFromFloat10_g324 = UnpackNormalFromFloat( fValue10_g324 );
+				float temp_output_3_0_g321 = break34_g314.x;
+				int temp_output_7_0_g325 = 1;
+				int temp_output_10_0_g325 = 1;
+				float3 break17_g321 = localGetInstancePos40_g314;
+				float temp_output_16_0_g321 = ( _GlobalTimers[_GlobalTimerId].y + break17_g321.x + break17_g321.y );
+				float temp_output_3_0_g325 = temp_output_16_0_g321;
+				float fTime28_g325 = temp_output_3_0_g325;
+				float temp_output_4_0_g325 = temp_output_4_0_g321;
+				float fOffset28_g325 = temp_output_4_0_g325;
+				float fTwitchFreqScale28_g325 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g325 = temp_output_3_0_g321;
+				float fWeight28_g325 = temp_output_5_0_g325;
+				int bWhip28_g325 = temp_output_7_0_g325;
+				float4 localComplexOscillationInputs28_g325 = ComplexOscillationInputs( fTime28_g325 , fOffset28_g325 , fTwitchFreqScale28_g325 , fWeight28_g325 , bWhip28_g325 );
+				float4 vData7_g327 = localComplexOscillationInputs28_g325;
+				float4 localTriangleWave7_g327 = TriangleWave( vData7_g327 );
+				float4 vData6_g327 = localTriangleWave7_g327;
+				float4 localCubicSmooth6_g327 = CubicSmooth( vData6_g327 );
+				float4 temp_output_29_0_g325 = ( ( localCubicSmooth6_g327 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g325 = temp_output_29_0_g325;
+				float temp_output_31_0_g325 = ( break30_g325.y * break30_g325.z );
+				float ifLocalVar36_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar36_g325 = 1.0;
 				else
-				ifLocalVar36_g288 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar35_g288 = temp_output_31_0_g288;
+				ifLocalVar36_g325 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar35_g325 = temp_output_31_0_g325;
 				else
-				ifLocalVar35_g288 = ( temp_output_31_0_g288 * -1.0 );
-				float lerpResult41_g288 = lerp( temp_output_31_0_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float lerpResult42_g288 = lerp( lerpResult41_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float temp_output_11_0_g288 = _ST_WindBranchTwitch.x;
-				float fTime61_g288 = temp_output_3_0_g288;
-				float fOffset61_g288 = temp_output_4_0_g288;
-				float fWeight61_g288 = temp_output_5_0_g288;
-				int bWhip61_g288 = temp_output_7_0_g288;
-				float4 localSimpleOscillationInputs61_g288 = SimpleOscillationInputs( fTime61_g288 , fOffset61_g288 , fWeight61_g288 , bWhip61_g288 );
-				float4 vData7_g289 = localSimpleOscillationInputs61_g288;
-				float4 localTriangleWave7_g289 = TriangleWave( vData7_g289 );
-				float4 vData6_g289 = localTriangleWave7_g289;
-				float4 localCubicSmooth6_g289 = CubicSmooth( vData6_g289 );
-				float4 temp_output_66_0_g288 = ( ( localCubicSmooth6_g289 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g288 = temp_output_66_0_g288;
-				float temp_output_64_0_g288 = ( break62_g288.x + ( break62_g288.x * break62_g288.y ) );
-				float ifLocalVar17_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar17_g288 = temp_output_64_0_g288;
+				ifLocalVar35_g325 = ( temp_output_31_0_g325 * -1.0 );
+				float lerpResult41_g325 = lerp( temp_output_31_0_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float lerpResult42_g325 = lerp( lerpResult41_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float temp_output_11_0_g325 = _ST_WindBranchTwitch.x;
+				float fTime61_g325 = temp_output_3_0_g325;
+				float fOffset61_g325 = temp_output_4_0_g325;
+				float fWeight61_g325 = temp_output_5_0_g325;
+				int bWhip61_g325 = temp_output_7_0_g325;
+				float4 localSimpleOscillationInputs61_g325 = SimpleOscillationInputs( fTime61_g325 , fOffset61_g325 , fWeight61_g325 , bWhip61_g325 );
+				float4 vData7_g326 = localSimpleOscillationInputs61_g325;
+				float4 localTriangleWave7_g326 = TriangleWave( vData7_g326 );
+				float4 vData6_g326 = localTriangleWave7_g326;
+				float4 localCubicSmooth6_g326 = CubicSmooth( vData6_g326 );
+				float4 temp_output_66_0_g325 = ( ( localCubicSmooth6_g326 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g325 = temp_output_66_0_g325;
+				float temp_output_64_0_g325 = ( break62_g325.x + ( break62_g325.x * break62_g325.y ) );
+				float ifLocalVar17_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar17_g325 = temp_output_64_0_g325;
 				else
-				ifLocalVar17_g288 = ( ( lerpResult42_g288 * temp_output_11_0_g288 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g288.x * ( 1.0 - temp_output_11_0_g288 ) ) );
-				float temp_output_11_0_g284 = _ST_WindBranchWhip.x;
-				float ifLocalVar52_g288 = 0;
-				if( temp_output_7_0_g288 <= 0.0 )
-				ifLocalVar52_g288 = ifLocalVar17_g288;
+				ifLocalVar17_g325 = ( ( lerpResult42_g325 * temp_output_11_0_g325 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g325.x * ( 1.0 - temp_output_11_0_g325 ) ) );
+				float temp_output_11_0_g321 = _ST_WindBranchWhip.x;
+				float ifLocalVar52_g325 = 0;
+				if( temp_output_7_0_g325 <= 0.0 )
+				ifLocalVar52_g325 = ifLocalVar17_g325;
 				else
-				ifLocalVar52_g288 = ( ifLocalVar17_g288 * ( 1.0 + ( break30_g288.w * (int)temp_output_11_0_g284 ) ) );
-				float3 temp_output_23_0_g284 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g287 * temp_output_3_0_g284 ) * ifLocalVar52_g288 * _ST_WindBranch.y ) );
-				float temp_output_3_0_g285 = temp_output_4_0_g284;
-				float temp_output_6_0_g285 = _ST_WindTurbulences.y;
-				float4 appendResult9_g285 = (float4(( ( temp_output_16_0_g284 * 0.1 ) + temp_output_3_0_g285 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g285 * 0.1 ) + temp_output_3_0_g285 ) , 0.0 , 0.0));
-				float4 vData7_g286 = appendResult9_g285;
-				float4 localTriangleWave7_g286 = TriangleWave( vData7_g286 );
-				float4 vData6_g286 = localTriangleWave7_g286;
-				float4 localCubicSmooth6_g286 = CubicSmooth( vData6_g286 );
-				float4 break16_g285 = ( ( localCubicSmooth6_g286 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar59_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar59_g288 = temp_output_66_0_g288;
+				ifLocalVar52_g325 = ( ifLocalVar17_g325 * ( 1.0 + ( break30_g325.w * (int)temp_output_11_0_g321 ) ) );
+				float3 temp_output_23_0_g321 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g324 * temp_output_3_0_g321 ) * ifLocalVar52_g325 * _ST_WindBranch.y ) );
+				float temp_output_3_0_g322 = temp_output_4_0_g321;
+				float temp_output_6_0_g322 = _ST_WindTurbulences.y;
+				float4 appendResult9_g322 = (float4(( ( temp_output_16_0_g321 * 0.1 ) + temp_output_3_0_g322 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g322 * 0.1 ) + temp_output_3_0_g322 ) , 0.0 , 0.0));
+				float4 vData7_g323 = appendResult9_g322;
+				float4 localTriangleWave7_g323 = TriangleWave( vData7_g323 );
+				float4 vData6_g323 = localTriangleWave7_g323;
+				float4 localCubicSmooth6_g323 = CubicSmooth( vData6_g323 );
+				float4 break16_g322 = ( ( localCubicSmooth6_g323 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar59_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar59_g325 = temp_output_66_0_g325;
 				else
-				ifLocalVar59_g288 = temp_output_29_0_g288;
-				float3 ifLocalVar29_g277 = 0;
-				if( temp_output_24_0_g277 == 5 )
-				ifLocalVar29_g277 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g284 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g285.x * break16_g285.y * break16_g285.x * break16_g285.y * temp_output_6_0_g285 ) ) + ( ifLocalVar59_g288.w * _ST_WindVector.w * temp_output_11_0_g284 ) ) * temp_output_3_0_g284 ) + temp_output_23_0_g284 );
+				ifLocalVar59_g325 = temp_output_29_0_g325;
+				float3 ifLocalVar29_g314 = 0;
+				if( temp_output_24_0_g314 == 5 )
+				ifLocalVar29_g314 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g321 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g322.x * break16_g322.y * break16_g322.x * break16_g322.y * temp_output_6_0_g322 ) ) + ( ifLocalVar59_g325.w * _ST_WindVector.w * temp_output_11_0_g321 ) ) * temp_output_3_0_g321 ) + temp_output_23_0_g321 );
 				else
-				ifLocalVar29_g277 = temp_output_45_0_g277;
-				float3 ifLocalVar26_g277 = 0;
-				if( temp_output_24_0_g277 >= 3 )
-				ifLocalVar26_g277 = ifLocalVar29_g277;
+				ifLocalVar29_g314 = temp_output_45_0_g314;
+				float3 ifLocalVar26_g314 = 0;
+				if( temp_output_24_0_g314 >= 3 )
+				ifLocalVar26_g314 = ifLocalVar29_g314;
 				else
-				ifLocalVar26_g277 = temp_output_3_0_g277;
+				ifLocalVar26_g314 = temp_output_3_0_g314;
 				#ifdef GEOM_TYPE_MESH
-				float3 staticSwitch9_g277 = ifLocalVar26_g277;
+				float3 staticSwitch9_g314 = ifLocalVar26_g314;
 				#else
-				float3 staticSwitch9_g277 = temp_output_3_0_g277;
+				float3 staticSwitch9_g314 = temp_output_3_0_g314;
 				#endif
-				float3 temp_output_111_0_g187 = staticSwitch9_g277;
-				float3 vPos140_g187 = temp_output_111_0_g187;
-				float3 vRotatedWindVector140_g187 = rotatedWindVector291;
-				float3 vPos145_g187 = temp_output_111_0_g187;
-				float4 windGlobal145_g187 = _ST_WindGlobal;
-				float localComputeWindAdjust145_g187 = ComputeWindAdjust( vPos145_g187 , windGlobal145_g187 );
-				float3 break122_g187 = localGetInstancePos40_g277;
-				float temp_output_125_0_g187 = _GlobalTimers[_GlobalTimerId].x;
-				float4 appendResult126_g187 = (float4(( break122_g187.x + temp_output_125_0_g187 ) , ( break122_g187.y + ( temp_output_125_0_g187 * 0.8 ) ) , 0.0 , 0.0));
-				float4 vData7_g188 = appendResult126_g187;
-				float4 localTriangleWave7_g188 = TriangleWave( vData7_g188 );
-				float4 vData6_g188 = localTriangleWave7_g188;
-				float4 localCubicSmooth6_g188 = CubicSmooth( vData6_g188 );
-				float4 break117_g187 = ( ( localCubicSmooth6_g188 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float temp_output_90_0_g187 = ( localComputeWindAdjust145_g187 * ( ( _ST_WindGlobal.y * ( break117_g187.x + ( break117_g187.y * break117_g187.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
-				float ifLocalVar142_g187 = 0;
+				float3 temp_output_111_0_g844 = staticSwitch9_g314;
+				float3 vPos140_g844 = temp_output_111_0_g844;
+				float3 vRotatedWindVector140_g844 = rotatedWindVector291;
+				float3 vPos145_g844 = temp_output_111_0_g844;
+				float4 windGlobal145_g844 = _ST_WindGlobal;
+				float localComputeWindAdjust145_g844 = ComputeWindAdjust( vPos145_g844 , windGlobal145_g844 );
+				float3 break122_g844 = localGetInstancePos40_g314;
+				float temp_output_125_0_g844 = _GlobalTimers[_GlobalTimerId].x;
+				float4 appendResult126_g844 = (float4(( break122_g844.x + temp_output_125_0_g844 ) , ( break122_g844.y + ( temp_output_125_0_g844 * 0.8 ) ) , 0.0 , 0.0));
+				float4 vData7_g845 = appendResult126_g844;
+				float4 localTriangleWave7_g845 = TriangleWave( vData7_g845 );
+				float4 vData6_g845 = localTriangleWave7_g845;
+				float4 localCubicSmooth6_g845 = CubicSmooth( vData6_g845 );
+				float4 break117_g844 = ( ( localCubicSmooth6_g845 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float temp_output_90_0_g844 = ( localComputeWindAdjust145_g844 * ( ( _ST_WindGlobal.y * ( break117_g844.x + ( break117_g844.y * break117_g844.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
+				float ifLocalVar142_g844 = 0;
 				if( _ST_WindGlobal.w == 0.0 )
-				ifLocalVar142_g187 = 0.0;
+				ifLocalVar142_g844 = 0.0;
 				else
-				ifLocalVar142_g187 = temp_output_90_0_g187;
-				float fMoveAmount140_g187 = ifLocalVar142_g187;
-				float3 localSwizzleCombineMoveAmount140_g187 = SwizzleCombineMoveAmount( vPos140_g187 , vRotatedWindVector140_g187 , fMoveAmount140_g187 );
-				float3 ifLocalVar132_g187 = 0;
+				ifLocalVar142_g844 = temp_output_90_0_g844;
+				float fMoveAmount140_g844 = ifLocalVar142_g844;
+				float3 localSwizzleCombineMoveAmount140_g844 = SwizzleCombineMoveAmount( vPos140_g844 , vRotatedWindVector140_g844 , fMoveAmount140_g844 );
+				float3 ifLocalVar132_g844 = 0;
 				if( _WindQuality <= 0 )
-				ifLocalVar132_g187 = temp_output_111_0_g187;
+				ifLocalVar132_g844 = temp_output_111_0_g844;
 				else
-				ifLocalVar132_g187 = localSwizzleCombineMoveAmount140_g187;
+				ifLocalVar132_g844 = localSwizzleCombineMoveAmount140_g844;
 				
-				float3 temp_output_9_0_g189 = inputMesh.normalOS;
-				float3 temp_output_7_0_g264 = temp_output_9_0_g189;
-				float3 ifLocalVar30_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar30_g264 = mul( temp_output_86_0_g269, temp_output_7_0_g264 );
+				float3 temp_output_9_0_g300 = inputMesh.normalOS;
+				float3 temp_output_7_0_g301 = temp_output_9_0_g300;
+				float3 ifLocalVar30_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar30_g301 = mul( temp_output_86_0_g306, temp_output_7_0_g301 );
 				else
-				ifLocalVar30_g264 = temp_output_7_0_g264;
-				float3 ifLocalVar10_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar10_g189 = temp_output_9_0_g189;
+				ifLocalVar30_g301 = temp_output_7_0_g301;
+				float3 ifLocalVar10_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar10_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar10_g189 = ifLocalVar30_g264;
-				float3 ifLocalVar14_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar14_g189 = temp_output_9_0_g189;
+				ifLocalVar10_g300 = ifLocalVar30_g301;
+				float3 ifLocalVar14_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar14_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar14_g189 = ifLocalVar10_g189;
+				ifLocalVar14_g300 = ifLocalVar10_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch348 = ifLocalVar14_g189;
+				float3 staticSwitch348 = ifLocalVar14_g300;
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#else
@@ -2131,7 +2395,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				
 				outputPackedVaryingsMeshToPS.ase_texcoord = inputMesh.uv0;
 				outputPackedVaryingsMeshToPS.ase_texcoord1 = inputMesh.uv2;
-				outputPackedVaryingsMeshToPS.ase_color = inputMesh.color;
+				outputPackedVaryingsMeshToPS.ase_color = inputMesh.ase_color;
 				outputPackedVaryingsMeshToPS.ase_texcoord2 = float4(inputMesh.positionOS,1);
 				outputPackedVaryingsMeshToPS.ase_normal = inputMesh.normalOS;
 
@@ -2140,7 +2404,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 defaultVertexValue = float3( 0, 0, 0 );
 				#endif
-				float3 vertexValue = ifLocalVar132_g187;
+				float3 vertexValue = ifLocalVar132_g844;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				inputMesh.positionOS.xyz = vertexValue;
@@ -2151,8 +2415,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				inputMesh.normalOS = staticSwitch348;
 				inputMesh.tangentOS =  inputMesh.tangentOS ;
 
-				float2 uv;
-
+				float2 uv = float2(0.0, 0.0);
 				if (unity_MetaVertexControl.x)
 				{
 					uv = inputMesh.uv1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
@@ -2165,6 +2428,106 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				outputPackedVaryingsMeshToPS.positionCS = float4(uv * 2.0 - 1.0, inputMesh.positionOS.z > 0 ? 1.0e-4 : 0.0, 1.0);
 				return outputPackedVaryingsMeshToPS;
 			}
+
+			#if defined(TESSELLATION_ON)
+			struct VertexControl
+			{
+				float3 positionOS : INTERNALTESSPOS;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
+				float4 uv0 : TEXCOORD0;
+				float4 uv1 : TEXCOORD1;
+				float4 uv2 : TEXCOORD2;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl Vert ( AttributesMesh v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.positionOS = v.positionOS;
+				o.normalOS = v.normalOS;
+				o.tangentOS = v.tangentOS;
+				o.uv0 = v.uv0;
+				o.uv1 = v.uv1;
+				o.uv2 = v.uv2;
+				o.ase_color = v.ase_color;
+				o.ase_texcoord3 = v.ase_texcoord3;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				float3 cameraPos = 0;
+				#else
+				float3 cameraPos = _WorldSpaceCameraPos;
+				#endif
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), cameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, GetObjectToWorldMatrix(), cameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), cameraPos, _ScreenParams, _FrustumPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			PackedVaryingsMeshToPS DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				AttributesMesh o = (AttributesMesh) 0;
+				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
+				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
+				o.tangentOS = patch[0].tangentOS * bary.x + patch[1].tangentOS * bary.y + patch[2].tangentOS * bary.z;
+				o.uv0 = patch[0].uv0 * bary.x + patch[1].uv0 * bary.y + patch[2].uv0 * bary.z;
+				o.uv1 = patch[0].uv1 * bary.x + patch[1].uv1 * bary.y + patch[2].uv1 * bary.z;
+				o.uv2 = patch[0].uv2 * bary.x + patch[1].uv2 * bary.y + patch[2].uv2 * bary.z;
+				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
+				o.ase_texcoord3 = patch[0].ase_texcoord3 * bary.x + patch[1].ase_texcoord3 * bary.y + patch[2].ase_texcoord3 * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.positionOS.xyz - patch[i].normalOS * (dot(o.positionOS.xyz, patch[i].normalOS) - dot(patch[i].positionOS.xyz, patch[i].normalOS));
+				float phongStrength = _TessPhongStrength;
+				o.positionOS.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.positionOS.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			PackedVaryingsMeshToPS Vert ( AttributesMesh v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
 
 			float4 Frag(PackedVaryingsMeshToPS packedInput  ) : SV_Target
 			{
@@ -2243,8 +2606,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 appendResult155 = (float4(break158.r , break158.g , break158.b , staticSwitch143.r));
 				
 				float3 _ZNormal = float3(0,0,1);
-				float3 tex2DNode166 = UnpackNormalmapRGorAG( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
-				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalmapRGorAG( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
+				float3 tex2DNode166 = UnpackNormalScale( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
+				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalScale( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
 				#ifdef GEOM_TYPE_BRANCH_DETAIL
 				float3 staticSwitch183 = lerpResult184;
 				#else
@@ -2345,34 +2708,31 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			
 			Name "ShadowCaster"
 			Tags { "LightMode"="ShadowCaster" }
+
 			Cull [_CullMode]
-
-			ZClip [_ZClip]
 			ZWrite On
+			ZClip [_ZClip]
 			ZTest LEqual
-
 			ColorMask 0
 
 			HLSLPROGRAM
 
-			#define _ALPHATEST_ON 1
+			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
-			#define ASE_SRP_VERSION 70108
+			#define HAVE_MESH_MODIFICATION
+			#define ASE_SRP_VERSION 999999
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
 			#pragma shader_feature_local _DOUBLESIDED_ON
 			#pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
+			#pragma shader_feature_local _ENABLE_FOG_ON_TRANSPARENT
+			#pragma shader_feature_local _ALPHATEST_ON
+
+			#define SHADERPASS SHADERPASS_SHADOWS
 
 			#pragma vertex Vert
 			#pragma fragment Frag
-
-			#if defined(_DOTS_INSTANCING)
-			#pragma instancing_options nolightprobe
-			#pragma instancing_options nolodfade
-			#else
-			#pragma instancing_options renderinglayer
-			#endif
 
 			//#define UNITY_MATERIAL_LIT
 
@@ -2382,15 +2742,15 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
 
-			#define SHADERPASS SHADERPASS_SHADOWS
-			#define USE_LEGACY_UNITY_MATRIX_VARIABLES
+			//#define USE_LEGACY_UNITY_MATRIX_VARIABLES
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
-
+			#ifdef DEBUG_DISPLAY
+				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
+			#endif
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
@@ -2399,6 +2759,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
 
 
@@ -2431,31 +2793,35 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			};
 
 			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindBranchAdherences;
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindLeaf1Twitch;
 			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindBranchWhip;
-			int _Cull;
-			float4 _ST_WindFrondRipple;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float4 _Color;
-			float4 _ST_WindVector;
 			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindVector;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindGlobal;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _Color;
 			float _Cutoff;
+			int _Cull;
+			int _WindQuality;
 			float _Metallic;
+			int _GlobalTimerId;
 			float _Smoothness;
 			float4 _EmissionColor;
+			float _AlphaCutoff;
 			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
 			float _StencilRef;
 			float _StencilWriteMask;
 			float _StencilRefDepth;
@@ -2476,25 +2842,34 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float _AlphaSrcBlend;
 			float _AlphaDstBlend;
 			float _ZWrite;
+			float _TransparentZWrite;
 			float _CullMode;
 			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
 			float _CullModeForward;
 			float _TransparentCullMode;
 			float _ZTestDepthEqualForOpaque;
 			float _ZTestTransparent;
 			float _TransparentBackfaceEnable;
 			float _AlphaCutoffEnable;
-			float _AlphaCutoff;
 			float _UseShadowThreshold;
 			float _DoubleSidedEnable;
 			float _DoubleSidedNormalMode;
 			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
 			CBUFFER_END
 			float4 _GlobalTimers[100];
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality , out float3 rotatedWindVector , out float3 rotatedBranchAnchor , float4 windVector , float4 windBranchAnchor )
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
 			{
 				if (windQuality <= 0) // WIND_QUALITY_NONE
 				{
@@ -2513,7 +2888,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float3 OffsetLeavesVertex( float3 VertexPos , float ColorAlpha , float3 texcoord1 , float2 texcoord3 )
+			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
 				VertexPos -= texcoord1.xyz;
@@ -2548,26 +2923,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				return abs((frac(vData + 0.5) * 2.0) - 1.0);
 			}
 			
-			float ComputeWindAdjust( float3 vPos , float4 windGlobal )
-			{
-				    // compute how much the height contributes
-				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
-				    if (fAdjust != 0.0) {
-				        float s = sign(fAdjust);
-				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
-				    }
-				    return fAdjust;
-			}
-			
-			float3 SwizzleCombineMoveAmount( float3 vPos , float3 vRotatedWindVector , float fMoveAmount )
-			{
-				    float fLength = length(vPos);
-				 
-				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
-				    vPos.xyz = normalize(vPos.xyz) * fLength;
-				    return vPos;
-			}
-			
 			float3 UnpackNormalFromFloat( float3 fValue )
 			{
 				     float3 vDecodeKey = float3(16.0, 1.0, 0.0625);
@@ -2586,7 +2941,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 ComplexOscillationInputs( float fTime , float fOffset , float fTwitchFreqScale , float fWeight , int bWhip )
+			float4 ComplexOscillationInputs( float fTime, float fOffset, float fTwitchFreqScale, float fWeight, int bWhip )
 			{
 				if (bWhip > 0) {
 				    return float4(fTime + fOffset, fTime * fTwitchFreqScale + fOffset, fTwitchFreqScale * 0.5 * (fTime + fOffset), fTime + fOffset + (1.0 - fWeight));
@@ -2595,7 +2950,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 SimpleOscillationInputs( float fTime , float fOffset , float fWeight , int bWhip )
+			float4 SimpleOscillationInputs( float fTime, float fOffset, float fWeight, int bWhip )
 			{
 				if (bWhip)
 				  return float4(fTime + fOffset, fTime * 0.689 + fOffset, 0.0, fTime + fOffset + (1.0 - fWeight));
@@ -2608,7 +2963,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				 return GetAbsolutePositionWS(float3(UNITY_MATRIX_M[0].w, UNITY_MATRIX_M[1].w, UNITY_MATRIX_M[2].w));
 			}
 			
-			float3x3 RotationMatrix( float3 vAxis , float fAngle )
+			float ComputeWindAdjust( float3 vPos, float4 windGlobal )
+			{
+				    // compute how much the height contributes
+				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+				    if (fAdjust != 0.0) {
+				        float s = sign(fAdjust);
+				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
+				    }
+				    return fAdjust;
+			}
+			
+			float3 SwizzleCombineMoveAmount( float3 vPos, float3 vRotatedWindVector, float fMoveAmount )
+			{
+				    float fLength = length(vPos);
+				 
+				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+				    vPos.xyz = normalize(vPos.xyz) * fLength;
+				    return vPos;
+			}
+			
+			float3x3 RotationMatrix( float3 vAxis, float fAngle )
 			{
 				    // compute sin/cos of fAngle
 				    float2 vSinCos;
@@ -2630,46 +3005,18 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			}
 			
 
-			void BuildSurfaceData(FragInputs fragInputs, inout AlphaSurfaceDescription surfaceDescription, float3 V, out SurfaceData surfaceData, out float3 bentNormalWS)
+			void BuildSurfaceData(FragInputs fragInputs, inout AlphaSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
 
-				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
-				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
-				#endif
-				#ifdef _MATERIAL_FEATURE_TRANSMISSION
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
-				#endif
-				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
-				#endif
+				surfaceData.specularOcclusion = 1.0;
 
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
-				#endif
-				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
-				#endif
+				// surface data
 
-				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
-				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
-				#endif
-
-				float3 normalTS = float3( 0.0f, 0.0f, 1.0f );
-				#ifdef _DOUBLESIDED_ON
-				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
-				#else
-				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
-				#endif
-				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
-				bentNormalWS = surfaceData.normalWS;
-				surfaceData.geomNormalWS = fragInputs.tangentToWorld[ 2 ];
-
+				// refraction
 				#ifdef _HAS_REFRACTION
 				if( _EnableSSRefraction )
 				{
-
 					surfaceData.transmittanceMask = ( 1.0 - surfaceDescription.Alpha );
 					surfaceDescription.Alpha = 1.0;
 				}
@@ -2688,28 +3035,79 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceData.transmittanceMask = 0.0;
 				#endif
 
-				surfaceData.tangentWS = normalize(fragInputs.tangentToWorld[0].xyz);    // The tangent is not normalize in tangentToWorld for mikkt. TODO: Check if it expected that we normalize with Morten. Tag: SURFACE_GRADIENT
-				surfaceData.tangentWS = Orthonormalize(surfaceData.tangentWS, surfaceData.normalWS);
+
+				// material features
+				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
+				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				#endif
+				#ifdef _MATERIAL_FEATURE_TRANSMISSION
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
+				#endif
+				#ifdef ASE_LIT_CLEAR_COAT
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#endif
+				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
+				#endif
+
+				// others
+				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
+				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
+				#endif
+				#ifdef _DOUBLESIDED_ON
+				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
+				#else
+				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
+				#endif
+
+				// normals
+				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
+				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
+
+				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
+
+				bentNormalWS = surfaceData.normalWS;
+
+				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );
+				surfaceData.tangentWS = Orthonormalize( surfaceData.tangentWS, surfaceData.normalWS );
+
+				// decals
+				#if HAVE_DECALS
+				if( _EnableDecals )
+				{
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
+					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+				}
+				#endif
 
 				#if defined(_SPECULAR_OCCLUSION_CUSTOM)
 				#elif defined(_SPECULAR_OCCLUSION_FROM_AO_BENT_NORMAL)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromBentAO( V, bentNormalWS, surfaceData.normalWS, surfaceData.ambientOcclusion, PerceptualSmoothnessToPerceptualRoughness( surfaceData.perceptualSmoothness ) );
 				#elif defined(_AMBIENT_OCCLUSION) && defined(_SPECULAR_OCCLUSION_FROM_AO)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion( ClampNdotV( dot( surfaceData.normalWS, V ) ), surfaceData.ambientOcclusion, PerceptualSmoothnessToRoughness( surfaceData.perceptualSmoothness ) );
-				#else
-				surfaceData.specularOcclusion = 1.0;
-				#endif
-				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
-				surfaceData.perceptualSmoothness = GeometricNormalFiltering( surfaceData.perceptualSmoothness, fragInputs.tangentToWorld[ 2 ], surfaceDescription.SpecularAAScreenSpaceVariance, surfaceDescription.SpecularAAThreshold );
 				#endif
 
+				// debug
+				#if defined(DEBUG_DISPLAY)
+				if (_DebugMipMapMode != DEBUGMIPMAPMODE_NONE)
+				{
+					surfaceData.metallic = 0;
+				}
+				ApplyDebugToSurfaceData(fragInputs.tangentToWorld, surfaceData);
+				#endif
 			}
 
 			void GetSurfaceAndBuiltinData(AlphaSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
 			{
 				#ifdef LOD_FADE_CROSSFADE
-				uint3 fadeMaskSeed = asuint( (int3)( V * _ScreenSize.xyx ) );
-				LODDitheringTransition( fadeMaskSeed, unity_LODFade.x );
+				LODDitheringTransition(ComputeFadeMaskSeed(V, posInput.positionSS), unity_LODFade.x);
 				#endif
 
 				#ifdef _DOUBLESIDED_ON
@@ -2734,35 +3132,19 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 
 				float3 bentNormalWS;
-				BuildSurfaceData( fragInputs, surfaceDescription, V, surfaceData, bentNormalWS );
+				BuildSurfaceData( fragInputs, surfaceDescription, V, posInput, surfaceData, bentNormalWS );
 
-				#if HAVE_DECALS
-				if( _EnableDecals )
-				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
-				}
-				#endif
-
-				InitBuiltinData (posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[2], fragInputs.texCoord1, fragInputs.texCoord2, builtinData);
-
-				#if (SHADERPASS == SHADERPASS_DISTORTION)
-				builtinData.distortion = surfaceDescription.Distortion;
-				builtinData.distortionBlur = surfaceDescription.DistortionBlur;
-				#else
-				builtinData.distortion = float2( 0.0, 0.0 );
-				builtinData.distortionBlur = 0.0;
-				#endif
+				InitBuiltinData( posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[ 2 ], fragInputs.texCoord1, fragInputs.texCoord2, builtinData );
 
 				PostInitBuiltinData(V, posInput, surfaceData, builtinData);
 			}
 
-			PackedVaryingsMeshToPS Vert(AttributesMesh inputMesh  )
+			PackedVaryingsMeshToPS VertexFunction(AttributesMesh inputMesh )
 			{
 				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS;
-
 				UNITY_SETUP_INSTANCE_ID(inputMesh);
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 
 				float3 temp_output_1_0_g4 = inputMesh.positionOS;
 				float3 appendResult213 = (float3(inputMesh.ase_texcoord1.xyz));
@@ -2792,7 +3174,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
-				int temp_output_40_0_g189 = _WindQuality;
+				int temp_output_40_0_g300 = _WindQuality;
 				float3 VertexPos286 = inputMesh.positionOS;
 				float3 appendResult112 = (float3(_Color.r , _Color.g , _Color.b));
 				float4 appendResult281 = (float4(( appendResult112 * inputMesh.ase_color.r ) , _Color.a));
@@ -2801,58 +3183,59 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 texcoord1286 = appendResult213;
 				float2 texcoord3286 = inputMesh.ase_texcoord3.xy;
 				float3 localOffsetLeavesVertex286 = OffsetLeavesVertex( VertexPos286 , ColorAlpha286 , texcoord1286 , texcoord3286 );
-				float3 temp_output_6_0_g189 = localOffsetLeavesVertex286;
-				int temp_output_2_0_g264 = temp_output_40_0_g189;
-				float4 break25_g189 = inputMesh.ase_texcoord2;
-				float3 temp_cast_5 = (break25_g189.z).xxx;
-				float3 fValue10_g268 = temp_cast_5;
-				float3 localUnpackNormalFromFloat10_g268 = UnpackNormalFromFloat( fValue10_g268 );
-				float temp_output_4_0_g264 = break25_g189.w;
-				float ifLocalVar19_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar19_g264 = _ST_WindLeaf1Ripple.y;
+				float3 temp_output_6_0_g300 = localOffsetLeavesVertex286;
+				int temp_output_2_0_g301 = temp_output_40_0_g300;
+				float4 break25_g300 = inputMesh.ase_texcoord2;
+				float3 temp_cast_5 = (break25_g300.z).xxx;
+				float3 fValue10_g305 = temp_cast_5;
+				float3 localUnpackNormalFromFloat10_g305 = UnpackNormalFromFloat( fValue10_g305 );
+				float temp_output_4_0_g301 = break25_g300.w;
+				float ifLocalVar19_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar19_g301 = _ST_WindLeaf1Ripple.y;
 				else
-				ifLocalVar19_g264 = _ST_WindLeaf2Ripple.y;
-				float2 break24_g189 = appendResult213.xy;
-				float4 break18_g264 = _GlobalTimers[_GlobalTimerId];
-				float4 appendResult10_g266 = (float4(( ( break24_g189.x + break24_g189.y ) + break18_g264.y ) , 0.0 , 0.0 , 0.0));
-				float4 vData7_g267 = appendResult10_g266;
-				float4 localTriangleWave7_g267 = TriangleWave( vData7_g267 );
-				float4 vData6_g267 = localTriangleWave7_g267;
-				float4 localCubicSmooth6_g267 = CubicSmooth( vData6_g267 );
-				float temp_output_8_0_g264 = break25_g189.x;
-				float3 temp_output_52_0_g264 = ( temp_output_6_0_g189 + ( localUnpackNormalFromFloat10_g268 * ( ifLocalVar19_g264 * ( ( localCubicSmooth6_g267 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g264 ) );
-				float temp_output_10_0_g264 = break25_g189.y;
-				float3 temp_cast_7 = (temp_output_10_0_g264).xxx;
-				float3 fValue10_g276 = temp_cast_7;
-				float3 localUnpackNormalFromFloat10_g276 = UnpackNormalFromFloat( fValue10_g276 );
-				float3 temp_output_5_0_g269 = localUnpackNormalFromFloat10_g276;
-				float3 vAxis6_g272 = temp_output_5_0_g269;
-				float temp_output_3_0_g269 = temp_output_8_0_g264;
-				float4 ifLocalVar32_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar32_g264 = _ST_WindLeaf1Tumble;
+				ifLocalVar19_g301 = _ST_WindLeaf2Ripple.y;
+				float2 break24_g300 = appendResult213.xy;
+				float4 break18_g301 = _GlobalTimers[_GlobalTimerId];
+				float4 appendResult10_g303 = (float4(( ( break24_g300.x + break24_g300.y ) + break18_g301.y ) , 0.0 , 0.0 , 0.0));
+				float4 vData7_g304 = appendResult10_g303;
+				float4 localTriangleWave7_g304 = TriangleWave( vData7_g304 );
+				float4 vData6_g304 = localTriangleWave7_g304;
+				float4 localCubicSmooth6_g304 = CubicSmooth( vData6_g304 );
+				float temp_output_8_0_g301 = break25_g300.x;
+				float3 temp_output_52_0_g301 = ( temp_output_6_0_g300 + ( localUnpackNormalFromFloat10_g305 * ( ifLocalVar19_g301 * ( ( localCubicSmooth6_g304 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g301 ) );
+				float temp_output_10_0_g301 = break25_g300.y;
+				float3 temp_cast_7 = (temp_output_10_0_g301).xxx;
+				float3 fValue10_g313 = temp_cast_7;
+				float3 localUnpackNormalFromFloat10_g313 = UnpackNormalFromFloat( fValue10_g313 );
+				float3 temp_output_5_0_g306 = localUnpackNormalFromFloat10_g313;
+				float3 vAxis6_g309 = temp_output_5_0_g306;
+				float temp_output_3_0_g306 = temp_output_8_0_g301;
+				float4 ifLocalVar32_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar32_g301 = _ST_WindLeaf1Tumble;
 				else
-				ifLocalVar32_g264 = _ST_WindLeaf2Tumble;
-				float4 break34_g264 = ifLocalVar32_g264;
-				float temp_output_22_0_g269 = frac( ( temp_output_10_0_g264 * 30.3 ) );
-				float temp_output_25_0_g269 = ( temp_output_22_0_g269 + temp_output_22_0_g269 + temp_output_22_0_g269 );
-				float temp_output_7_0_g269 = break18_g264.z;
-				float4 appendResult34_g269 = (float4(( temp_output_25_0_g269 + temp_output_7_0_g269 ) , ( ( temp_output_7_0_g269 * 0.75 ) + ( temp_output_25_0_g269 * -1.0 ) ) , ( ( temp_output_7_0_g269 * 0.01 ) + temp_output_25_0_g269 ) , ( temp_output_25_0_g269 + ( temp_output_7_0_g269 * 1.0 ) )));
-				float4 vData7_g271 = appendResult34_g269;
-				float4 localTriangleWave7_g271 = TriangleWave( vData7_g271 );
-				float4 vData6_g271 = localTriangleWave7_g271;
-				float4 localCubicSmooth6_g271 = CubicSmooth( vData6_g271 );
-				float4 temp_output_27_0_g269 = ( ( localCubicSmooth6_g271 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break47_g269 = temp_output_27_0_g269;
-				float fAngle6_g272 = ( temp_output_3_0_g269 * break34_g264.z * ( break47_g269.x + ( break47_g269.y * break47_g269.y ) ) );
-				float3x3 localRotationMatrix6_g272 = RotationMatrix( vAxis6_g272 , fAngle6_g272 );
+				ifLocalVar32_g301 = _ST_WindLeaf2Tumble;
+				float4 break34_g301 = ifLocalVar32_g301;
+				float temp_output_22_0_g306 = frac( ( temp_output_10_0_g301 * 30.3 ) );
+				float temp_output_25_0_g306 = ( temp_output_22_0_g306 + temp_output_22_0_g306 + temp_output_22_0_g306 );
+				float temp_output_7_0_g306 = break18_g301.z;
+				float4 appendResult34_g306 = (float4(( temp_output_25_0_g306 + temp_output_7_0_g306 ) , ( ( temp_output_7_0_g306 * 0.75 ) + ( temp_output_25_0_g306 * -1.0 ) ) , ( ( temp_output_7_0_g306 * 0.01 ) + temp_output_25_0_g306 ) , ( temp_output_25_0_g306 + ( temp_output_7_0_g306 * 1.0 ) )));
+				float4 vData7_g308 = appendResult34_g306;
+				float4 localTriangleWave7_g308 = TriangleWave( vData7_g308 );
+				float4 vData6_g308 = localTriangleWave7_g308;
+				float4 localCubicSmooth6_g308 = CubicSmooth( vData6_g308 );
+				float4 temp_output_27_0_g306 = ( ( localCubicSmooth6_g308 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break47_g306 = temp_output_27_0_g306;
+				float fAngle6_g309 = ( temp_output_3_0_g306 * break34_g301.z * ( break47_g306.x + ( break47_g306.y * break47_g306.y ) ) );
+				float3x3 localRotationMatrix6_g309 = RotationMatrix( vAxis6_g309 , fAngle6_g309 );
 				int localCalculateWindInputs291 = ( 0 );
 				float windQuality291 = (float)_WindQuality;
 				float3 rotatedWindVector291 = float3( 0,0,0 );
 				float3 rotatedBranchAnchor291 = float3( 0,0,0 );
 				float4 windVector291 = _ST_WindVector;
 				float4 windBranchAnchor291 = _ST_WindBranchAnchor;
+				{
 				if (windQuality291 <= 0) // WIND_QUALITY_NONE
 				{
 				    rotatedWindVector291 = float3(0.0f, 0.0f, 0.0f);
@@ -2868,268 +3251,269 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    }
 				    rotatedBranchAnchor291 = normalize(mul(windBranchAnchor291.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor291.w;
 				}
-				float3 data116_g269 = rotatedWindVector291;
-				float3 localClampToNonZero116_g269 = ClampToNonZero( data116_g269 );
-				float3 break57_g269 = cross( temp_output_5_0_g269 , localClampToNonZero116_g269 );
-				float dotResult55_g269 = dot( float3( 0,0,0 ) , temp_output_5_0_g269 );
-				float clampResult56_g269 = clamp( dotResult55_g269 , -1.0 , 1.0 );
-				float3 appendResult59_g269 = (float3(break57_g269.x , ( clampResult56_g269 + break57_g269.y ) , break57_g269.z));
-				float3 normalizeResult60_g269 = normalize( appendResult59_g269 );
-				float3 vAxis6_g275 = normalizeResult60_g269;
-				float3 break9_g273 = float3( 0,0,0 );
-				float temp_output_4_0_g273 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g269 );
-				float4 appendResult12_g273 = (float4(( break9_g273.x + break9_g273.z + temp_output_4_0_g273 ) , ( ( 0.87 * temp_output_4_0_g273 ) + break9_g273.y ) , 0.0 , 0.0));
-				float4 vData7_g274 = appendResult12_g273;
-				float4 localTriangleWave7_g274 = TriangleWave( vData7_g274 );
-				float4 vData6_g274 = localTriangleWave7_g274;
-				float4 localCubicSmooth6_g274 = CubicSmooth( vData6_g274 );
-				float4 break14_g273 = ( ( localCubicSmooth6_g274 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar35_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar35_g264 = _ST_WindLeaf1Twitch;
+				}
+				float3 data116_g306 = rotatedWindVector291;
+				float3 localClampToNonZero116_g306 = ClampToNonZero( data116_g306 );
+				float3 break57_g306 = cross( temp_output_5_0_g306 , localClampToNonZero116_g306 );
+				float dotResult55_g306 = dot( float3( 0,0,0 ) , temp_output_5_0_g306 );
+				float clampResult56_g306 = clamp( dotResult55_g306 , -1.0 , 1.0 );
+				float3 appendResult59_g306 = (float3(break57_g306.x , ( clampResult56_g306 + break57_g306.y ) , break57_g306.z));
+				float3 normalizeResult60_g306 = normalize( appendResult59_g306 );
+				float3 vAxis6_g312 = normalizeResult60_g306;
+				float3 break9_g310 = float3( 0,0,0 );
+				float temp_output_4_0_g310 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g306 );
+				float4 appendResult12_g310 = (float4(( break9_g310.x + break9_g310.z + temp_output_4_0_g310 ) , ( ( 0.87 * temp_output_4_0_g310 ) + break9_g310.y ) , 0.0 , 0.0));
+				float4 vData7_g311 = appendResult12_g310;
+				float4 localTriangleWave7_g311 = TriangleWave( vData7_g311 );
+				float4 vData6_g311 = localTriangleWave7_g311;
+				float4 localCubicSmooth6_g311 = CubicSmooth( vData6_g311 );
+				float4 break14_g310 = ( ( localCubicSmooth6_g311 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar35_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar35_g301 = _ST_WindLeaf1Twitch;
 				else
-				ifLocalVar35_g264 = _ST_WindLeaf2Twitch;
-				float3 appendResult37_g264 = (float3(ifLocalVar35_g264.xyz));
-				float3 break76_g269 = appendResult37_g264;
-				float4 break109_g269 = temp_output_27_0_g269;
-				float fAngle6_g275 = ( temp_output_3_0_g269 * ( ( acos( clampResult56_g269 ) * break34_g264.w ) + ( pow( saturate( ( ( ( break14_g273.x * break14_g273.y * break14_g273.y ) + 1.0 ) * 0.5 ) ) , break76_g269.y ) * break76_g269.x ) + ( ( break109_g269.y + ( ( break109_g269.x * break109_g269.x ) * -1.0 ) ) * break34_g264.y ) ) );
-				float3x3 localRotationMatrix6_g275 = RotationMatrix( vAxis6_g275 , fAngle6_g275 );
-				float3x3 temp_output_86_0_g269 = mul( localRotationMatrix6_g272, localRotationMatrix6_g275 );
-				float3 temp_output_1_0_g269 = temp_output_52_0_g264;
-				float3 normalizeResult91_g269 = normalize( mul( temp_output_86_0_g269, temp_output_1_0_g269 ) );
-				float3 ifLocalVar27_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar27_g264 = ( normalizeResult91_g269 * length( temp_output_1_0_g269 ) );
+				ifLocalVar35_g301 = _ST_WindLeaf2Twitch;
+				float3 appendResult37_g301 = (float3(ifLocalVar35_g301.xyz));
+				float3 break76_g306 = appendResult37_g301;
+				float4 break109_g306 = temp_output_27_0_g306;
+				float fAngle6_g312 = ( temp_output_3_0_g306 * ( ( acos( clampResult56_g306 ) * break34_g301.w ) + ( pow( saturate( ( ( ( break14_g310.x * break14_g310.y * break14_g310.y ) + 1.0 ) * 0.5 ) ) , break76_g306.y ) * break76_g306.x ) + ( ( break109_g306.y + ( ( break109_g306.x * break109_g306.x ) * -1.0 ) ) * break34_g301.y ) ) );
+				float3x3 localRotationMatrix6_g312 = RotationMatrix( vAxis6_g312 , fAngle6_g312 );
+				float3x3 temp_output_86_0_g306 = mul( localRotationMatrix6_g309, localRotationMatrix6_g312 );
+				float3 temp_output_1_0_g306 = temp_output_52_0_g301;
+				float3 normalizeResult91_g306 = normalize( mul( temp_output_86_0_g306, temp_output_1_0_g306 ) );
+				float3 ifLocalVar27_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar27_g301 = ( normalizeResult91_g306 * length( temp_output_1_0_g306 ) );
 				else
-				ifLocalVar27_g264 = temp_output_52_0_g264;
-				float3 ifLocalVar2_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar2_g189 = temp_output_6_0_g189;
+				ifLocalVar27_g301 = temp_output_52_0_g301;
+				float3 ifLocalVar2_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar2_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar2_g189 = ifLocalVar27_g264;
-				float3 ifLocalVar1_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar1_g189 = temp_output_6_0_g189;
+				ifLocalVar2_g300 = ifLocalVar27_g301;
+				float3 ifLocalVar1_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar1_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar1_g189 = ifLocalVar2_g189;
+				ifLocalVar1_g300 = ifLocalVar2_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g189 );
+				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g300 );
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch214 = staticSwitch343;
 				#else
 				float3 staticSwitch214 = staticSwitch343;
 				#endif
-				float3 temp_output_3_0_g277 = staticSwitch214;
-				int temp_output_24_0_g277 = _WindQuality;
-				float4 break32_g277 = inputMesh.ase_texcoord;
-				float2 appendResult31_g277 = (float2(break32_g277.z , break32_g277.w));
-				float2 break34_g277 = appendResult31_g277;
-				float temp_output_5_0_g278 = break34_g277.y;
-				float3 temp_cast_10 = (temp_output_5_0_g278).xxx;
-				float3 fValue10_g279 = temp_cast_10;
-				float3 localUnpackNormalFromFloat10_g279 = UnpackNormalFromFloat( fValue10_g279 );
-				float temp_output_4_0_g278 = break34_g277.x;
-				int temp_output_7_0_g280 = 0;
-				int temp_output_10_0_g280 = 1;
-				float3 localGetInstancePos40_g277 = GetInstancePos();
-				float3 break17_g278 = localGetInstancePos40_g277;
-				float temp_output_3_0_g280 = ( break17_g278.x + break17_g278.y + _GlobalTimers[_GlobalTimerId].y );
-				float fTime28_g280 = temp_output_3_0_g280;
-				float temp_output_4_0_g280 = temp_output_5_0_g278;
-				float fOffset28_g280 = temp_output_4_0_g280;
-				float fTwitchFreqScale28_g280 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g280 = temp_output_4_0_g278;
-				float fWeight28_g280 = temp_output_5_0_g280;
-				int bWhip28_g280 = temp_output_7_0_g280;
-				float4 localComplexOscillationInputs28_g280 = ComplexOscillationInputs( fTime28_g280 , fOffset28_g280 , fTwitchFreqScale28_g280 , fWeight28_g280 , bWhip28_g280 );
-				float4 vData7_g282 = localComplexOscillationInputs28_g280;
-				float4 localTriangleWave7_g282 = TriangleWave( vData7_g282 );
-				float4 vData6_g282 = localTriangleWave7_g282;
-				float4 localCubicSmooth6_g282 = CubicSmooth( vData6_g282 );
-				float4 temp_output_29_0_g280 = ( ( localCubicSmooth6_g282 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g280 = temp_output_29_0_g280;
-				float temp_output_31_0_g280 = ( break30_g280.y * break30_g280.z );
-				float ifLocalVar36_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar36_g280 = 1.0;
+				float3 temp_output_3_0_g314 = staticSwitch214;
+				int temp_output_24_0_g314 = _WindQuality;
+				float4 break32_g314 = inputMesh.ase_texcoord;
+				float2 appendResult31_g314 = (float2(break32_g314.z , break32_g314.w));
+				float2 break34_g314 = appendResult31_g314;
+				float temp_output_5_0_g315 = break34_g314.y;
+				float3 temp_cast_10 = (temp_output_5_0_g315).xxx;
+				float3 fValue10_g316 = temp_cast_10;
+				float3 localUnpackNormalFromFloat10_g316 = UnpackNormalFromFloat( fValue10_g316 );
+				float temp_output_4_0_g315 = break34_g314.x;
+				int temp_output_7_0_g317 = 0;
+				int temp_output_10_0_g317 = 1;
+				float3 localGetInstancePos40_g314 = GetInstancePos();
+				float3 break17_g315 = localGetInstancePos40_g314;
+				float temp_output_3_0_g317 = ( break17_g315.x + break17_g315.y + _GlobalTimers[_GlobalTimerId].y );
+				float fTime28_g317 = temp_output_3_0_g317;
+				float temp_output_4_0_g317 = temp_output_5_0_g315;
+				float fOffset28_g317 = temp_output_4_0_g317;
+				float fTwitchFreqScale28_g317 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g317 = temp_output_4_0_g315;
+				float fWeight28_g317 = temp_output_5_0_g317;
+				int bWhip28_g317 = temp_output_7_0_g317;
+				float4 localComplexOscillationInputs28_g317 = ComplexOscillationInputs( fTime28_g317 , fOffset28_g317 , fTwitchFreqScale28_g317 , fWeight28_g317 , bWhip28_g317 );
+				float4 vData7_g319 = localComplexOscillationInputs28_g317;
+				float4 localTriangleWave7_g319 = TriangleWave( vData7_g319 );
+				float4 vData6_g319 = localTriangleWave7_g319;
+				float4 localCubicSmooth6_g319 = CubicSmooth( vData6_g319 );
+				float4 temp_output_29_0_g317 = ( ( localCubicSmooth6_g319 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g317 = temp_output_29_0_g317;
+				float temp_output_31_0_g317 = ( break30_g317.y * break30_g317.z );
+				float ifLocalVar36_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar36_g317 = 1.0;
 				else
-				ifLocalVar36_g280 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar35_g280 = temp_output_31_0_g280;
+				ifLocalVar36_g317 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar35_g317 = temp_output_31_0_g317;
 				else
-				ifLocalVar35_g280 = ( temp_output_31_0_g280 * -1.0 );
-				float lerpResult41_g280 = lerp( temp_output_31_0_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float lerpResult42_g280 = lerp( lerpResult41_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float temp_output_11_0_g280 = _ST_WindBranchTwitch.x;
-				float fTime61_g280 = temp_output_3_0_g280;
-				float fOffset61_g280 = temp_output_4_0_g280;
-				float fWeight61_g280 = temp_output_5_0_g280;
-				int bWhip61_g280 = temp_output_7_0_g280;
-				float4 localSimpleOscillationInputs61_g280 = SimpleOscillationInputs( fTime61_g280 , fOffset61_g280 , fWeight61_g280 , bWhip61_g280 );
-				float4 vData7_g281 = localSimpleOscillationInputs61_g280;
-				float4 localTriangleWave7_g281 = TriangleWave( vData7_g281 );
-				float4 vData6_g281 = localTriangleWave7_g281;
-				float4 localCubicSmooth6_g281 = CubicSmooth( vData6_g281 );
-				float4 temp_output_66_0_g280 = ( ( localCubicSmooth6_g281 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g280 = temp_output_66_0_g280;
-				float temp_output_64_0_g280 = ( break62_g280.x + ( break62_g280.x * break62_g280.y ) );
-				float ifLocalVar17_g280 = 0;
-				if( temp_output_10_0_g280 <= 0.0 )
-				ifLocalVar17_g280 = temp_output_64_0_g280;
+				ifLocalVar35_g317 = ( temp_output_31_0_g317 * -1.0 );
+				float lerpResult41_g317 = lerp( temp_output_31_0_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float lerpResult42_g317 = lerp( lerpResult41_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float temp_output_11_0_g317 = _ST_WindBranchTwitch.x;
+				float fTime61_g317 = temp_output_3_0_g317;
+				float fOffset61_g317 = temp_output_4_0_g317;
+				float fWeight61_g317 = temp_output_5_0_g317;
+				int bWhip61_g317 = temp_output_7_0_g317;
+				float4 localSimpleOscillationInputs61_g317 = SimpleOscillationInputs( fTime61_g317 , fOffset61_g317 , fWeight61_g317 , bWhip61_g317 );
+				float4 vData7_g318 = localSimpleOscillationInputs61_g317;
+				float4 localTriangleWave7_g318 = TriangleWave( vData7_g318 );
+				float4 vData6_g318 = localTriangleWave7_g318;
+				float4 localCubicSmooth6_g318 = CubicSmooth( vData6_g318 );
+				float4 temp_output_66_0_g317 = ( ( localCubicSmooth6_g318 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g317 = temp_output_66_0_g317;
+				float temp_output_64_0_g317 = ( break62_g317.x + ( break62_g317.x * break62_g317.y ) );
+				float ifLocalVar17_g317 = 0;
+				if( temp_output_10_0_g317 <= 0.0 )
+				ifLocalVar17_g317 = temp_output_64_0_g317;
 				else
-				ifLocalVar17_g280 = ( ( lerpResult42_g280 * temp_output_11_0_g280 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g280.x * ( 1.0 - temp_output_11_0_g280 ) ) );
-				float ifLocalVar52_g280 = 0;
-				if( temp_output_7_0_g280 <= 0.0 )
-				ifLocalVar52_g280 = ifLocalVar17_g280;
+				ifLocalVar17_g317 = ( ( lerpResult42_g317 * temp_output_11_0_g317 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g317.x * ( 1.0 - temp_output_11_0_g317 ) ) );
+				float ifLocalVar52_g317 = 0;
+				if( temp_output_7_0_g317 <= 0.0 )
+				ifLocalVar52_g317 = ifLocalVar17_g317;
 				else
-				ifLocalVar52_g280 = ( ifLocalVar17_g280 * ( 1.0 + ( break30_g280.w * (int)_ST_WindBranchWhip.x ) ) );
-				float3 temp_output_45_0_g277 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g279 * temp_output_4_0_g278 ) * ifLocalVar52_g280 * _ST_WindBranch.y ) );
-				float temp_output_4_0_g284 = break34_g277.y;
-				float3 temp_cast_12 = (temp_output_4_0_g284).xxx;
-				float3 fValue10_g287 = temp_cast_12;
-				float3 localUnpackNormalFromFloat10_g287 = UnpackNormalFromFloat( fValue10_g287 );
-				float temp_output_3_0_g284 = break34_g277.x;
-				int temp_output_7_0_g288 = 1;
-				int temp_output_10_0_g288 = 1;
-				float3 break17_g284 = localGetInstancePos40_g277;
-				float temp_output_16_0_g284 = ( _GlobalTimers[_GlobalTimerId].y + break17_g284.x + break17_g284.y );
-				float temp_output_3_0_g288 = temp_output_16_0_g284;
-				float fTime28_g288 = temp_output_3_0_g288;
-				float temp_output_4_0_g288 = temp_output_4_0_g284;
-				float fOffset28_g288 = temp_output_4_0_g288;
-				float fTwitchFreqScale28_g288 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g288 = temp_output_3_0_g284;
-				float fWeight28_g288 = temp_output_5_0_g288;
-				int bWhip28_g288 = temp_output_7_0_g288;
-				float4 localComplexOscillationInputs28_g288 = ComplexOscillationInputs( fTime28_g288 , fOffset28_g288 , fTwitchFreqScale28_g288 , fWeight28_g288 , bWhip28_g288 );
-				float4 vData7_g290 = localComplexOscillationInputs28_g288;
-				float4 localTriangleWave7_g290 = TriangleWave( vData7_g290 );
-				float4 vData6_g290 = localTriangleWave7_g290;
-				float4 localCubicSmooth6_g290 = CubicSmooth( vData6_g290 );
-				float4 temp_output_29_0_g288 = ( ( localCubicSmooth6_g290 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g288 = temp_output_29_0_g288;
-				float temp_output_31_0_g288 = ( break30_g288.y * break30_g288.z );
-				float ifLocalVar36_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar36_g288 = 1.0;
+				ifLocalVar52_g317 = ( ifLocalVar17_g317 * ( 1.0 + ( break30_g317.w * (int)_ST_WindBranchWhip.x ) ) );
+				float3 temp_output_45_0_g314 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g316 * temp_output_4_0_g315 ) * ifLocalVar52_g317 * _ST_WindBranch.y ) );
+				float temp_output_4_0_g321 = break34_g314.y;
+				float3 temp_cast_12 = (temp_output_4_0_g321).xxx;
+				float3 fValue10_g324 = temp_cast_12;
+				float3 localUnpackNormalFromFloat10_g324 = UnpackNormalFromFloat( fValue10_g324 );
+				float temp_output_3_0_g321 = break34_g314.x;
+				int temp_output_7_0_g325 = 1;
+				int temp_output_10_0_g325 = 1;
+				float3 break17_g321 = localGetInstancePos40_g314;
+				float temp_output_16_0_g321 = ( _GlobalTimers[_GlobalTimerId].y + break17_g321.x + break17_g321.y );
+				float temp_output_3_0_g325 = temp_output_16_0_g321;
+				float fTime28_g325 = temp_output_3_0_g325;
+				float temp_output_4_0_g325 = temp_output_4_0_g321;
+				float fOffset28_g325 = temp_output_4_0_g325;
+				float fTwitchFreqScale28_g325 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g325 = temp_output_3_0_g321;
+				float fWeight28_g325 = temp_output_5_0_g325;
+				int bWhip28_g325 = temp_output_7_0_g325;
+				float4 localComplexOscillationInputs28_g325 = ComplexOscillationInputs( fTime28_g325 , fOffset28_g325 , fTwitchFreqScale28_g325 , fWeight28_g325 , bWhip28_g325 );
+				float4 vData7_g327 = localComplexOscillationInputs28_g325;
+				float4 localTriangleWave7_g327 = TriangleWave( vData7_g327 );
+				float4 vData6_g327 = localTriangleWave7_g327;
+				float4 localCubicSmooth6_g327 = CubicSmooth( vData6_g327 );
+				float4 temp_output_29_0_g325 = ( ( localCubicSmooth6_g327 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g325 = temp_output_29_0_g325;
+				float temp_output_31_0_g325 = ( break30_g325.y * break30_g325.z );
+				float ifLocalVar36_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar36_g325 = 1.0;
 				else
-				ifLocalVar36_g288 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar35_g288 = temp_output_31_0_g288;
+				ifLocalVar36_g325 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar35_g325 = temp_output_31_0_g325;
 				else
-				ifLocalVar35_g288 = ( temp_output_31_0_g288 * -1.0 );
-				float lerpResult41_g288 = lerp( temp_output_31_0_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float lerpResult42_g288 = lerp( lerpResult41_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float temp_output_11_0_g288 = _ST_WindBranchTwitch.x;
-				float fTime61_g288 = temp_output_3_0_g288;
-				float fOffset61_g288 = temp_output_4_0_g288;
-				float fWeight61_g288 = temp_output_5_0_g288;
-				int bWhip61_g288 = temp_output_7_0_g288;
-				float4 localSimpleOscillationInputs61_g288 = SimpleOscillationInputs( fTime61_g288 , fOffset61_g288 , fWeight61_g288 , bWhip61_g288 );
-				float4 vData7_g289 = localSimpleOscillationInputs61_g288;
-				float4 localTriangleWave7_g289 = TriangleWave( vData7_g289 );
-				float4 vData6_g289 = localTriangleWave7_g289;
-				float4 localCubicSmooth6_g289 = CubicSmooth( vData6_g289 );
-				float4 temp_output_66_0_g288 = ( ( localCubicSmooth6_g289 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g288 = temp_output_66_0_g288;
-				float temp_output_64_0_g288 = ( break62_g288.x + ( break62_g288.x * break62_g288.y ) );
-				float ifLocalVar17_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar17_g288 = temp_output_64_0_g288;
+				ifLocalVar35_g325 = ( temp_output_31_0_g325 * -1.0 );
+				float lerpResult41_g325 = lerp( temp_output_31_0_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float lerpResult42_g325 = lerp( lerpResult41_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float temp_output_11_0_g325 = _ST_WindBranchTwitch.x;
+				float fTime61_g325 = temp_output_3_0_g325;
+				float fOffset61_g325 = temp_output_4_0_g325;
+				float fWeight61_g325 = temp_output_5_0_g325;
+				int bWhip61_g325 = temp_output_7_0_g325;
+				float4 localSimpleOscillationInputs61_g325 = SimpleOscillationInputs( fTime61_g325 , fOffset61_g325 , fWeight61_g325 , bWhip61_g325 );
+				float4 vData7_g326 = localSimpleOscillationInputs61_g325;
+				float4 localTriangleWave7_g326 = TriangleWave( vData7_g326 );
+				float4 vData6_g326 = localTriangleWave7_g326;
+				float4 localCubicSmooth6_g326 = CubicSmooth( vData6_g326 );
+				float4 temp_output_66_0_g325 = ( ( localCubicSmooth6_g326 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g325 = temp_output_66_0_g325;
+				float temp_output_64_0_g325 = ( break62_g325.x + ( break62_g325.x * break62_g325.y ) );
+				float ifLocalVar17_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar17_g325 = temp_output_64_0_g325;
 				else
-				ifLocalVar17_g288 = ( ( lerpResult42_g288 * temp_output_11_0_g288 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g288.x * ( 1.0 - temp_output_11_0_g288 ) ) );
-				float temp_output_11_0_g284 = _ST_WindBranchWhip.x;
-				float ifLocalVar52_g288 = 0;
-				if( temp_output_7_0_g288 <= 0.0 )
-				ifLocalVar52_g288 = ifLocalVar17_g288;
+				ifLocalVar17_g325 = ( ( lerpResult42_g325 * temp_output_11_0_g325 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g325.x * ( 1.0 - temp_output_11_0_g325 ) ) );
+				float temp_output_11_0_g321 = _ST_WindBranchWhip.x;
+				float ifLocalVar52_g325 = 0;
+				if( temp_output_7_0_g325 <= 0.0 )
+				ifLocalVar52_g325 = ifLocalVar17_g325;
 				else
-				ifLocalVar52_g288 = ( ifLocalVar17_g288 * ( 1.0 + ( break30_g288.w * (int)temp_output_11_0_g284 ) ) );
-				float3 temp_output_23_0_g284 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g287 * temp_output_3_0_g284 ) * ifLocalVar52_g288 * _ST_WindBranch.y ) );
-				float temp_output_3_0_g285 = temp_output_4_0_g284;
-				float temp_output_6_0_g285 = _ST_WindTurbulences.y;
-				float4 appendResult9_g285 = (float4(( ( temp_output_16_0_g284 * 0.1 ) + temp_output_3_0_g285 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g285 * 0.1 ) + temp_output_3_0_g285 ) , 0.0 , 0.0));
-				float4 vData7_g286 = appendResult9_g285;
-				float4 localTriangleWave7_g286 = TriangleWave( vData7_g286 );
-				float4 vData6_g286 = localTriangleWave7_g286;
-				float4 localCubicSmooth6_g286 = CubicSmooth( vData6_g286 );
-				float4 break16_g285 = ( ( localCubicSmooth6_g286 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar59_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar59_g288 = temp_output_66_0_g288;
+				ifLocalVar52_g325 = ( ifLocalVar17_g325 * ( 1.0 + ( break30_g325.w * (int)temp_output_11_0_g321 ) ) );
+				float3 temp_output_23_0_g321 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g324 * temp_output_3_0_g321 ) * ifLocalVar52_g325 * _ST_WindBranch.y ) );
+				float temp_output_3_0_g322 = temp_output_4_0_g321;
+				float temp_output_6_0_g322 = _ST_WindTurbulences.y;
+				float4 appendResult9_g322 = (float4(( ( temp_output_16_0_g321 * 0.1 ) + temp_output_3_0_g322 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g322 * 0.1 ) + temp_output_3_0_g322 ) , 0.0 , 0.0));
+				float4 vData7_g323 = appendResult9_g322;
+				float4 localTriangleWave7_g323 = TriangleWave( vData7_g323 );
+				float4 vData6_g323 = localTriangleWave7_g323;
+				float4 localCubicSmooth6_g323 = CubicSmooth( vData6_g323 );
+				float4 break16_g322 = ( ( localCubicSmooth6_g323 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar59_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar59_g325 = temp_output_66_0_g325;
 				else
-				ifLocalVar59_g288 = temp_output_29_0_g288;
-				float3 ifLocalVar29_g277 = 0;
-				if( temp_output_24_0_g277 == 5 )
-				ifLocalVar29_g277 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g284 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g285.x * break16_g285.y * break16_g285.x * break16_g285.y * temp_output_6_0_g285 ) ) + ( ifLocalVar59_g288.w * _ST_WindVector.w * temp_output_11_0_g284 ) ) * temp_output_3_0_g284 ) + temp_output_23_0_g284 );
+				ifLocalVar59_g325 = temp_output_29_0_g325;
+				float3 ifLocalVar29_g314 = 0;
+				if( temp_output_24_0_g314 == 5 )
+				ifLocalVar29_g314 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g321 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g322.x * break16_g322.y * break16_g322.x * break16_g322.y * temp_output_6_0_g322 ) ) + ( ifLocalVar59_g325.w * _ST_WindVector.w * temp_output_11_0_g321 ) ) * temp_output_3_0_g321 ) + temp_output_23_0_g321 );
 				else
-				ifLocalVar29_g277 = temp_output_45_0_g277;
-				float3 ifLocalVar26_g277 = 0;
-				if( temp_output_24_0_g277 >= 3 )
-				ifLocalVar26_g277 = ifLocalVar29_g277;
+				ifLocalVar29_g314 = temp_output_45_0_g314;
+				float3 ifLocalVar26_g314 = 0;
+				if( temp_output_24_0_g314 >= 3 )
+				ifLocalVar26_g314 = ifLocalVar29_g314;
 				else
-				ifLocalVar26_g277 = temp_output_3_0_g277;
+				ifLocalVar26_g314 = temp_output_3_0_g314;
 				#ifdef GEOM_TYPE_MESH
-				float3 staticSwitch9_g277 = ifLocalVar26_g277;
+				float3 staticSwitch9_g314 = ifLocalVar26_g314;
 				#else
-				float3 staticSwitch9_g277 = temp_output_3_0_g277;
+				float3 staticSwitch9_g314 = temp_output_3_0_g314;
 				#endif
-				float3 temp_output_111_0_g187 = staticSwitch9_g277;
-				float3 vPos140_g187 = temp_output_111_0_g187;
-				float3 vRotatedWindVector140_g187 = rotatedWindVector291;
-				float3 vPos145_g187 = temp_output_111_0_g187;
-				float4 windGlobal145_g187 = _ST_WindGlobal;
-				float localComputeWindAdjust145_g187 = ComputeWindAdjust( vPos145_g187 , windGlobal145_g187 );
-				float3 break122_g187 = localGetInstancePos40_g277;
-				float temp_output_125_0_g187 = _GlobalTimers[_GlobalTimerId].x;
-				float4 appendResult126_g187 = (float4(( break122_g187.x + temp_output_125_0_g187 ) , ( break122_g187.y + ( temp_output_125_0_g187 * 0.8 ) ) , 0.0 , 0.0));
-				float4 vData7_g188 = appendResult126_g187;
-				float4 localTriangleWave7_g188 = TriangleWave( vData7_g188 );
-				float4 vData6_g188 = localTriangleWave7_g188;
-				float4 localCubicSmooth6_g188 = CubicSmooth( vData6_g188 );
-				float4 break117_g187 = ( ( localCubicSmooth6_g188 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float temp_output_90_0_g187 = ( localComputeWindAdjust145_g187 * ( ( _ST_WindGlobal.y * ( break117_g187.x + ( break117_g187.y * break117_g187.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
-				float ifLocalVar142_g187 = 0;
+				float3 temp_output_111_0_g844 = staticSwitch9_g314;
+				float3 vPos140_g844 = temp_output_111_0_g844;
+				float3 vRotatedWindVector140_g844 = rotatedWindVector291;
+				float3 vPos145_g844 = temp_output_111_0_g844;
+				float4 windGlobal145_g844 = _ST_WindGlobal;
+				float localComputeWindAdjust145_g844 = ComputeWindAdjust( vPos145_g844 , windGlobal145_g844 );
+				float3 break122_g844 = localGetInstancePos40_g314;
+				float temp_output_125_0_g844 = _GlobalTimers[_GlobalTimerId].x;
+				float4 appendResult126_g844 = (float4(( break122_g844.x + temp_output_125_0_g844 ) , ( break122_g844.y + ( temp_output_125_0_g844 * 0.8 ) ) , 0.0 , 0.0));
+				float4 vData7_g845 = appendResult126_g844;
+				float4 localTriangleWave7_g845 = TriangleWave( vData7_g845 );
+				float4 vData6_g845 = localTriangleWave7_g845;
+				float4 localCubicSmooth6_g845 = CubicSmooth( vData6_g845 );
+				float4 break117_g844 = ( ( localCubicSmooth6_g845 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float temp_output_90_0_g844 = ( localComputeWindAdjust145_g844 * ( ( _ST_WindGlobal.y * ( break117_g844.x + ( break117_g844.y * break117_g844.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
+				float ifLocalVar142_g844 = 0;
 				if( _ST_WindGlobal.w == 0.0 )
-				ifLocalVar142_g187 = 0.0;
+				ifLocalVar142_g844 = 0.0;
 				else
-				ifLocalVar142_g187 = temp_output_90_0_g187;
-				float fMoveAmount140_g187 = ifLocalVar142_g187;
-				float3 localSwizzleCombineMoveAmount140_g187 = SwizzleCombineMoveAmount( vPos140_g187 , vRotatedWindVector140_g187 , fMoveAmount140_g187 );
-				float3 ifLocalVar132_g187 = 0;
+				ifLocalVar142_g844 = temp_output_90_0_g844;
+				float fMoveAmount140_g844 = ifLocalVar142_g844;
+				float3 localSwizzleCombineMoveAmount140_g844 = SwizzleCombineMoveAmount( vPos140_g844 , vRotatedWindVector140_g844 , fMoveAmount140_g844 );
+				float3 ifLocalVar132_g844 = 0;
 				if( _WindQuality <= 0 )
-				ifLocalVar132_g187 = temp_output_111_0_g187;
+				ifLocalVar132_g844 = temp_output_111_0_g844;
 				else
-				ifLocalVar132_g187 = localSwizzleCombineMoveAmount140_g187;
+				ifLocalVar132_g844 = localSwizzleCombineMoveAmount140_g844;
 				
-				float3 temp_output_9_0_g189 = inputMesh.normalOS;
-				float3 temp_output_7_0_g264 = temp_output_9_0_g189;
-				float3 ifLocalVar30_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar30_g264 = mul( temp_output_86_0_g269, temp_output_7_0_g264 );
+				float3 temp_output_9_0_g300 = inputMesh.normalOS;
+				float3 temp_output_7_0_g301 = temp_output_9_0_g300;
+				float3 ifLocalVar30_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar30_g301 = mul( temp_output_86_0_g306, temp_output_7_0_g301 );
 				else
-				ifLocalVar30_g264 = temp_output_7_0_g264;
-				float3 ifLocalVar10_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar10_g189 = temp_output_9_0_g189;
+				ifLocalVar30_g301 = temp_output_7_0_g301;
+				float3 ifLocalVar10_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar10_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar10_g189 = ifLocalVar30_g264;
-				float3 ifLocalVar14_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar14_g189 = temp_output_9_0_g189;
+				ifLocalVar10_g300 = ifLocalVar30_g301;
+				float3 ifLocalVar14_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar14_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar14_g189 = ifLocalVar10_g189;
+				ifLocalVar14_g300 = ifLocalVar10_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch348 = ifLocalVar14_g189;
+				float3 staticSwitch348 = ifLocalVar14_g300;
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#else
@@ -3143,35 +3527,131 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 defaultVertexValue = float3( 0, 0, 0 );
 				#endif
-				float3 vertexValue = ifLocalVar132_g187;
+				float3 vertexValue = ifLocalVar132_g844;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				inputMesh.positionOS.xyz = vertexValue;
 				#else
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
+
 				inputMesh.normalOS = staticSwitch348;
 
-				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS.xyz);
+				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
 				outputPackedVaryingsMeshToPS.positionCS = TransformWorldToHClip(positionRWS);
 				outputPackedVaryingsMeshToPS.interp00.xyz = positionRWS;
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 				return outputPackedVaryingsMeshToPS;
 			}
 
-			void Frag(  PackedVaryingsMeshToPS packedInput
+			#if defined(TESSELLATION_ON)
+			struct VertexControl
+			{
+				float3 positionOS : INTERNALTESSPOS;
+				float3 normalOS : NORMAL;
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl Vert ( AttributesMesh v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.positionOS = v.positionOS;
+				o.normalOS = v.normalOS;
+				o.ase_texcoord1 = v.ase_texcoord1;
+				o.ase_texcoord2 = v.ase_texcoord2;
+				o.ase_texcoord = v.ase_texcoord;
+				o.ase_color = v.ase_color;
+				o.ase_texcoord3 = v.ase_texcoord3;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				float3 cameraPos = 0;
+				#else
+				float3 cameraPos = _WorldSpaceCameraPos;
+				#endif
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), cameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, GetObjectToWorldMatrix(), cameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), cameraPos, _ScreenParams, _FrustumPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			PackedVaryingsMeshToPS DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				AttributesMesh o = (AttributesMesh) 0;
+				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
+				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
+				o.ase_texcoord1 = patch[0].ase_texcoord1 * bary.x + patch[1].ase_texcoord1 * bary.y + patch[2].ase_texcoord1 * bary.z;
+				o.ase_texcoord2 = patch[0].ase_texcoord2 * bary.x + patch[1].ase_texcoord2 * bary.y + patch[2].ase_texcoord2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
+				o.ase_texcoord3 = patch[0].ase_texcoord3 * bary.x + patch[1].ase_texcoord3 * bary.y + patch[2].ase_texcoord3 * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.positionOS.xyz - patch[i].normalOS * (dot(o.positionOS.xyz, patch[i].normalOS) - dot(patch[i].positionOS.xyz, patch[i].normalOS));
+				float phongStrength = _TessPhongStrength;
+				o.positionOS.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.positionOS.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			PackedVaryingsMeshToPS Vert ( AttributesMesh v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+			
+			void Frag( PackedVaryingsMeshToPS packedInput
 						#ifdef WRITE_NORMAL_BUFFER
 						, out float4 outNormalBuffer : SV_Target0
 							#ifdef WRITE_MSAA_DEPTH
 							, out float1 depthColor : SV_Target1
 							#endif
-						#elif defined(WRITE_MSAA_DEPTH) // When only WRITE_MSAA_DEPTH is define and not WRITE_NORMAL_BUFFER it mean we are Unlit and only need depth, but we still have normal buffer binded
+						#elif defined(WRITE_MSAA_DEPTH)
 						, out float4 outNormalBuffer : SV_Target0
 						, out float1 depthColor : SV_Target1
 						#elif defined(SCENESELECTIONPASS)
 						, out float4 outColor : SV_Target0
 						#endif
-
 						#ifdef _DEPTHOFFSET_ON
 						, out float outputDepth : SV_Depth
 						#endif
@@ -3181,10 +3661,11 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( packedInput );
 				UNITY_SETUP_INSTANCE_ID( packedInput );
 
-				float3 positionRWS  = packedInput.interp00.xyz;
+				float3 positionRWS = packedInput.interp00.xyz;
 
 				FragInputs input;
 				ZERO_INITIALIZE(FragInputs, input);
+
 				input.tangentToWorld = k_identity3x3;
 				input.positionSS = packedInput.positionCS;
 
@@ -3194,16 +3675,15 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				input.isFrontFace = IS_FRONT_VFACE( packedInput.cullFace, true, false);
 				#elif SHADER_STAGE_FRAGMENT
 				#if defined(ASE_NEED_CULLFACE)
-				input.isFrontFace = IS_FRONT_VFACE(packedInput.cullFace, true, false);
+				input.isFrontFace = IS_FRONT_VFACE( packedInput.cullFace, true, false );
 				#endif
 				#endif
 				half isFrontFace = input.isFrontFace;
 
 				PositionInputs posInput = GetPositionInput(input.positionSS.xy, _ScreenSize.zw, input.positionSS.z, input.positionSS.w, input.positionRWS);
+
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
-				SurfaceData surfaceData;
-				BuiltinData builtinData;
 				AlphaSurfaceDescription surfaceDescription = (AlphaSurfaceDescription)0;
 				float4 appendResult170 = (float4(packedInput.ase_texcoord1.x , packedInput.ase_texcoord1.y , 0.0 , 0.0));
 				float4 tex2DNode91 = tex2D( _MainTex, appendResult170.xy );
@@ -3223,7 +3703,9 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceDescription.DepthOffset = 0;
 				#endif
 
-				GetSurfaceAndBuiltinData( surfaceDescription, input, V, posInput, surfaceData, builtinData );
+				SurfaceData surfaceData;
+				BuiltinData builtinData;
+				GetSurfaceAndBuiltinData(surfaceDescription, input, V, posInput, surfaceData, builtinData);
 
 				#ifdef _DEPTHOFFSET_ON
 				outputDepth = posInput.deviceDepth;
@@ -3236,16 +3718,15 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 				#elif defined(WRITE_MSAA_DEPTH)
 				outNormalBuffer = float4( 0.0, 0.0, 0.0, 1.0 );
-				depthColor = packedInput.vmesh.positionCS.z;
+				depthColor = packedInput.positionCS.z;
 				#elif defined(SCENESELECTIONPASS)
 				outColor = float4( _ObjectId, _PassValue, 1.0, 1.0 );
 				#endif
 			}
-
 			ENDHLSL
 		}
 
-			
+		
 		Pass
 		{
 			
@@ -3255,24 +3736,24 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			HLSLPROGRAM
 
-			#define _ALPHATEST_ON 1
+			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
-			#define ASE_SRP_VERSION 70108
+			#define HAVE_MESH_MODIFICATION
+			#define ASE_SRP_VERSION 999999
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
 			#pragma shader_feature_local _DOUBLESIDED_ON
 			#pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
+			#pragma shader_feature_local _ENABLE_FOG_ON_TRANSPARENT
+			#pragma shader_feature_local _ALPHATEST_ON
+
+			#define SHADERPASS SHADERPASS_DEPTH_ONLY
+			#define SCENESELECTIONPASS
+			#pragma editor_sync_compilation
 
 			#pragma vertex Vert
 			#pragma fragment Frag
-
-			#if defined(_DOTS_INSTANCING)
-			#pragma instancing_options nolightprobe
-			#pragma instancing_options nolodfade
-			#else
-			#pragma instancing_options renderinglayer
-			#endif
 
 			//#define UNITY_MATERIAL_LIT
 
@@ -3285,10 +3766,10 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
 
-			#define SHADERPASS SHADERPASS_DEPTH_ONLY
-			#define SCENESELECTIONPASS
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+			#ifdef DEBUG_DISPLAY
+				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
+			#endif
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
@@ -3297,15 +3778,14 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
 
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
 			#endif
-
-			int _ObjectId;
-			int _PassValue;
 
 			struct AttributesMesh
 			{
@@ -3322,7 +3802,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			struct PackedVaryingsMeshToPS
 			{
 				float4 positionCS : SV_Position;
-				float4 ase_texcoord : TEXCOORD0;
+				float3 interp00 : TEXCOORD0;
+				float4 ase_texcoord1 : TEXCOORD1;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
@@ -3330,32 +3811,39 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 			};
 
+			int _ObjectId;
+			int _PassValue;
+
 			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindBranchAdherences;
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindLeaf1Twitch;
 			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindBranchWhip;
-			int _Cull;
-			float4 _ST_WindFrondRipple;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float4 _Color;
-			float4 _ST_WindVector;
 			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindVector;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindGlobal;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _Color;
 			float _Cutoff;
+			int _Cull;
+			int _WindQuality;
 			float _Metallic;
+			int _GlobalTimerId;
 			float _Smoothness;
 			float4 _EmissionColor;
+			float _AlphaCutoff;
 			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
 			float _StencilRef;
 			float _StencilWriteMask;
 			float _StencilRefDepth;
@@ -3376,25 +3864,35 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float _AlphaSrcBlend;
 			float _AlphaDstBlend;
 			float _ZWrite;
+			float _TransparentZWrite;
 			float _CullMode;
 			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
 			float _CullModeForward;
 			float _TransparentCullMode;
 			float _ZTestDepthEqualForOpaque;
 			float _ZTestTransparent;
 			float _TransparentBackfaceEnable;
 			float _AlphaCutoffEnable;
-			float _AlphaCutoff;
 			float _UseShadowThreshold;
 			float _DoubleSidedEnable;
 			float _DoubleSidedNormalMode;
 			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
 			CBUFFER_END
+
 			float4 _GlobalTimers[100];
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality , out float3 rotatedWindVector , out float3 rotatedBranchAnchor , float4 windVector , float4 windBranchAnchor )
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
 			{
 				if (windQuality <= 0) // WIND_QUALITY_NONE
 				{
@@ -3413,7 +3911,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float3 OffsetLeavesVertex( float3 VertexPos , float ColorAlpha , float3 texcoord1 , float2 texcoord3 )
+			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
 				VertexPos -= texcoord1.xyz;
@@ -3448,26 +3946,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				return abs((frac(vData + 0.5) * 2.0) - 1.0);
 			}
 			
-			float ComputeWindAdjust( float3 vPos , float4 windGlobal )
-			{
-				    // compute how much the height contributes
-				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
-				    if (fAdjust != 0.0) {
-				        float s = sign(fAdjust);
-				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
-				    }
-				    return fAdjust;
-			}
-			
-			float3 SwizzleCombineMoveAmount( float3 vPos , float3 vRotatedWindVector , float fMoveAmount )
-			{
-				    float fLength = length(vPos);
-				 
-				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
-				    vPos.xyz = normalize(vPos.xyz) * fLength;
-				    return vPos;
-			}
-			
 			float3 UnpackNormalFromFloat( float3 fValue )
 			{
 				     float3 vDecodeKey = float3(16.0, 1.0, 0.0625);
@@ -3486,7 +3964,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 ComplexOscillationInputs( float fTime , float fOffset , float fTwitchFreqScale , float fWeight , int bWhip )
+			float4 ComplexOscillationInputs( float fTime, float fOffset, float fTwitchFreqScale, float fWeight, int bWhip )
 			{
 				if (bWhip > 0) {
 				    return float4(fTime + fOffset, fTime * fTwitchFreqScale + fOffset, fTwitchFreqScale * 0.5 * (fTime + fOffset), fTime + fOffset + (1.0 - fWeight));
@@ -3495,7 +3973,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 SimpleOscillationInputs( float fTime , float fOffset , float fWeight , int bWhip )
+			float4 SimpleOscillationInputs( float fTime, float fOffset, float fWeight, int bWhip )
 			{
 				if (bWhip)
 				  return float4(fTime + fOffset, fTime * 0.689 + fOffset, 0.0, fTime + fOffset + (1.0 - fWeight));
@@ -3508,7 +3986,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				 return GetAbsolutePositionWS(float3(UNITY_MATRIX_M[0].w, UNITY_MATRIX_M[1].w, UNITY_MATRIX_M[2].w));
 			}
 			
-			float3x3 RotationMatrix( float3 vAxis , float fAngle )
+			float ComputeWindAdjust( float3 vPos, float4 windGlobal )
+			{
+				    // compute how much the height contributes
+				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+				    if (fAdjust != 0.0) {
+				        float s = sign(fAdjust);
+				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
+				    }
+				    return fAdjust;
+			}
+			
+			float3 SwizzleCombineMoveAmount( float3 vPos, float3 vRotatedWindVector, float fMoveAmount )
+			{
+				    float fLength = length(vPos);
+				 
+				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+				    vPos.xyz = normalize(vPos.xyz) * fLength;
+				    return vPos;
+			}
+			
+			float3x3 RotationMatrix( float3 vAxis, float fAngle )
 			{
 				    // compute sin/cos of fAngle
 				    float2 vSinCos;
@@ -3530,47 +4028,18 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			}
 			
 
-			void BuildSurfaceData(FragInputs fragInputs, inout AlphaSurfaceDescription surfaceDescription, float3 V, out SurfaceData surfaceData, out float3 bentNormalWS)
+			void BuildSurfaceData(FragInputs fragInputs, inout SceneSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
 
-				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
-				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
-				#endif
-				#ifdef _MATERIAL_FEATURE_TRANSMISSION
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
-				#endif
-				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
-				#endif
+				surfaceData.specularOcclusion = 1.0;
 
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
-				#endif
-				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
-				#endif
+				// surface data
 
-				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
-				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
-				#endif
-
-				float3 normalTS = float3( 0.0f, 0.0f, 1.0f );
-				#ifdef _DOUBLESIDED_ON
-				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
-				#else
-				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
-				#endif
-				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
-
-				bentNormalWS = surfaceData.normalWS;
-				surfaceData.geomNormalWS = fragInputs.tangentToWorld[ 2 ];
-
+				// refraction
 				#ifdef _HAS_REFRACTION
 				if( _EnableSSRefraction )
 				{
-
 					surfaceData.transmittanceMask = ( 1.0 - surfaceDescription.Alpha );
 					surfaceDescription.Alpha = 1.0;
 				}
@@ -3589,27 +4058,79 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceData.transmittanceMask = 0.0;
 				#endif
 
-				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );    // The tangent is not normalize in tangentToWorld for mikkt. TODO: Check if it expected that we normalize with Morten. Tag: SURFACE_GRADIENT
+
+				// material features
+				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
+				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				#endif
+				#ifdef _MATERIAL_FEATURE_TRANSMISSION
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
+				#endif
+				#ifdef ASE_LIT_CLEAR_COAT
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#endif
+				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
+				#endif
+
+				// others
+				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
+				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
+				#endif
+				#ifdef _DOUBLESIDED_ON
+				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
+				#else
+				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
+				#endif
+
+				// normals
+				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
+				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
+
+				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
+
+				bentNormalWS = surfaceData.normalWS;
+
+				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );
 				surfaceData.tangentWS = Orthonormalize( surfaceData.tangentWS, surfaceData.normalWS );
+
+				// decals
+				#if HAVE_DECALS
+				if( _EnableDecals )
+				{
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
+					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+				}
+				#endif
 
 				#if defined(_SPECULAR_OCCLUSION_CUSTOM)
 				#elif defined(_SPECULAR_OCCLUSION_FROM_AO_BENT_NORMAL)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromBentAO( V, bentNormalWS, surfaceData.normalWS, surfaceData.ambientOcclusion, PerceptualSmoothnessToPerceptualRoughness( surfaceData.perceptualSmoothness ) );
 				#elif defined(_AMBIENT_OCCLUSION) && defined(_SPECULAR_OCCLUSION_FROM_AO)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion( ClampNdotV( dot( surfaceData.normalWS, V ) ), surfaceData.ambientOcclusion, PerceptualSmoothnessToRoughness( surfaceData.perceptualSmoothness ) );
-				#else
-				surfaceData.specularOcclusion = 1.0;
 				#endif
-				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
-				surfaceData.perceptualSmoothness = GeometricNormalFiltering( surfaceData.perceptualSmoothness, fragInputs.tangentToWorld[ 2 ], surfaceDescription.SpecularAAScreenSpaceVariance, surfaceDescription.SpecularAAThreshold );
+
+				// debug
+				#if defined(DEBUG_DISPLAY)
+				if (_DebugMipMapMode != DEBUGMIPMAPMODE_NONE)
+				{
+					surfaceData.metallic = 0;
+				}
+				ApplyDebugToSurfaceData(fragInputs.tangentToWorld, surfaceData);
 				#endif
 			}
 
-			void GetSurfaceAndBuiltinData(AlphaSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
+			void GetSurfaceAndBuiltinData(SceneSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
 			{
 				#ifdef LOD_FADE_CROSSFADE
-				uint3 fadeMaskSeed = asuint( (int3)( V * _ScreenSize.xyx ) );
-				LODDitheringTransition( fadeMaskSeed, unity_LODFade.x );
+				LODDitheringTransition(ComputeFadeMaskSeed(V, posInput.positionSS), unity_LODFade.x);
 				#endif
 
 				#ifdef _DOUBLESIDED_ON
@@ -3630,35 +4151,19 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 
 				float3 bentNormalWS;
-				BuildSurfaceData( fragInputs, surfaceDescription, V, surfaceData, bentNormalWS );
-
-				#if HAVE_DECALS
-				if( _EnableDecals )
-				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
-				}
-				#endif
+				BuildSurfaceData( fragInputs, surfaceDescription, V, posInput, surfaceData, bentNormalWS );
 
 				InitBuiltinData( posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[ 2 ], fragInputs.texCoord1, fragInputs.texCoord2, builtinData );
-
-				#if (SHADERPASS == SHADERPASS_DISTORTION)
-				builtinData.distortion = surfaceDescription.Distortion;
-				builtinData.distortionBlur = surfaceDescription.DistortionBlur;
-				#else
-				builtinData.distortion = float2( 0.0, 0.0 );
-				builtinData.distortionBlur = 0.0;
-				#endif
 
 				PostInitBuiltinData(V, posInput, surfaceData, builtinData);
 			}
 
-			PackedVaryingsMeshToPS Vert(AttributesMesh inputMesh  )
+			PackedVaryingsMeshToPS VertexFunction(AttributesMesh inputMesh )
 			{
 				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS;
-
 				UNITY_SETUP_INSTANCE_ID(inputMesh);
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 
 				float3 temp_output_1_0_g4 = inputMesh.positionOS;
 				float3 appendResult213 = (float3(inputMesh.ase_texcoord1.xyz));
@@ -3688,7 +4193,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
-				int temp_output_40_0_g189 = _WindQuality;
+				int temp_output_40_0_g300 = _WindQuality;
 				float3 VertexPos286 = inputMesh.positionOS;
 				float3 appendResult112 = (float3(_Color.r , _Color.g , _Color.b));
 				float4 appendResult281 = (float4(( appendResult112 * inputMesh.ase_color.r ) , _Color.a));
@@ -3697,58 +4202,59 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 texcoord1286 = appendResult213;
 				float2 texcoord3286 = inputMesh.ase_texcoord3.xy;
 				float3 localOffsetLeavesVertex286 = OffsetLeavesVertex( VertexPos286 , ColorAlpha286 , texcoord1286 , texcoord3286 );
-				float3 temp_output_6_0_g189 = localOffsetLeavesVertex286;
-				int temp_output_2_0_g264 = temp_output_40_0_g189;
-				float4 break25_g189 = inputMesh.ase_texcoord2;
-				float3 temp_cast_5 = (break25_g189.z).xxx;
-				float3 fValue10_g268 = temp_cast_5;
-				float3 localUnpackNormalFromFloat10_g268 = UnpackNormalFromFloat( fValue10_g268 );
-				float temp_output_4_0_g264 = break25_g189.w;
-				float ifLocalVar19_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar19_g264 = _ST_WindLeaf1Ripple.y;
+				float3 temp_output_6_0_g300 = localOffsetLeavesVertex286;
+				int temp_output_2_0_g301 = temp_output_40_0_g300;
+				float4 break25_g300 = inputMesh.ase_texcoord2;
+				float3 temp_cast_5 = (break25_g300.z).xxx;
+				float3 fValue10_g305 = temp_cast_5;
+				float3 localUnpackNormalFromFloat10_g305 = UnpackNormalFromFloat( fValue10_g305 );
+				float temp_output_4_0_g301 = break25_g300.w;
+				float ifLocalVar19_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar19_g301 = _ST_WindLeaf1Ripple.y;
 				else
-				ifLocalVar19_g264 = _ST_WindLeaf2Ripple.y;
-				float2 break24_g189 = appendResult213.xy;
-				float4 break18_g264 = _GlobalTimers[_GlobalTimerId];
-				float4 appendResult10_g266 = (float4(( ( break24_g189.x + break24_g189.y ) + break18_g264.y ) , 0.0 , 0.0 , 0.0));
-				float4 vData7_g267 = appendResult10_g266;
-				float4 localTriangleWave7_g267 = TriangleWave( vData7_g267 );
-				float4 vData6_g267 = localTriangleWave7_g267;
-				float4 localCubicSmooth6_g267 = CubicSmooth( vData6_g267 );
-				float temp_output_8_0_g264 = break25_g189.x;
-				float3 temp_output_52_0_g264 = ( temp_output_6_0_g189 + ( localUnpackNormalFromFloat10_g268 * ( ifLocalVar19_g264 * ( ( localCubicSmooth6_g267 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g264 ) );
-				float temp_output_10_0_g264 = break25_g189.y;
-				float3 temp_cast_7 = (temp_output_10_0_g264).xxx;
-				float3 fValue10_g276 = temp_cast_7;
-				float3 localUnpackNormalFromFloat10_g276 = UnpackNormalFromFloat( fValue10_g276 );
-				float3 temp_output_5_0_g269 = localUnpackNormalFromFloat10_g276;
-				float3 vAxis6_g272 = temp_output_5_0_g269;
-				float temp_output_3_0_g269 = temp_output_8_0_g264;
-				float4 ifLocalVar32_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar32_g264 = _ST_WindLeaf1Tumble;
+				ifLocalVar19_g301 = _ST_WindLeaf2Ripple.y;
+				float2 break24_g300 = appendResult213.xy;
+				float4 break18_g301 = _GlobalTimers[_GlobalTimerId];
+				float4 appendResult10_g303 = (float4(( ( break24_g300.x + break24_g300.y ) + break18_g301.y ) , 0.0 , 0.0 , 0.0));
+				float4 vData7_g304 = appendResult10_g303;
+				float4 localTriangleWave7_g304 = TriangleWave( vData7_g304 );
+				float4 vData6_g304 = localTriangleWave7_g304;
+				float4 localCubicSmooth6_g304 = CubicSmooth( vData6_g304 );
+				float temp_output_8_0_g301 = break25_g300.x;
+				float3 temp_output_52_0_g301 = ( temp_output_6_0_g300 + ( localUnpackNormalFromFloat10_g305 * ( ifLocalVar19_g301 * ( ( localCubicSmooth6_g304 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g301 ) );
+				float temp_output_10_0_g301 = break25_g300.y;
+				float3 temp_cast_7 = (temp_output_10_0_g301).xxx;
+				float3 fValue10_g313 = temp_cast_7;
+				float3 localUnpackNormalFromFloat10_g313 = UnpackNormalFromFloat( fValue10_g313 );
+				float3 temp_output_5_0_g306 = localUnpackNormalFromFloat10_g313;
+				float3 vAxis6_g309 = temp_output_5_0_g306;
+				float temp_output_3_0_g306 = temp_output_8_0_g301;
+				float4 ifLocalVar32_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar32_g301 = _ST_WindLeaf1Tumble;
 				else
-				ifLocalVar32_g264 = _ST_WindLeaf2Tumble;
-				float4 break34_g264 = ifLocalVar32_g264;
-				float temp_output_22_0_g269 = frac( ( temp_output_10_0_g264 * 30.3 ) );
-				float temp_output_25_0_g269 = ( temp_output_22_0_g269 + temp_output_22_0_g269 + temp_output_22_0_g269 );
-				float temp_output_7_0_g269 = break18_g264.z;
-				float4 appendResult34_g269 = (float4(( temp_output_25_0_g269 + temp_output_7_0_g269 ) , ( ( temp_output_7_0_g269 * 0.75 ) + ( temp_output_25_0_g269 * -1.0 ) ) , ( ( temp_output_7_0_g269 * 0.01 ) + temp_output_25_0_g269 ) , ( temp_output_25_0_g269 + ( temp_output_7_0_g269 * 1.0 ) )));
-				float4 vData7_g271 = appendResult34_g269;
-				float4 localTriangleWave7_g271 = TriangleWave( vData7_g271 );
-				float4 vData6_g271 = localTriangleWave7_g271;
-				float4 localCubicSmooth6_g271 = CubicSmooth( vData6_g271 );
-				float4 temp_output_27_0_g269 = ( ( localCubicSmooth6_g271 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break47_g269 = temp_output_27_0_g269;
-				float fAngle6_g272 = ( temp_output_3_0_g269 * break34_g264.z * ( break47_g269.x + ( break47_g269.y * break47_g269.y ) ) );
-				float3x3 localRotationMatrix6_g272 = RotationMatrix( vAxis6_g272 , fAngle6_g272 );
+				ifLocalVar32_g301 = _ST_WindLeaf2Tumble;
+				float4 break34_g301 = ifLocalVar32_g301;
+				float temp_output_22_0_g306 = frac( ( temp_output_10_0_g301 * 30.3 ) );
+				float temp_output_25_0_g306 = ( temp_output_22_0_g306 + temp_output_22_0_g306 + temp_output_22_0_g306 );
+				float temp_output_7_0_g306 = break18_g301.z;
+				float4 appendResult34_g306 = (float4(( temp_output_25_0_g306 + temp_output_7_0_g306 ) , ( ( temp_output_7_0_g306 * 0.75 ) + ( temp_output_25_0_g306 * -1.0 ) ) , ( ( temp_output_7_0_g306 * 0.01 ) + temp_output_25_0_g306 ) , ( temp_output_25_0_g306 + ( temp_output_7_0_g306 * 1.0 ) )));
+				float4 vData7_g308 = appendResult34_g306;
+				float4 localTriangleWave7_g308 = TriangleWave( vData7_g308 );
+				float4 vData6_g308 = localTriangleWave7_g308;
+				float4 localCubicSmooth6_g308 = CubicSmooth( vData6_g308 );
+				float4 temp_output_27_0_g306 = ( ( localCubicSmooth6_g308 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break47_g306 = temp_output_27_0_g306;
+				float fAngle6_g309 = ( temp_output_3_0_g306 * break34_g301.z * ( break47_g306.x + ( break47_g306.y * break47_g306.y ) ) );
+				float3x3 localRotationMatrix6_g309 = RotationMatrix( vAxis6_g309 , fAngle6_g309 );
 				int localCalculateWindInputs291 = ( 0 );
 				float windQuality291 = (float)_WindQuality;
 				float3 rotatedWindVector291 = float3( 0,0,0 );
 				float3 rotatedBranchAnchor291 = float3( 0,0,0 );
 				float4 windVector291 = _ST_WindVector;
 				float4 windBranchAnchor291 = _ST_WindBranchAnchor;
+				{
 				if (windQuality291 <= 0) // WIND_QUALITY_NONE
 				{
 				    rotatedWindVector291 = float3(0.0f, 0.0f, 0.0f);
@@ -3764,297 +4270,396 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    }
 				    rotatedBranchAnchor291 = normalize(mul(windBranchAnchor291.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor291.w;
 				}
-				float3 data116_g269 = rotatedWindVector291;
-				float3 localClampToNonZero116_g269 = ClampToNonZero( data116_g269 );
-				float3 break57_g269 = cross( temp_output_5_0_g269 , localClampToNonZero116_g269 );
-				float dotResult55_g269 = dot( float3( 0,0,0 ) , temp_output_5_0_g269 );
-				float clampResult56_g269 = clamp( dotResult55_g269 , -1.0 , 1.0 );
-				float3 appendResult59_g269 = (float3(break57_g269.x , ( clampResult56_g269 + break57_g269.y ) , break57_g269.z));
-				float3 normalizeResult60_g269 = normalize( appendResult59_g269 );
-				float3 vAxis6_g275 = normalizeResult60_g269;
-				float3 break9_g273 = float3( 0,0,0 );
-				float temp_output_4_0_g273 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g269 );
-				float4 appendResult12_g273 = (float4(( break9_g273.x + break9_g273.z + temp_output_4_0_g273 ) , ( ( 0.87 * temp_output_4_0_g273 ) + break9_g273.y ) , 0.0 , 0.0));
-				float4 vData7_g274 = appendResult12_g273;
-				float4 localTriangleWave7_g274 = TriangleWave( vData7_g274 );
-				float4 vData6_g274 = localTriangleWave7_g274;
-				float4 localCubicSmooth6_g274 = CubicSmooth( vData6_g274 );
-				float4 break14_g273 = ( ( localCubicSmooth6_g274 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar35_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar35_g264 = _ST_WindLeaf1Twitch;
+				}
+				float3 data116_g306 = rotatedWindVector291;
+				float3 localClampToNonZero116_g306 = ClampToNonZero( data116_g306 );
+				float3 break57_g306 = cross( temp_output_5_0_g306 , localClampToNonZero116_g306 );
+				float dotResult55_g306 = dot( float3( 0,0,0 ) , temp_output_5_0_g306 );
+				float clampResult56_g306 = clamp( dotResult55_g306 , -1.0 , 1.0 );
+				float3 appendResult59_g306 = (float3(break57_g306.x , ( clampResult56_g306 + break57_g306.y ) , break57_g306.z));
+				float3 normalizeResult60_g306 = normalize( appendResult59_g306 );
+				float3 vAxis6_g312 = normalizeResult60_g306;
+				float3 break9_g310 = float3( 0,0,0 );
+				float temp_output_4_0_g310 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g306 );
+				float4 appendResult12_g310 = (float4(( break9_g310.x + break9_g310.z + temp_output_4_0_g310 ) , ( ( 0.87 * temp_output_4_0_g310 ) + break9_g310.y ) , 0.0 , 0.0));
+				float4 vData7_g311 = appendResult12_g310;
+				float4 localTriangleWave7_g311 = TriangleWave( vData7_g311 );
+				float4 vData6_g311 = localTriangleWave7_g311;
+				float4 localCubicSmooth6_g311 = CubicSmooth( vData6_g311 );
+				float4 break14_g310 = ( ( localCubicSmooth6_g311 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar35_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar35_g301 = _ST_WindLeaf1Twitch;
 				else
-				ifLocalVar35_g264 = _ST_WindLeaf2Twitch;
-				float3 appendResult37_g264 = (float3(ifLocalVar35_g264.xyz));
-				float3 break76_g269 = appendResult37_g264;
-				float4 break109_g269 = temp_output_27_0_g269;
-				float fAngle6_g275 = ( temp_output_3_0_g269 * ( ( acos( clampResult56_g269 ) * break34_g264.w ) + ( pow( saturate( ( ( ( break14_g273.x * break14_g273.y * break14_g273.y ) + 1.0 ) * 0.5 ) ) , break76_g269.y ) * break76_g269.x ) + ( ( break109_g269.y + ( ( break109_g269.x * break109_g269.x ) * -1.0 ) ) * break34_g264.y ) ) );
-				float3x3 localRotationMatrix6_g275 = RotationMatrix( vAxis6_g275 , fAngle6_g275 );
-				float3x3 temp_output_86_0_g269 = mul( localRotationMatrix6_g272, localRotationMatrix6_g275 );
-				float3 temp_output_1_0_g269 = temp_output_52_0_g264;
-				float3 normalizeResult91_g269 = normalize( mul( temp_output_86_0_g269, temp_output_1_0_g269 ) );
-				float3 ifLocalVar27_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar27_g264 = ( normalizeResult91_g269 * length( temp_output_1_0_g269 ) );
+				ifLocalVar35_g301 = _ST_WindLeaf2Twitch;
+				float3 appendResult37_g301 = (float3(ifLocalVar35_g301.xyz));
+				float3 break76_g306 = appendResult37_g301;
+				float4 break109_g306 = temp_output_27_0_g306;
+				float fAngle6_g312 = ( temp_output_3_0_g306 * ( ( acos( clampResult56_g306 ) * break34_g301.w ) + ( pow( saturate( ( ( ( break14_g310.x * break14_g310.y * break14_g310.y ) + 1.0 ) * 0.5 ) ) , break76_g306.y ) * break76_g306.x ) + ( ( break109_g306.y + ( ( break109_g306.x * break109_g306.x ) * -1.0 ) ) * break34_g301.y ) ) );
+				float3x3 localRotationMatrix6_g312 = RotationMatrix( vAxis6_g312 , fAngle6_g312 );
+				float3x3 temp_output_86_0_g306 = mul( localRotationMatrix6_g309, localRotationMatrix6_g312 );
+				float3 temp_output_1_0_g306 = temp_output_52_0_g301;
+				float3 normalizeResult91_g306 = normalize( mul( temp_output_86_0_g306, temp_output_1_0_g306 ) );
+				float3 ifLocalVar27_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar27_g301 = ( normalizeResult91_g306 * length( temp_output_1_0_g306 ) );
 				else
-				ifLocalVar27_g264 = temp_output_52_0_g264;
-				float3 ifLocalVar2_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar2_g189 = temp_output_6_0_g189;
+				ifLocalVar27_g301 = temp_output_52_0_g301;
+				float3 ifLocalVar2_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar2_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar2_g189 = ifLocalVar27_g264;
-				float3 ifLocalVar1_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar1_g189 = temp_output_6_0_g189;
+				ifLocalVar2_g300 = ifLocalVar27_g301;
+				float3 ifLocalVar1_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar1_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar1_g189 = ifLocalVar2_g189;
+				ifLocalVar1_g300 = ifLocalVar2_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g189 );
+				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g300 );
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch214 = staticSwitch343;
 				#else
 				float3 staticSwitch214 = staticSwitch343;
 				#endif
-				float3 temp_output_3_0_g277 = staticSwitch214;
-				int temp_output_24_0_g277 = _WindQuality;
-				float4 break32_g277 = inputMesh.ase_texcoord;
-				float2 appendResult31_g277 = (float2(break32_g277.z , break32_g277.w));
-				float2 break34_g277 = appendResult31_g277;
-				float temp_output_5_0_g278 = break34_g277.y;
-				float3 temp_cast_10 = (temp_output_5_0_g278).xxx;
-				float3 fValue10_g279 = temp_cast_10;
-				float3 localUnpackNormalFromFloat10_g279 = UnpackNormalFromFloat( fValue10_g279 );
-				float temp_output_4_0_g278 = break34_g277.x;
-				int temp_output_7_0_g280 = 0;
-				int temp_output_10_0_g280 = 1;
-				float3 localGetInstancePos40_g277 = GetInstancePos();
-				float3 break17_g278 = localGetInstancePos40_g277;
-				float temp_output_3_0_g280 = ( break17_g278.x + break17_g278.y + _GlobalTimers[_GlobalTimerId].y );
-				float fTime28_g280 = temp_output_3_0_g280;
-				float temp_output_4_0_g280 = temp_output_5_0_g278;
-				float fOffset28_g280 = temp_output_4_0_g280;
-				float fTwitchFreqScale28_g280 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g280 = temp_output_4_0_g278;
-				float fWeight28_g280 = temp_output_5_0_g280;
-				int bWhip28_g280 = temp_output_7_0_g280;
-				float4 localComplexOscillationInputs28_g280 = ComplexOscillationInputs( fTime28_g280 , fOffset28_g280 , fTwitchFreqScale28_g280 , fWeight28_g280 , bWhip28_g280 );
-				float4 vData7_g282 = localComplexOscillationInputs28_g280;
-				float4 localTriangleWave7_g282 = TriangleWave( vData7_g282 );
-				float4 vData6_g282 = localTriangleWave7_g282;
-				float4 localCubicSmooth6_g282 = CubicSmooth( vData6_g282 );
-				float4 temp_output_29_0_g280 = ( ( localCubicSmooth6_g282 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g280 = temp_output_29_0_g280;
-				float temp_output_31_0_g280 = ( break30_g280.y * break30_g280.z );
-				float ifLocalVar36_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar36_g280 = 1.0;
+				float3 temp_output_3_0_g314 = staticSwitch214;
+				int temp_output_24_0_g314 = _WindQuality;
+				float4 break32_g314 = inputMesh.ase_texcoord;
+				float2 appendResult31_g314 = (float2(break32_g314.z , break32_g314.w));
+				float2 break34_g314 = appendResult31_g314;
+				float temp_output_5_0_g315 = break34_g314.y;
+				float3 temp_cast_10 = (temp_output_5_0_g315).xxx;
+				float3 fValue10_g316 = temp_cast_10;
+				float3 localUnpackNormalFromFloat10_g316 = UnpackNormalFromFloat( fValue10_g316 );
+				float temp_output_4_0_g315 = break34_g314.x;
+				int temp_output_7_0_g317 = 0;
+				int temp_output_10_0_g317 = 1;
+				float3 localGetInstancePos40_g314 = GetInstancePos();
+				float3 break17_g315 = localGetInstancePos40_g314;
+				float temp_output_3_0_g317 = ( break17_g315.x + break17_g315.y + _GlobalTimers[_GlobalTimerId].y );
+				float fTime28_g317 = temp_output_3_0_g317;
+				float temp_output_4_0_g317 = temp_output_5_0_g315;
+				float fOffset28_g317 = temp_output_4_0_g317;
+				float fTwitchFreqScale28_g317 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g317 = temp_output_4_0_g315;
+				float fWeight28_g317 = temp_output_5_0_g317;
+				int bWhip28_g317 = temp_output_7_0_g317;
+				float4 localComplexOscillationInputs28_g317 = ComplexOscillationInputs( fTime28_g317 , fOffset28_g317 , fTwitchFreqScale28_g317 , fWeight28_g317 , bWhip28_g317 );
+				float4 vData7_g319 = localComplexOscillationInputs28_g317;
+				float4 localTriangleWave7_g319 = TriangleWave( vData7_g319 );
+				float4 vData6_g319 = localTriangleWave7_g319;
+				float4 localCubicSmooth6_g319 = CubicSmooth( vData6_g319 );
+				float4 temp_output_29_0_g317 = ( ( localCubicSmooth6_g319 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g317 = temp_output_29_0_g317;
+				float temp_output_31_0_g317 = ( break30_g317.y * break30_g317.z );
+				float ifLocalVar36_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar36_g317 = 1.0;
 				else
-				ifLocalVar36_g280 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar35_g280 = temp_output_31_0_g280;
+				ifLocalVar36_g317 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar35_g317 = temp_output_31_0_g317;
 				else
-				ifLocalVar35_g280 = ( temp_output_31_0_g280 * -1.0 );
-				float lerpResult41_g280 = lerp( temp_output_31_0_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float lerpResult42_g280 = lerp( lerpResult41_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float temp_output_11_0_g280 = _ST_WindBranchTwitch.x;
-				float fTime61_g280 = temp_output_3_0_g280;
-				float fOffset61_g280 = temp_output_4_0_g280;
-				float fWeight61_g280 = temp_output_5_0_g280;
-				int bWhip61_g280 = temp_output_7_0_g280;
-				float4 localSimpleOscillationInputs61_g280 = SimpleOscillationInputs( fTime61_g280 , fOffset61_g280 , fWeight61_g280 , bWhip61_g280 );
-				float4 vData7_g281 = localSimpleOscillationInputs61_g280;
-				float4 localTriangleWave7_g281 = TriangleWave( vData7_g281 );
-				float4 vData6_g281 = localTriangleWave7_g281;
-				float4 localCubicSmooth6_g281 = CubicSmooth( vData6_g281 );
-				float4 temp_output_66_0_g280 = ( ( localCubicSmooth6_g281 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g280 = temp_output_66_0_g280;
-				float temp_output_64_0_g280 = ( break62_g280.x + ( break62_g280.x * break62_g280.y ) );
-				float ifLocalVar17_g280 = 0;
-				if( temp_output_10_0_g280 <= 0.0 )
-				ifLocalVar17_g280 = temp_output_64_0_g280;
+				ifLocalVar35_g317 = ( temp_output_31_0_g317 * -1.0 );
+				float lerpResult41_g317 = lerp( temp_output_31_0_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float lerpResult42_g317 = lerp( lerpResult41_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float temp_output_11_0_g317 = _ST_WindBranchTwitch.x;
+				float fTime61_g317 = temp_output_3_0_g317;
+				float fOffset61_g317 = temp_output_4_0_g317;
+				float fWeight61_g317 = temp_output_5_0_g317;
+				int bWhip61_g317 = temp_output_7_0_g317;
+				float4 localSimpleOscillationInputs61_g317 = SimpleOscillationInputs( fTime61_g317 , fOffset61_g317 , fWeight61_g317 , bWhip61_g317 );
+				float4 vData7_g318 = localSimpleOscillationInputs61_g317;
+				float4 localTriangleWave7_g318 = TriangleWave( vData7_g318 );
+				float4 vData6_g318 = localTriangleWave7_g318;
+				float4 localCubicSmooth6_g318 = CubicSmooth( vData6_g318 );
+				float4 temp_output_66_0_g317 = ( ( localCubicSmooth6_g318 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g317 = temp_output_66_0_g317;
+				float temp_output_64_0_g317 = ( break62_g317.x + ( break62_g317.x * break62_g317.y ) );
+				float ifLocalVar17_g317 = 0;
+				if( temp_output_10_0_g317 <= 0.0 )
+				ifLocalVar17_g317 = temp_output_64_0_g317;
 				else
-				ifLocalVar17_g280 = ( ( lerpResult42_g280 * temp_output_11_0_g280 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g280.x * ( 1.0 - temp_output_11_0_g280 ) ) );
-				float ifLocalVar52_g280 = 0;
-				if( temp_output_7_0_g280 <= 0.0 )
-				ifLocalVar52_g280 = ifLocalVar17_g280;
+				ifLocalVar17_g317 = ( ( lerpResult42_g317 * temp_output_11_0_g317 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g317.x * ( 1.0 - temp_output_11_0_g317 ) ) );
+				float ifLocalVar52_g317 = 0;
+				if( temp_output_7_0_g317 <= 0.0 )
+				ifLocalVar52_g317 = ifLocalVar17_g317;
 				else
-				ifLocalVar52_g280 = ( ifLocalVar17_g280 * ( 1.0 + ( break30_g280.w * (int)_ST_WindBranchWhip.x ) ) );
-				float3 temp_output_45_0_g277 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g279 * temp_output_4_0_g278 ) * ifLocalVar52_g280 * _ST_WindBranch.y ) );
-				float temp_output_4_0_g284 = break34_g277.y;
-				float3 temp_cast_12 = (temp_output_4_0_g284).xxx;
-				float3 fValue10_g287 = temp_cast_12;
-				float3 localUnpackNormalFromFloat10_g287 = UnpackNormalFromFloat( fValue10_g287 );
-				float temp_output_3_0_g284 = break34_g277.x;
-				int temp_output_7_0_g288 = 1;
-				int temp_output_10_0_g288 = 1;
-				float3 break17_g284 = localGetInstancePos40_g277;
-				float temp_output_16_0_g284 = ( _GlobalTimers[_GlobalTimerId].y + break17_g284.x + break17_g284.y );
-				float temp_output_3_0_g288 = temp_output_16_0_g284;
-				float fTime28_g288 = temp_output_3_0_g288;
-				float temp_output_4_0_g288 = temp_output_4_0_g284;
-				float fOffset28_g288 = temp_output_4_0_g288;
-				float fTwitchFreqScale28_g288 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g288 = temp_output_3_0_g284;
-				float fWeight28_g288 = temp_output_5_0_g288;
-				int bWhip28_g288 = temp_output_7_0_g288;
-				float4 localComplexOscillationInputs28_g288 = ComplexOscillationInputs( fTime28_g288 , fOffset28_g288 , fTwitchFreqScale28_g288 , fWeight28_g288 , bWhip28_g288 );
-				float4 vData7_g290 = localComplexOscillationInputs28_g288;
-				float4 localTriangleWave7_g290 = TriangleWave( vData7_g290 );
-				float4 vData6_g290 = localTriangleWave7_g290;
-				float4 localCubicSmooth6_g290 = CubicSmooth( vData6_g290 );
-				float4 temp_output_29_0_g288 = ( ( localCubicSmooth6_g290 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g288 = temp_output_29_0_g288;
-				float temp_output_31_0_g288 = ( break30_g288.y * break30_g288.z );
-				float ifLocalVar36_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar36_g288 = 1.0;
+				ifLocalVar52_g317 = ( ifLocalVar17_g317 * ( 1.0 + ( break30_g317.w * (int)_ST_WindBranchWhip.x ) ) );
+				float3 temp_output_45_0_g314 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g316 * temp_output_4_0_g315 ) * ifLocalVar52_g317 * _ST_WindBranch.y ) );
+				float temp_output_4_0_g321 = break34_g314.y;
+				float3 temp_cast_12 = (temp_output_4_0_g321).xxx;
+				float3 fValue10_g324 = temp_cast_12;
+				float3 localUnpackNormalFromFloat10_g324 = UnpackNormalFromFloat( fValue10_g324 );
+				float temp_output_3_0_g321 = break34_g314.x;
+				int temp_output_7_0_g325 = 1;
+				int temp_output_10_0_g325 = 1;
+				float3 break17_g321 = localGetInstancePos40_g314;
+				float temp_output_16_0_g321 = ( _GlobalTimers[_GlobalTimerId].y + break17_g321.x + break17_g321.y );
+				float temp_output_3_0_g325 = temp_output_16_0_g321;
+				float fTime28_g325 = temp_output_3_0_g325;
+				float temp_output_4_0_g325 = temp_output_4_0_g321;
+				float fOffset28_g325 = temp_output_4_0_g325;
+				float fTwitchFreqScale28_g325 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g325 = temp_output_3_0_g321;
+				float fWeight28_g325 = temp_output_5_0_g325;
+				int bWhip28_g325 = temp_output_7_0_g325;
+				float4 localComplexOscillationInputs28_g325 = ComplexOscillationInputs( fTime28_g325 , fOffset28_g325 , fTwitchFreqScale28_g325 , fWeight28_g325 , bWhip28_g325 );
+				float4 vData7_g327 = localComplexOscillationInputs28_g325;
+				float4 localTriangleWave7_g327 = TriangleWave( vData7_g327 );
+				float4 vData6_g327 = localTriangleWave7_g327;
+				float4 localCubicSmooth6_g327 = CubicSmooth( vData6_g327 );
+				float4 temp_output_29_0_g325 = ( ( localCubicSmooth6_g327 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g325 = temp_output_29_0_g325;
+				float temp_output_31_0_g325 = ( break30_g325.y * break30_g325.z );
+				float ifLocalVar36_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar36_g325 = 1.0;
 				else
-				ifLocalVar36_g288 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar35_g288 = temp_output_31_0_g288;
+				ifLocalVar36_g325 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar35_g325 = temp_output_31_0_g325;
 				else
-				ifLocalVar35_g288 = ( temp_output_31_0_g288 * -1.0 );
-				float lerpResult41_g288 = lerp( temp_output_31_0_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float lerpResult42_g288 = lerp( lerpResult41_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float temp_output_11_0_g288 = _ST_WindBranchTwitch.x;
-				float fTime61_g288 = temp_output_3_0_g288;
-				float fOffset61_g288 = temp_output_4_0_g288;
-				float fWeight61_g288 = temp_output_5_0_g288;
-				int bWhip61_g288 = temp_output_7_0_g288;
-				float4 localSimpleOscillationInputs61_g288 = SimpleOscillationInputs( fTime61_g288 , fOffset61_g288 , fWeight61_g288 , bWhip61_g288 );
-				float4 vData7_g289 = localSimpleOscillationInputs61_g288;
-				float4 localTriangleWave7_g289 = TriangleWave( vData7_g289 );
-				float4 vData6_g289 = localTriangleWave7_g289;
-				float4 localCubicSmooth6_g289 = CubicSmooth( vData6_g289 );
-				float4 temp_output_66_0_g288 = ( ( localCubicSmooth6_g289 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g288 = temp_output_66_0_g288;
-				float temp_output_64_0_g288 = ( break62_g288.x + ( break62_g288.x * break62_g288.y ) );
-				float ifLocalVar17_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar17_g288 = temp_output_64_0_g288;
+				ifLocalVar35_g325 = ( temp_output_31_0_g325 * -1.0 );
+				float lerpResult41_g325 = lerp( temp_output_31_0_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float lerpResult42_g325 = lerp( lerpResult41_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float temp_output_11_0_g325 = _ST_WindBranchTwitch.x;
+				float fTime61_g325 = temp_output_3_0_g325;
+				float fOffset61_g325 = temp_output_4_0_g325;
+				float fWeight61_g325 = temp_output_5_0_g325;
+				int bWhip61_g325 = temp_output_7_0_g325;
+				float4 localSimpleOscillationInputs61_g325 = SimpleOscillationInputs( fTime61_g325 , fOffset61_g325 , fWeight61_g325 , bWhip61_g325 );
+				float4 vData7_g326 = localSimpleOscillationInputs61_g325;
+				float4 localTriangleWave7_g326 = TriangleWave( vData7_g326 );
+				float4 vData6_g326 = localTriangleWave7_g326;
+				float4 localCubicSmooth6_g326 = CubicSmooth( vData6_g326 );
+				float4 temp_output_66_0_g325 = ( ( localCubicSmooth6_g326 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g325 = temp_output_66_0_g325;
+				float temp_output_64_0_g325 = ( break62_g325.x + ( break62_g325.x * break62_g325.y ) );
+				float ifLocalVar17_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar17_g325 = temp_output_64_0_g325;
 				else
-				ifLocalVar17_g288 = ( ( lerpResult42_g288 * temp_output_11_0_g288 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g288.x * ( 1.0 - temp_output_11_0_g288 ) ) );
-				float temp_output_11_0_g284 = _ST_WindBranchWhip.x;
-				float ifLocalVar52_g288 = 0;
-				if( temp_output_7_0_g288 <= 0.0 )
-				ifLocalVar52_g288 = ifLocalVar17_g288;
+				ifLocalVar17_g325 = ( ( lerpResult42_g325 * temp_output_11_0_g325 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g325.x * ( 1.0 - temp_output_11_0_g325 ) ) );
+				float temp_output_11_0_g321 = _ST_WindBranchWhip.x;
+				float ifLocalVar52_g325 = 0;
+				if( temp_output_7_0_g325 <= 0.0 )
+				ifLocalVar52_g325 = ifLocalVar17_g325;
 				else
-				ifLocalVar52_g288 = ( ifLocalVar17_g288 * ( 1.0 + ( break30_g288.w * (int)temp_output_11_0_g284 ) ) );
-				float3 temp_output_23_0_g284 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g287 * temp_output_3_0_g284 ) * ifLocalVar52_g288 * _ST_WindBranch.y ) );
-				float temp_output_3_0_g285 = temp_output_4_0_g284;
-				float temp_output_6_0_g285 = _ST_WindTurbulences.y;
-				float4 appendResult9_g285 = (float4(( ( temp_output_16_0_g284 * 0.1 ) + temp_output_3_0_g285 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g285 * 0.1 ) + temp_output_3_0_g285 ) , 0.0 , 0.0));
-				float4 vData7_g286 = appendResult9_g285;
-				float4 localTriangleWave7_g286 = TriangleWave( vData7_g286 );
-				float4 vData6_g286 = localTriangleWave7_g286;
-				float4 localCubicSmooth6_g286 = CubicSmooth( vData6_g286 );
-				float4 break16_g285 = ( ( localCubicSmooth6_g286 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar59_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar59_g288 = temp_output_66_0_g288;
+				ifLocalVar52_g325 = ( ifLocalVar17_g325 * ( 1.0 + ( break30_g325.w * (int)temp_output_11_0_g321 ) ) );
+				float3 temp_output_23_0_g321 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g324 * temp_output_3_0_g321 ) * ifLocalVar52_g325 * _ST_WindBranch.y ) );
+				float temp_output_3_0_g322 = temp_output_4_0_g321;
+				float temp_output_6_0_g322 = _ST_WindTurbulences.y;
+				float4 appendResult9_g322 = (float4(( ( temp_output_16_0_g321 * 0.1 ) + temp_output_3_0_g322 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g322 * 0.1 ) + temp_output_3_0_g322 ) , 0.0 , 0.0));
+				float4 vData7_g323 = appendResult9_g322;
+				float4 localTriangleWave7_g323 = TriangleWave( vData7_g323 );
+				float4 vData6_g323 = localTriangleWave7_g323;
+				float4 localCubicSmooth6_g323 = CubicSmooth( vData6_g323 );
+				float4 break16_g322 = ( ( localCubicSmooth6_g323 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar59_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar59_g325 = temp_output_66_0_g325;
 				else
-				ifLocalVar59_g288 = temp_output_29_0_g288;
-				float3 ifLocalVar29_g277 = 0;
-				if( temp_output_24_0_g277 == 5 )
-				ifLocalVar29_g277 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g284 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g285.x * break16_g285.y * break16_g285.x * break16_g285.y * temp_output_6_0_g285 ) ) + ( ifLocalVar59_g288.w * _ST_WindVector.w * temp_output_11_0_g284 ) ) * temp_output_3_0_g284 ) + temp_output_23_0_g284 );
+				ifLocalVar59_g325 = temp_output_29_0_g325;
+				float3 ifLocalVar29_g314 = 0;
+				if( temp_output_24_0_g314 == 5 )
+				ifLocalVar29_g314 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g321 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g322.x * break16_g322.y * break16_g322.x * break16_g322.y * temp_output_6_0_g322 ) ) + ( ifLocalVar59_g325.w * _ST_WindVector.w * temp_output_11_0_g321 ) ) * temp_output_3_0_g321 ) + temp_output_23_0_g321 );
 				else
-				ifLocalVar29_g277 = temp_output_45_0_g277;
-				float3 ifLocalVar26_g277 = 0;
-				if( temp_output_24_0_g277 >= 3 )
-				ifLocalVar26_g277 = ifLocalVar29_g277;
+				ifLocalVar29_g314 = temp_output_45_0_g314;
+				float3 ifLocalVar26_g314 = 0;
+				if( temp_output_24_0_g314 >= 3 )
+				ifLocalVar26_g314 = ifLocalVar29_g314;
 				else
-				ifLocalVar26_g277 = temp_output_3_0_g277;
+				ifLocalVar26_g314 = temp_output_3_0_g314;
 				#ifdef GEOM_TYPE_MESH
-				float3 staticSwitch9_g277 = ifLocalVar26_g277;
+				float3 staticSwitch9_g314 = ifLocalVar26_g314;
 				#else
-				float3 staticSwitch9_g277 = temp_output_3_0_g277;
+				float3 staticSwitch9_g314 = temp_output_3_0_g314;
 				#endif
-				float3 temp_output_111_0_g187 = staticSwitch9_g277;
-				float3 vPos140_g187 = temp_output_111_0_g187;
-				float3 vRotatedWindVector140_g187 = rotatedWindVector291;
-				float3 vPos145_g187 = temp_output_111_0_g187;
-				float4 windGlobal145_g187 = _ST_WindGlobal;
-				float localComputeWindAdjust145_g187 = ComputeWindAdjust( vPos145_g187 , windGlobal145_g187 );
-				float3 break122_g187 = localGetInstancePos40_g277;
-				float temp_output_125_0_g187 = _GlobalTimers[_GlobalTimerId].x;
-				float4 appendResult126_g187 = (float4(( break122_g187.x + temp_output_125_0_g187 ) , ( break122_g187.y + ( temp_output_125_0_g187 * 0.8 ) ) , 0.0 , 0.0));
-				float4 vData7_g188 = appendResult126_g187;
-				float4 localTriangleWave7_g188 = TriangleWave( vData7_g188 );
-				float4 vData6_g188 = localTriangleWave7_g188;
-				float4 localCubicSmooth6_g188 = CubicSmooth( vData6_g188 );
-				float4 break117_g187 = ( ( localCubicSmooth6_g188 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float temp_output_90_0_g187 = ( localComputeWindAdjust145_g187 * ( ( _ST_WindGlobal.y * ( break117_g187.x + ( break117_g187.y * break117_g187.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
-				float ifLocalVar142_g187 = 0;
+				float3 temp_output_111_0_g844 = staticSwitch9_g314;
+				float3 vPos140_g844 = temp_output_111_0_g844;
+				float3 vRotatedWindVector140_g844 = rotatedWindVector291;
+				float3 vPos145_g844 = temp_output_111_0_g844;
+				float4 windGlobal145_g844 = _ST_WindGlobal;
+				float localComputeWindAdjust145_g844 = ComputeWindAdjust( vPos145_g844 , windGlobal145_g844 );
+				float3 break122_g844 = localGetInstancePos40_g314;
+				float temp_output_125_0_g844 = _GlobalTimers[_GlobalTimerId].x;
+				float4 appendResult126_g844 = (float4(( break122_g844.x + temp_output_125_0_g844 ) , ( break122_g844.y + ( temp_output_125_0_g844 * 0.8 ) ) , 0.0 , 0.0));
+				float4 vData7_g845 = appendResult126_g844;
+				float4 localTriangleWave7_g845 = TriangleWave( vData7_g845 );
+				float4 vData6_g845 = localTriangleWave7_g845;
+				float4 localCubicSmooth6_g845 = CubicSmooth( vData6_g845 );
+				float4 break117_g844 = ( ( localCubicSmooth6_g845 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float temp_output_90_0_g844 = ( localComputeWindAdjust145_g844 * ( ( _ST_WindGlobal.y * ( break117_g844.x + ( break117_g844.y * break117_g844.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
+				float ifLocalVar142_g844 = 0;
 				if( _ST_WindGlobal.w == 0.0 )
-				ifLocalVar142_g187 = 0.0;
+				ifLocalVar142_g844 = 0.0;
 				else
-				ifLocalVar142_g187 = temp_output_90_0_g187;
-				float fMoveAmount140_g187 = ifLocalVar142_g187;
-				float3 localSwizzleCombineMoveAmount140_g187 = SwizzleCombineMoveAmount( vPos140_g187 , vRotatedWindVector140_g187 , fMoveAmount140_g187 );
-				float3 ifLocalVar132_g187 = 0;
+				ifLocalVar142_g844 = temp_output_90_0_g844;
+				float fMoveAmount140_g844 = ifLocalVar142_g844;
+				float3 localSwizzleCombineMoveAmount140_g844 = SwizzleCombineMoveAmount( vPos140_g844 , vRotatedWindVector140_g844 , fMoveAmount140_g844 );
+				float3 ifLocalVar132_g844 = 0;
 				if( _WindQuality <= 0 )
-				ifLocalVar132_g187 = temp_output_111_0_g187;
+				ifLocalVar132_g844 = temp_output_111_0_g844;
 				else
-				ifLocalVar132_g187 = localSwizzleCombineMoveAmount140_g187;
+				ifLocalVar132_g844 = localSwizzleCombineMoveAmount140_g844;
 				
-				float3 temp_output_9_0_g189 = inputMesh.normalOS;
-				float3 temp_output_7_0_g264 = temp_output_9_0_g189;
-				float3 ifLocalVar30_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar30_g264 = mul( temp_output_86_0_g269, temp_output_7_0_g264 );
+				float3 temp_output_9_0_g300 = inputMesh.normalOS;
+				float3 temp_output_7_0_g301 = temp_output_9_0_g300;
+				float3 ifLocalVar30_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar30_g301 = mul( temp_output_86_0_g306, temp_output_7_0_g301 );
 				else
-				ifLocalVar30_g264 = temp_output_7_0_g264;
-				float3 ifLocalVar10_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar10_g189 = temp_output_9_0_g189;
+				ifLocalVar30_g301 = temp_output_7_0_g301;
+				float3 ifLocalVar10_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar10_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar10_g189 = ifLocalVar30_g264;
-				float3 ifLocalVar14_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar14_g189 = temp_output_9_0_g189;
+				ifLocalVar10_g300 = ifLocalVar30_g301;
+				float3 ifLocalVar14_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar14_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar14_g189 = ifLocalVar10_g189;
+				ifLocalVar14_g300 = ifLocalVar10_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch348 = ifLocalVar14_g189;
+				float3 staticSwitch348 = ifLocalVar14_g300;
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#else
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#endif
 				
-				outputPackedVaryingsMeshToPS.ase_texcoord = inputMesh.ase_texcoord;
+				outputPackedVaryingsMeshToPS.ase_texcoord1 = inputMesh.ase_texcoord;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
 				#else
 				float3 defaultVertexValue = float3( 0, 0, 0 );
 				#endif
-				float3 vertexValue = ifLocalVar132_g187;
+				float3 vertexValue = ifLocalVar132_g844;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				inputMesh.positionOS.xyz = vertexValue;
 				#else
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
+
 				inputMesh.normalOS = staticSwitch348;
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
 				outputPackedVaryingsMeshToPS.positionCS = TransformWorldToHClip(positionRWS);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
+				outputPackedVaryingsMeshToPS.interp00.xyz = positionRWS;
 				return outputPackedVaryingsMeshToPS;
 			}
 
-			void Frag(  PackedVaryingsMeshToPS packedInput
+			#if defined(TESSELLATION_ON)
+			struct VertexControl
+			{
+				float3 positionOS : INTERNALTESSPOS;
+				float3 normalOS : NORMAL;
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl Vert ( AttributesMesh v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.positionOS = v.positionOS;
+				o.normalOS = v.normalOS;
+				o.ase_texcoord1 = v.ase_texcoord1;
+				o.ase_texcoord2 = v.ase_texcoord2;
+				o.ase_texcoord = v.ase_texcoord;
+				o.ase_color = v.ase_color;
+				o.ase_texcoord3 = v.ase_texcoord3;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				float3 cameraPos = 0;
+				#else
+				float3 cameraPos = _WorldSpaceCameraPos;
+				#endif
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), cameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, GetObjectToWorldMatrix(), cameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), cameraPos, _ScreenParams, _FrustumPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			PackedVaryingsMeshToPS DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				AttributesMesh o = (AttributesMesh) 0;
+				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
+				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
+				o.ase_texcoord1 = patch[0].ase_texcoord1 * bary.x + patch[1].ase_texcoord1 * bary.y + patch[2].ase_texcoord1 * bary.z;
+				o.ase_texcoord2 = patch[0].ase_texcoord2 * bary.x + patch[1].ase_texcoord2 * bary.y + patch[2].ase_texcoord2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
+				o.ase_texcoord3 = patch[0].ase_texcoord3 * bary.x + patch[1].ase_texcoord3 * bary.y + patch[2].ase_texcoord3 * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.positionOS.xyz - patch[i].normalOS * (dot(o.positionOS.xyz, patch[i].normalOS) - dot(patch[i].positionOS.xyz, patch[i].normalOS));
+				float phongStrength = _TessPhongStrength;
+				o.positionOS.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.positionOS.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			PackedVaryingsMeshToPS Vert ( AttributesMesh v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+
+			void Frag( PackedVaryingsMeshToPS packedInput
 						#ifdef WRITE_NORMAL_BUFFER
 						, out float4 outNormalBuffer : SV_Target0
 							#ifdef WRITE_MSAA_DEPTH
@@ -4066,7 +4671,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 						#elif defined(SCENESELECTIONPASS)
 						, out float4 outColor : SV_Target0
 						#endif
-
 						#ifdef _DEPTHOFFSET_ON
 						, out float outputDepth : SV_Depth
 						#endif
@@ -4075,28 +4679,32 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			{
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( packedInput );
 				UNITY_SETUP_INSTANCE_ID( packedInput );
+
+				float3 positionRWS = packedInput.interp00.xyz;
+
 				FragInputs input;
 				ZERO_INITIALIZE(FragInputs, input);
+
 				input.tangentToWorld = k_identity3x3;
 				input.positionSS = packedInput.positionCS;
+
+				input.positionRWS = positionRWS;
 
 				#if _DOUBLESIDED_ON && SHADER_STAGE_FRAGMENT
 				input.isFrontFace = IS_FRONT_VFACE( packedInput.cullFace, true, false);
 				#elif SHADER_STAGE_FRAGMENT
 				#if defined(ASE_NEED_CULLFACE)
-				input.isFrontFace = IS_FRONT_VFACE(packedInput.cullFace, true, false);
+				input.isFrontFace = IS_FRONT_VFACE( packedInput.cullFace, true, false );
 				#endif
 				#endif
 				half isFrontFace = input.isFrontFace;
 
 				PositionInputs posInput = GetPositionInput(input.positionSS.xy, _ScreenSize.zw, input.positionSS.z, input.positionSS.w, input.positionRWS);
 
-				float3 V = float3(1.0, 1.0, 1.0); // Avoid the division by 0
+				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
-				SurfaceData surfaceData;
-				BuiltinData builtinData;
-				AlphaSurfaceDescription surfaceDescription = (AlphaSurfaceDescription)0;
-				float4 appendResult170 = (float4(packedInput.ase_texcoord.x , packedInput.ase_texcoord.y , 0.0 , 0.0));
+				SceneSurfaceDescription surfaceDescription = (SceneSurfaceDescription)0;
+				float4 appendResult170 = (float4(packedInput.ase_texcoord1.x , packedInput.ase_texcoord1.y , 0.0 , 0.0));
 				float4 tex2DNode91 = tex2D( _MainTex, appendResult170.xy );
 				float temp_output_93_0 = ( tex2DNode91.a * _Color.a );
 				
@@ -4110,7 +4718,9 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceDescription.DepthOffset = 0;
 				#endif
 
-				GetSurfaceAndBuiltinData( surfaceDescription, input, V, posInput, surfaceData, builtinData );
+				SurfaceData surfaceData;
+				BuiltinData builtinData;
+				GetSurfaceAndBuiltinData(surfaceDescription, input, V, posInput, surfaceData, builtinData);
 
 				#ifdef _DEPTHOFFSET_ON
 				outputDepth = posInput.deviceDepth;
@@ -4123,12 +4733,11 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 				#elif defined(WRITE_MSAA_DEPTH)
 				outNormalBuffer = float4( 0.0, 0.0, 0.0, 1.0 );
-				depthColor = packedInput.vmesh.positionCS.z;
+				depthColor = packedInput.positionCS.z;
 				#elif defined(SCENESELECTIONPASS)
 				outColor = float4( _ObjectId, _PassValue, 1.0, 1.0 );
 				#endif
 			}
-
 			ENDHLSL
 		}
 
@@ -4156,24 +4765,24 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			HLSLPROGRAM
 
-			#define _ALPHATEST_ON 1
+			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
-			#define ASE_SRP_VERSION 70108
+			#define HAVE_MESH_MODIFICATION
+			#define ASE_SRP_VERSION 999999
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
 			#pragma shader_feature_local _DOUBLESIDED_ON
 			#pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
+			#pragma shader_feature_local _ENABLE_FOG_ON_TRANSPARENT
+			#pragma shader_feature_local _ALPHATEST_ON
+
+			#define SHADERPASS SHADERPASS_DEPTH_ONLY
+			#pragma multi_compile _ WRITE_NORMAL_BUFFER
+			#pragma multi_compile _ WRITE_MSAA_DEPTH
 
 			#pragma vertex Vert
 			#pragma fragment Frag
-
-			#if defined(_DOTS_INSTANCING)
-			#pragma instancing_options nolightprobe
-			#pragma instancing_options nolodfade
-			#else
-			#pragma instancing_options renderinglayer
-			#endif
 
 			//#define UNITY_MATERIAL_LIT
 
@@ -4183,30 +4792,13 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
 
-			#define SHADERPASS SHADERPASS_DEPTH_ONLY
-			#pragma multi_compile _ WRITE_NORMAL_BUFFER
-			#pragma multi_compile _ WRITE_MSAA_DEPTH
-
-			#define ATTRIBUTES_NEED_NORMAL
-			#define ATTRIBUTES_NEED_TANGENT
-			#define ATTRIBUTES_NEED_TEXCOORD0
-			#define ATTRIBUTES_NEED_TEXCOORD1
-			#define ATTRIBUTES_NEED_TEXCOORD2
-			#define ATTRIBUTES_NEED_TEXCOORD3
-			#define ATTRIBUTES_NEED_COLOR
-			#define VARYINGS_NEED_POSITION_WS
-			#define VARYINGS_NEED_TANGENT_TO_WORLD
-			#define VARYINGS_NEED_TEXCOORD0
-			#define VARYINGS_NEED_TEXCOORD1
-			#define VARYINGS_NEED_TEXCOORD2
-			#define VARYINGS_NEED_TEXCOORD3
-			#define VARYINGS_NEED_COLOR
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+			#ifdef DEBUG_DISPLAY
+				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
+			#endif
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
@@ -4215,7 +4807,11 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_BUMP
+			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
 
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
@@ -4227,12 +4823,11 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
 				float4 tangentOS : TANGENT;
-				float4 uv0 : TEXCOORD0;
-				float4 uv1 : TEXCOORD1;
-				float4 uv2 : TEXCOORD2;
-				float4 uv3 : TEXCOORD3;
-				float4 color : COLOR;
-				
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -4242,12 +4837,9 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 interp00 : TEXCOORD0;
 				float3 interp01 : TEXCOORD1;
 				float4 interp02 : TEXCOORD2;
-				float4 interp03 : TEXCOORD3;
-				float4 interp04 : TEXCOORD4;
-				float4 interp05 : TEXCOORD5;
-				float4 interp06 : TEXCOORD6;
-				float4 interp07 : TEXCOORD7;
-				
+				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_color : COLOR;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
@@ -4256,31 +4848,35 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			};
 
 			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindBranchAdherences;
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindLeaf1Twitch;
 			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindBranchWhip;
-			int _Cull;
-			float4 _ST_WindFrondRipple;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float4 _Color;
-			float4 _ST_WindVector;
 			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindVector;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindGlobal;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _Color;
 			float _Cutoff;
+			int _Cull;
+			int _WindQuality;
 			float _Metallic;
+			int _GlobalTimerId;
 			float _Smoothness;
 			float4 _EmissionColor;
+			float _AlphaCutoff;
 			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
 			float _StencilRef;
 			float _StencilWriteMask;
 			float _StencilRefDepth;
@@ -4301,25 +4897,36 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float _AlphaSrcBlend;
 			float _AlphaDstBlend;
 			float _ZWrite;
+			float _TransparentZWrite;
 			float _CullMode;
 			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
 			float _CullModeForward;
 			float _TransparentCullMode;
 			float _ZTestDepthEqualForOpaque;
 			float _ZTestTransparent;
 			float _TransparentBackfaceEnable;
 			float _AlphaCutoffEnable;
-			float _AlphaCutoff;
 			float _UseShadowThreshold;
 			float _DoubleSidedEnable;
 			float _DoubleSidedNormalMode;
 			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
 			CBUFFER_END
 			float4 _GlobalTimers[100];
+			sampler2D _BumpMap;
+			sampler2D _DetailTex;
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality , out float3 rotatedWindVector , out float3 rotatedBranchAnchor , float4 windVector , float4 windBranchAnchor )
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
 			{
 				if (windQuality <= 0) // WIND_QUALITY_NONE
 				{
@@ -4338,7 +4945,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float3 OffsetLeavesVertex( float3 VertexPos , float ColorAlpha , float3 texcoord1 , float2 texcoord3 )
+			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
 				VertexPos -= texcoord1.xyz;
@@ -4373,26 +4980,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				return abs((frac(vData + 0.5) * 2.0) - 1.0);
 			}
 			
-			float ComputeWindAdjust( float3 vPos , float4 windGlobal )
-			{
-				    // compute how much the height contributes
-				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
-				    if (fAdjust != 0.0) {
-				        float s = sign(fAdjust);
-				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
-				    }
-				    return fAdjust;
-			}
-			
-			float3 SwizzleCombineMoveAmount( float3 vPos , float3 vRotatedWindVector , float fMoveAmount )
-			{
-				    float fLength = length(vPos);
-				 
-				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
-				    vPos.xyz = normalize(vPos.xyz) * fLength;
-				    return vPos;
-			}
-			
 			float3 UnpackNormalFromFloat( float3 fValue )
 			{
 				     float3 vDecodeKey = float3(16.0, 1.0, 0.0625);
@@ -4411,7 +4998,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 ComplexOscillationInputs( float fTime , float fOffset , float fTwitchFreqScale , float fWeight , int bWhip )
+			float4 ComplexOscillationInputs( float fTime, float fOffset, float fTwitchFreqScale, float fWeight, int bWhip )
 			{
 				if (bWhip > 0) {
 				    return float4(fTime + fOffset, fTime * fTwitchFreqScale + fOffset, fTwitchFreqScale * 0.5 * (fTime + fOffset), fTime + fOffset + (1.0 - fWeight));
@@ -4420,7 +5007,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 SimpleOscillationInputs( float fTime , float fOffset , float fWeight , int bWhip )
+			float4 SimpleOscillationInputs( float fTime, float fOffset, float fWeight, int bWhip )
 			{
 				if (bWhip)
 				  return float4(fTime + fOffset, fTime * 0.689 + fOffset, 0.0, fTime + fOffset + (1.0 - fWeight));
@@ -4433,7 +5020,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				 return GetAbsolutePositionWS(float3(UNITY_MATRIX_M[0].w, UNITY_MATRIX_M[1].w, UNITY_MATRIX_M[2].w));
 			}
 			
-			float3x3 RotationMatrix( float3 vAxis , float fAngle )
+			float ComputeWindAdjust( float3 vPos, float4 windGlobal )
+			{
+				    // compute how much the height contributes
+				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+				    if (fAdjust != 0.0) {
+				        float s = sign(fAdjust);
+				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
+				    }
+				    return fAdjust;
+			}
+			
+			float3 SwizzleCombineMoveAmount( float3 vPos, float3 vRotatedWindVector, float fMoveAmount )
+			{
+				    float fLength = length(vPos);
+				 
+				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+				    vPos.xyz = normalize(vPos.xyz) * fLength;
+				    return vPos;
+			}
+			
+			float3x3 RotationMatrix( float3 vAxis, float fAngle )
 			{
 				    // compute sin/cos of fAngle
 				    float2 vSinCos;
@@ -4455,11 +5062,39 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			}
 			
 
-			void BuildSurfaceData(FragInputs fragInputs, inout SmoothSurfaceDescription surfaceDescription, float3 V, out SurfaceData surfaceData, out float3 bentNormalWS)
+			void BuildSurfaceData(FragInputs fragInputs, inout SmoothSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
-				surfaceData.perceptualSmoothness =      surfaceDescription.Smoothness;
 
+				surfaceData.specularOcclusion = 1.0;
+
+				// surface data
+				surfaceData.perceptualSmoothness =		surfaceDescription.Smoothness;
+
+				// refraction
+				#ifdef _HAS_REFRACTION
+				if( _EnableSSRefraction )
+				{
+					surfaceData.transmittanceMask = ( 1.0 - surfaceDescription.Alpha );
+					surfaceDescription.Alpha = 1.0;
+				}
+				else
+				{
+					surfaceData.ior = 1.0;
+					surfaceData.transmittanceColor = float3( 1.0, 1.0, 1.0 );
+					surfaceData.atDistance = 1.0;
+					surfaceData.transmittanceMask = 0.0;
+					surfaceDescription.Alpha = 1.0;
+				}
+				#else
+				surfaceData.ior = 1.0;
+				surfaceData.transmittanceColor = float3( 1.0, 1.0, 1.0 );
+				surfaceData.atDistance = 1.0;
+				surfaceData.transmittanceMask = 0.0;
+				#endif
+
+
+				// material features
 				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
 				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
 				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
@@ -4470,7 +5105,9 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#ifdef _MATERIAL_FEATURE_ANISOTROPY
 				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
 				#endif
-
+				#ifdef ASE_LIT_CLEAR_COAT
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
+				#endif
 				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
 				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
 				#endif
@@ -4478,47 +5115,58 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
 				#endif
 
+				// others
 				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
 				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
 				#endif
-
-				float3 normalTS = float3( 0.0f, 0.0f, 1.0f );
 				#ifdef _DOUBLESIDED_ON
 				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
 				#else
 				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
 				#endif
+
+				// normals
+				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
+				normalTS = surfaceDescription.Normal;
 				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
+
+				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
+
 				bentNormalWS = surfaceData.normalWS;
-				surfaceData.geomNormalWS = fragInputs.tangentToWorld[ 2 ];
 
-				#ifdef _HAS_REFRACTION
-				surfaceData.transmittanceMask = 1.0 - surfaceDescription.Alpha;
-				surfaceDescription.Alpha = 1.0;
-				#endif
-
-				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );    // The tangent is not normalize in tangentToWorld for mikkt. TODO: Check if it expected that we normalize with Morten. Tag: SURFACE_GRADIENT
+				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );
 				surfaceData.tangentWS = Orthonormalize( surfaceData.tangentWS, surfaceData.normalWS );
+
+				// decals
+				#if HAVE_DECALS
+				if( _EnableDecals )
+				{
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
+					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+				}
+				#endif
 
 				#if defined(_SPECULAR_OCCLUSION_CUSTOM)
 				#elif defined(_SPECULAR_OCCLUSION_FROM_AO_BENT_NORMAL)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromBentAO( V, bentNormalWS, surfaceData.normalWS, surfaceData.ambientOcclusion, PerceptualSmoothnessToPerceptualRoughness( surfaceData.perceptualSmoothness ) );
 				#elif defined(_AMBIENT_OCCLUSION) && defined(_SPECULAR_OCCLUSION_FROM_AO)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion( ClampNdotV( dot( surfaceData.normalWS, V ) ), surfaceData.ambientOcclusion, PerceptualSmoothnessToRoughness( surfaceData.perceptualSmoothness ) );
-				#else
-				surfaceData.specularOcclusion = 1.0;
-				#endif
-				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
-				surfaceData.perceptualSmoothness = GeometricNormalFiltering( surfaceData.perceptualSmoothness, fragInputs.tangentToWorld[ 2 ], surfaceDescription.SpecularAAScreenSpaceVariance, surfaceDescription.SpecularAAThreshold );
 				#endif
 
+				// debug
+				#if defined(DEBUG_DISPLAY)
+				if (_DebugMipMapMode != DEBUGMIPMAPMODE_NONE)
+				{
+					surfaceData.metallic = 0;
+				}
+				ApplyDebugToSurfaceData(fragInputs.tangentToWorld, surfaceData);
+				#endif
 			}
 
 			void GetSurfaceAndBuiltinData(SmoothSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
 			{
 				#ifdef LOD_FADE_CROSSFADE
-				uint3 fadeMaskSeed = asuint( (int3)( V * _ScreenSize.xyx ) );
-				LODDitheringTransition( fadeMaskSeed, unity_LODFade.x );
+				LODDitheringTransition(ComputeFadeMaskSeed(V, posInput.positionSS), unity_LODFade.x);
 				#endif
 
 				#ifdef _DOUBLESIDED_ON
@@ -4539,38 +5187,23 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 
 				float3 bentNormalWS;
-				BuildSurfaceData( fragInputs, surfaceDescription, V, surfaceData, bentNormalWS );
-
-				#if HAVE_DECALS
-				if( _EnableDecals )
-				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
-				}
-				#endif
+				BuildSurfaceData( fragInputs, surfaceDescription, V, posInput, surfaceData, bentNormalWS );
 
 				InitBuiltinData( posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[ 2 ], fragInputs.texCoord1, fragInputs.texCoord2, builtinData );
-
-				#if (SHADERPASS == SHADERPASS_DISTORTION)
-				builtinData.distortion = surfaceDescription.Distortion;
-				builtinData.distortionBlur = surfaceDescription.DistortionBlur;
-				#else
-				builtinData.distortion = float2( 0.0, 0.0 );
-				builtinData.distortionBlur = 0.0;
-				#endif
 
 				PostInitBuiltinData(V, posInput, surfaceData, builtinData);
 			}
 
-			PackedVaryingsMeshToPS Vert(AttributesMesh inputMesh )
+			PackedVaryingsMeshToPS VertexFunction(AttributesMesh inputMesh )
 			{
 				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS;
 
 				UNITY_SETUP_INSTANCE_ID(inputMesh);
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 
 				float3 temp_output_1_0_g4 = inputMesh.positionOS;
-				float3 appendResult213 = (float3(inputMesh.uv1.xyz));
+				float3 appendResult213 = (float3(inputMesh.ase_texcoord1.xyz));
 				float3 lerpResult13_g4 = lerp( temp_output_1_0_g4 , appendResult213 , unity_LODFade.x);
 				#ifdef LOD_FADE_PERCENTAGE
 				float3 staticSwitch14_g4 = lerpResult13_g4;
@@ -4578,8 +5211,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 staticSwitch14_g4 = temp_output_1_0_g4;
 				#endif
 				float3 temp_output_344_0 = staticSwitch14_g4;
-				float3 appendResult331 = (float3(inputMesh.uv2.xyz));
-				float2 appendResult336 = (float2(inputMesh.uv0.xy));
+				float3 appendResult331 = (float3(inputMesh.ase_texcoord2.xyz));
+				float2 appendResult336 = (float2(inputMesh.ase_texcoord.xy));
 				float2 break10_g297 = appendResult336;
 				float ifLocalVar11_g297 = 0;
 				UNITY_BRANCH 
@@ -4597,67 +5230,68 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
-				int temp_output_40_0_g189 = _WindQuality;
+				int temp_output_40_0_g300 = _WindQuality;
 				float3 VertexPos286 = inputMesh.positionOS;
 				float3 appendResult112 = (float3(_Color.r , _Color.g , _Color.b));
-				float4 appendResult281 = (float4(( appendResult112 * inputMesh.color.r ) , _Color.a));
+				float4 appendResult281 = (float4(( appendResult112 * inputMesh.ase_color.r ) , _Color.a));
 				float4 appendResult243 = (float4(appendResult281));
 				float ColorAlpha286 = appendResult243.a;
 				float3 texcoord1286 = appendResult213;
-				float2 texcoord3286 = inputMesh.uv3.xy;
+				float2 texcoord3286 = inputMesh.ase_texcoord3.xy;
 				float3 localOffsetLeavesVertex286 = OffsetLeavesVertex( VertexPos286 , ColorAlpha286 , texcoord1286 , texcoord3286 );
-				float3 temp_output_6_0_g189 = localOffsetLeavesVertex286;
-				int temp_output_2_0_g264 = temp_output_40_0_g189;
-				float4 break25_g189 = inputMesh.uv2;
-				float3 temp_cast_5 = (break25_g189.z).xxx;
-				float3 fValue10_g268 = temp_cast_5;
-				float3 localUnpackNormalFromFloat10_g268 = UnpackNormalFromFloat( fValue10_g268 );
-				float temp_output_4_0_g264 = break25_g189.w;
-				float ifLocalVar19_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar19_g264 = _ST_WindLeaf1Ripple.y;
+				float3 temp_output_6_0_g300 = localOffsetLeavesVertex286;
+				int temp_output_2_0_g301 = temp_output_40_0_g300;
+				float4 break25_g300 = inputMesh.ase_texcoord2;
+				float3 temp_cast_5 = (break25_g300.z).xxx;
+				float3 fValue10_g305 = temp_cast_5;
+				float3 localUnpackNormalFromFloat10_g305 = UnpackNormalFromFloat( fValue10_g305 );
+				float temp_output_4_0_g301 = break25_g300.w;
+				float ifLocalVar19_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar19_g301 = _ST_WindLeaf1Ripple.y;
 				else
-				ifLocalVar19_g264 = _ST_WindLeaf2Ripple.y;
-				float2 break24_g189 = appendResult213.xy;
-				float4 break18_g264 = _GlobalTimers[_GlobalTimerId];
-				float4 appendResult10_g266 = (float4(( ( break24_g189.x + break24_g189.y ) + break18_g264.y ) , 0.0 , 0.0 , 0.0));
-				float4 vData7_g267 = appendResult10_g266;
-				float4 localTriangleWave7_g267 = TriangleWave( vData7_g267 );
-				float4 vData6_g267 = localTriangleWave7_g267;
-				float4 localCubicSmooth6_g267 = CubicSmooth( vData6_g267 );
-				float temp_output_8_0_g264 = break25_g189.x;
-				float3 temp_output_52_0_g264 = ( temp_output_6_0_g189 + ( localUnpackNormalFromFloat10_g268 * ( ifLocalVar19_g264 * ( ( localCubicSmooth6_g267 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g264 ) );
-				float temp_output_10_0_g264 = break25_g189.y;
-				float3 temp_cast_7 = (temp_output_10_0_g264).xxx;
-				float3 fValue10_g276 = temp_cast_7;
-				float3 localUnpackNormalFromFloat10_g276 = UnpackNormalFromFloat( fValue10_g276 );
-				float3 temp_output_5_0_g269 = localUnpackNormalFromFloat10_g276;
-				float3 vAxis6_g272 = temp_output_5_0_g269;
-				float temp_output_3_0_g269 = temp_output_8_0_g264;
-				float4 ifLocalVar32_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar32_g264 = _ST_WindLeaf1Tumble;
+				ifLocalVar19_g301 = _ST_WindLeaf2Ripple.y;
+				float2 break24_g300 = appendResult213.xy;
+				float4 break18_g301 = _GlobalTimers[_GlobalTimerId];
+				float4 appendResult10_g303 = (float4(( ( break24_g300.x + break24_g300.y ) + break18_g301.y ) , 0.0 , 0.0 , 0.0));
+				float4 vData7_g304 = appendResult10_g303;
+				float4 localTriangleWave7_g304 = TriangleWave( vData7_g304 );
+				float4 vData6_g304 = localTriangleWave7_g304;
+				float4 localCubicSmooth6_g304 = CubicSmooth( vData6_g304 );
+				float temp_output_8_0_g301 = break25_g300.x;
+				float3 temp_output_52_0_g301 = ( temp_output_6_0_g300 + ( localUnpackNormalFromFloat10_g305 * ( ifLocalVar19_g301 * ( ( localCubicSmooth6_g304 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g301 ) );
+				float temp_output_10_0_g301 = break25_g300.y;
+				float3 temp_cast_7 = (temp_output_10_0_g301).xxx;
+				float3 fValue10_g313 = temp_cast_7;
+				float3 localUnpackNormalFromFloat10_g313 = UnpackNormalFromFloat( fValue10_g313 );
+				float3 temp_output_5_0_g306 = localUnpackNormalFromFloat10_g313;
+				float3 vAxis6_g309 = temp_output_5_0_g306;
+				float temp_output_3_0_g306 = temp_output_8_0_g301;
+				float4 ifLocalVar32_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar32_g301 = _ST_WindLeaf1Tumble;
 				else
-				ifLocalVar32_g264 = _ST_WindLeaf2Tumble;
-				float4 break34_g264 = ifLocalVar32_g264;
-				float temp_output_22_0_g269 = frac( ( temp_output_10_0_g264 * 30.3 ) );
-				float temp_output_25_0_g269 = ( temp_output_22_0_g269 + temp_output_22_0_g269 + temp_output_22_0_g269 );
-				float temp_output_7_0_g269 = break18_g264.z;
-				float4 appendResult34_g269 = (float4(( temp_output_25_0_g269 + temp_output_7_0_g269 ) , ( ( temp_output_7_0_g269 * 0.75 ) + ( temp_output_25_0_g269 * -1.0 ) ) , ( ( temp_output_7_0_g269 * 0.01 ) + temp_output_25_0_g269 ) , ( temp_output_25_0_g269 + ( temp_output_7_0_g269 * 1.0 ) )));
-				float4 vData7_g271 = appendResult34_g269;
-				float4 localTriangleWave7_g271 = TriangleWave( vData7_g271 );
-				float4 vData6_g271 = localTriangleWave7_g271;
-				float4 localCubicSmooth6_g271 = CubicSmooth( vData6_g271 );
-				float4 temp_output_27_0_g269 = ( ( localCubicSmooth6_g271 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break47_g269 = temp_output_27_0_g269;
-				float fAngle6_g272 = ( temp_output_3_0_g269 * break34_g264.z * ( break47_g269.x + ( break47_g269.y * break47_g269.y ) ) );
-				float3x3 localRotationMatrix6_g272 = RotationMatrix( vAxis6_g272 , fAngle6_g272 );
+				ifLocalVar32_g301 = _ST_WindLeaf2Tumble;
+				float4 break34_g301 = ifLocalVar32_g301;
+				float temp_output_22_0_g306 = frac( ( temp_output_10_0_g301 * 30.3 ) );
+				float temp_output_25_0_g306 = ( temp_output_22_0_g306 + temp_output_22_0_g306 + temp_output_22_0_g306 );
+				float temp_output_7_0_g306 = break18_g301.z;
+				float4 appendResult34_g306 = (float4(( temp_output_25_0_g306 + temp_output_7_0_g306 ) , ( ( temp_output_7_0_g306 * 0.75 ) + ( temp_output_25_0_g306 * -1.0 ) ) , ( ( temp_output_7_0_g306 * 0.01 ) + temp_output_25_0_g306 ) , ( temp_output_25_0_g306 + ( temp_output_7_0_g306 * 1.0 ) )));
+				float4 vData7_g308 = appendResult34_g306;
+				float4 localTriangleWave7_g308 = TriangleWave( vData7_g308 );
+				float4 vData6_g308 = localTriangleWave7_g308;
+				float4 localCubicSmooth6_g308 = CubicSmooth( vData6_g308 );
+				float4 temp_output_27_0_g306 = ( ( localCubicSmooth6_g308 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break47_g306 = temp_output_27_0_g306;
+				float fAngle6_g309 = ( temp_output_3_0_g306 * break34_g301.z * ( break47_g306.x + ( break47_g306.y * break47_g306.y ) ) );
+				float3x3 localRotationMatrix6_g309 = RotationMatrix( vAxis6_g309 , fAngle6_g309 );
 				int localCalculateWindInputs291 = ( 0 );
 				float windQuality291 = (float)_WindQuality;
 				float3 rotatedWindVector291 = float3( 0,0,0 );
 				float3 rotatedBranchAnchor291 = float3( 0,0,0 );
 				float4 windVector291 = _ST_WindVector;
 				float4 windBranchAnchor291 = _ST_WindBranchAnchor;
+				{
 				if (windQuality291 <= 0) // WIND_QUALITY_NONE
 				{
 				    rotatedWindVector291 = float3(0.0f, 0.0f, 0.0f);
@@ -4673,281 +5307,285 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    }
 				    rotatedBranchAnchor291 = normalize(mul(windBranchAnchor291.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor291.w;
 				}
-				float3 data116_g269 = rotatedWindVector291;
-				float3 localClampToNonZero116_g269 = ClampToNonZero( data116_g269 );
-				float3 break57_g269 = cross( temp_output_5_0_g269 , localClampToNonZero116_g269 );
-				float dotResult55_g269 = dot( float3( 0,0,0 ) , temp_output_5_0_g269 );
-				float clampResult56_g269 = clamp( dotResult55_g269 , -1.0 , 1.0 );
-				float3 appendResult59_g269 = (float3(break57_g269.x , ( clampResult56_g269 + break57_g269.y ) , break57_g269.z));
-				float3 normalizeResult60_g269 = normalize( appendResult59_g269 );
-				float3 vAxis6_g275 = normalizeResult60_g269;
-				float3 break9_g273 = float3( 0,0,0 );
-				float temp_output_4_0_g273 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g269 );
-				float4 appendResult12_g273 = (float4(( break9_g273.x + break9_g273.z + temp_output_4_0_g273 ) , ( ( 0.87 * temp_output_4_0_g273 ) + break9_g273.y ) , 0.0 , 0.0));
-				float4 vData7_g274 = appendResult12_g273;
-				float4 localTriangleWave7_g274 = TriangleWave( vData7_g274 );
-				float4 vData6_g274 = localTriangleWave7_g274;
-				float4 localCubicSmooth6_g274 = CubicSmooth( vData6_g274 );
-				float4 break14_g273 = ( ( localCubicSmooth6_g274 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar35_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar35_g264 = _ST_WindLeaf1Twitch;
+				}
+				float3 data116_g306 = rotatedWindVector291;
+				float3 localClampToNonZero116_g306 = ClampToNonZero( data116_g306 );
+				float3 break57_g306 = cross( temp_output_5_0_g306 , localClampToNonZero116_g306 );
+				float dotResult55_g306 = dot( float3( 0,0,0 ) , temp_output_5_0_g306 );
+				float clampResult56_g306 = clamp( dotResult55_g306 , -1.0 , 1.0 );
+				float3 appendResult59_g306 = (float3(break57_g306.x , ( clampResult56_g306 + break57_g306.y ) , break57_g306.z));
+				float3 normalizeResult60_g306 = normalize( appendResult59_g306 );
+				float3 vAxis6_g312 = normalizeResult60_g306;
+				float3 break9_g310 = float3( 0,0,0 );
+				float temp_output_4_0_g310 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g306 );
+				float4 appendResult12_g310 = (float4(( break9_g310.x + break9_g310.z + temp_output_4_0_g310 ) , ( ( 0.87 * temp_output_4_0_g310 ) + break9_g310.y ) , 0.0 , 0.0));
+				float4 vData7_g311 = appendResult12_g310;
+				float4 localTriangleWave7_g311 = TriangleWave( vData7_g311 );
+				float4 vData6_g311 = localTriangleWave7_g311;
+				float4 localCubicSmooth6_g311 = CubicSmooth( vData6_g311 );
+				float4 break14_g310 = ( ( localCubicSmooth6_g311 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar35_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar35_g301 = _ST_WindLeaf1Twitch;
 				else
-				ifLocalVar35_g264 = _ST_WindLeaf2Twitch;
-				float3 appendResult37_g264 = (float3(ifLocalVar35_g264.xyz));
-				float3 break76_g269 = appendResult37_g264;
-				float4 break109_g269 = temp_output_27_0_g269;
-				float fAngle6_g275 = ( temp_output_3_0_g269 * ( ( acos( clampResult56_g269 ) * break34_g264.w ) + ( pow( saturate( ( ( ( break14_g273.x * break14_g273.y * break14_g273.y ) + 1.0 ) * 0.5 ) ) , break76_g269.y ) * break76_g269.x ) + ( ( break109_g269.y + ( ( break109_g269.x * break109_g269.x ) * -1.0 ) ) * break34_g264.y ) ) );
-				float3x3 localRotationMatrix6_g275 = RotationMatrix( vAxis6_g275 , fAngle6_g275 );
-				float3x3 temp_output_86_0_g269 = mul( localRotationMatrix6_g272, localRotationMatrix6_g275 );
-				float3 temp_output_1_0_g269 = temp_output_52_0_g264;
-				float3 normalizeResult91_g269 = normalize( mul( temp_output_86_0_g269, temp_output_1_0_g269 ) );
-				float3 ifLocalVar27_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar27_g264 = ( normalizeResult91_g269 * length( temp_output_1_0_g269 ) );
+				ifLocalVar35_g301 = _ST_WindLeaf2Twitch;
+				float3 appendResult37_g301 = (float3(ifLocalVar35_g301.xyz));
+				float3 break76_g306 = appendResult37_g301;
+				float4 break109_g306 = temp_output_27_0_g306;
+				float fAngle6_g312 = ( temp_output_3_0_g306 * ( ( acos( clampResult56_g306 ) * break34_g301.w ) + ( pow( saturate( ( ( ( break14_g310.x * break14_g310.y * break14_g310.y ) + 1.0 ) * 0.5 ) ) , break76_g306.y ) * break76_g306.x ) + ( ( break109_g306.y + ( ( break109_g306.x * break109_g306.x ) * -1.0 ) ) * break34_g301.y ) ) );
+				float3x3 localRotationMatrix6_g312 = RotationMatrix( vAxis6_g312 , fAngle6_g312 );
+				float3x3 temp_output_86_0_g306 = mul( localRotationMatrix6_g309, localRotationMatrix6_g312 );
+				float3 temp_output_1_0_g306 = temp_output_52_0_g301;
+				float3 normalizeResult91_g306 = normalize( mul( temp_output_86_0_g306, temp_output_1_0_g306 ) );
+				float3 ifLocalVar27_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar27_g301 = ( normalizeResult91_g306 * length( temp_output_1_0_g306 ) );
 				else
-				ifLocalVar27_g264 = temp_output_52_0_g264;
-				float3 ifLocalVar2_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar2_g189 = temp_output_6_0_g189;
+				ifLocalVar27_g301 = temp_output_52_0_g301;
+				float3 ifLocalVar2_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar2_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar2_g189 = ifLocalVar27_g264;
-				float3 ifLocalVar1_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar1_g189 = temp_output_6_0_g189;
+				ifLocalVar2_g300 = ifLocalVar27_g301;
+				float3 ifLocalVar1_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar1_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar1_g189 = ifLocalVar2_g189;
+				ifLocalVar1_g300 = ifLocalVar2_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g189 );
+				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g300 );
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch214 = staticSwitch343;
 				#else
 				float3 staticSwitch214 = staticSwitch343;
 				#endif
-				float3 temp_output_3_0_g277 = staticSwitch214;
-				int temp_output_24_0_g277 = _WindQuality;
-				float4 break32_g277 = inputMesh.uv0;
-				float2 appendResult31_g277 = (float2(break32_g277.z , break32_g277.w));
-				float2 break34_g277 = appendResult31_g277;
-				float temp_output_5_0_g278 = break34_g277.y;
-				float3 temp_cast_10 = (temp_output_5_0_g278).xxx;
-				float3 fValue10_g279 = temp_cast_10;
-				float3 localUnpackNormalFromFloat10_g279 = UnpackNormalFromFloat( fValue10_g279 );
-				float temp_output_4_0_g278 = break34_g277.x;
-				int temp_output_7_0_g280 = 0;
-				int temp_output_10_0_g280 = 1;
-				float3 localGetInstancePos40_g277 = GetInstancePos();
-				float3 break17_g278 = localGetInstancePos40_g277;
-				float temp_output_3_0_g280 = ( break17_g278.x + break17_g278.y + _GlobalTimers[_GlobalTimerId].y );
-				float fTime28_g280 = temp_output_3_0_g280;
-				float temp_output_4_0_g280 = temp_output_5_0_g278;
-				float fOffset28_g280 = temp_output_4_0_g280;
-				float fTwitchFreqScale28_g280 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g280 = temp_output_4_0_g278;
-				float fWeight28_g280 = temp_output_5_0_g280;
-				int bWhip28_g280 = temp_output_7_0_g280;
-				float4 localComplexOscillationInputs28_g280 = ComplexOscillationInputs( fTime28_g280 , fOffset28_g280 , fTwitchFreqScale28_g280 , fWeight28_g280 , bWhip28_g280 );
-				float4 vData7_g282 = localComplexOscillationInputs28_g280;
-				float4 localTriangleWave7_g282 = TriangleWave( vData7_g282 );
-				float4 vData6_g282 = localTriangleWave7_g282;
-				float4 localCubicSmooth6_g282 = CubicSmooth( vData6_g282 );
-				float4 temp_output_29_0_g280 = ( ( localCubicSmooth6_g282 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g280 = temp_output_29_0_g280;
-				float temp_output_31_0_g280 = ( break30_g280.y * break30_g280.z );
-				float ifLocalVar36_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar36_g280 = 1.0;
+				float3 temp_output_3_0_g314 = staticSwitch214;
+				int temp_output_24_0_g314 = _WindQuality;
+				float4 break32_g314 = inputMesh.ase_texcoord;
+				float2 appendResult31_g314 = (float2(break32_g314.z , break32_g314.w));
+				float2 break34_g314 = appendResult31_g314;
+				float temp_output_5_0_g315 = break34_g314.y;
+				float3 temp_cast_10 = (temp_output_5_0_g315).xxx;
+				float3 fValue10_g316 = temp_cast_10;
+				float3 localUnpackNormalFromFloat10_g316 = UnpackNormalFromFloat( fValue10_g316 );
+				float temp_output_4_0_g315 = break34_g314.x;
+				int temp_output_7_0_g317 = 0;
+				int temp_output_10_0_g317 = 1;
+				float3 localGetInstancePos40_g314 = GetInstancePos();
+				float3 break17_g315 = localGetInstancePos40_g314;
+				float temp_output_3_0_g317 = ( break17_g315.x + break17_g315.y + _GlobalTimers[_GlobalTimerId].y );
+				float fTime28_g317 = temp_output_3_0_g317;
+				float temp_output_4_0_g317 = temp_output_5_0_g315;
+				float fOffset28_g317 = temp_output_4_0_g317;
+				float fTwitchFreqScale28_g317 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g317 = temp_output_4_0_g315;
+				float fWeight28_g317 = temp_output_5_0_g317;
+				int bWhip28_g317 = temp_output_7_0_g317;
+				float4 localComplexOscillationInputs28_g317 = ComplexOscillationInputs( fTime28_g317 , fOffset28_g317 , fTwitchFreqScale28_g317 , fWeight28_g317 , bWhip28_g317 );
+				float4 vData7_g319 = localComplexOscillationInputs28_g317;
+				float4 localTriangleWave7_g319 = TriangleWave( vData7_g319 );
+				float4 vData6_g319 = localTriangleWave7_g319;
+				float4 localCubicSmooth6_g319 = CubicSmooth( vData6_g319 );
+				float4 temp_output_29_0_g317 = ( ( localCubicSmooth6_g319 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g317 = temp_output_29_0_g317;
+				float temp_output_31_0_g317 = ( break30_g317.y * break30_g317.z );
+				float ifLocalVar36_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar36_g317 = 1.0;
 				else
-				ifLocalVar36_g280 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar35_g280 = temp_output_31_0_g280;
+				ifLocalVar36_g317 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar35_g317 = temp_output_31_0_g317;
 				else
-				ifLocalVar35_g280 = ( temp_output_31_0_g280 * -1.0 );
-				float lerpResult41_g280 = lerp( temp_output_31_0_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float lerpResult42_g280 = lerp( lerpResult41_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float temp_output_11_0_g280 = _ST_WindBranchTwitch.x;
-				float fTime61_g280 = temp_output_3_0_g280;
-				float fOffset61_g280 = temp_output_4_0_g280;
-				float fWeight61_g280 = temp_output_5_0_g280;
-				int bWhip61_g280 = temp_output_7_0_g280;
-				float4 localSimpleOscillationInputs61_g280 = SimpleOscillationInputs( fTime61_g280 , fOffset61_g280 , fWeight61_g280 , bWhip61_g280 );
-				float4 vData7_g281 = localSimpleOscillationInputs61_g280;
-				float4 localTriangleWave7_g281 = TriangleWave( vData7_g281 );
-				float4 vData6_g281 = localTriangleWave7_g281;
-				float4 localCubicSmooth6_g281 = CubicSmooth( vData6_g281 );
-				float4 temp_output_66_0_g280 = ( ( localCubicSmooth6_g281 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g280 = temp_output_66_0_g280;
-				float temp_output_64_0_g280 = ( break62_g280.x + ( break62_g280.x * break62_g280.y ) );
-				float ifLocalVar17_g280 = 0;
-				if( temp_output_10_0_g280 <= 0.0 )
-				ifLocalVar17_g280 = temp_output_64_0_g280;
+				ifLocalVar35_g317 = ( temp_output_31_0_g317 * -1.0 );
+				float lerpResult41_g317 = lerp( temp_output_31_0_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float lerpResult42_g317 = lerp( lerpResult41_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float temp_output_11_0_g317 = _ST_WindBranchTwitch.x;
+				float fTime61_g317 = temp_output_3_0_g317;
+				float fOffset61_g317 = temp_output_4_0_g317;
+				float fWeight61_g317 = temp_output_5_0_g317;
+				int bWhip61_g317 = temp_output_7_0_g317;
+				float4 localSimpleOscillationInputs61_g317 = SimpleOscillationInputs( fTime61_g317 , fOffset61_g317 , fWeight61_g317 , bWhip61_g317 );
+				float4 vData7_g318 = localSimpleOscillationInputs61_g317;
+				float4 localTriangleWave7_g318 = TriangleWave( vData7_g318 );
+				float4 vData6_g318 = localTriangleWave7_g318;
+				float4 localCubicSmooth6_g318 = CubicSmooth( vData6_g318 );
+				float4 temp_output_66_0_g317 = ( ( localCubicSmooth6_g318 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g317 = temp_output_66_0_g317;
+				float temp_output_64_0_g317 = ( break62_g317.x + ( break62_g317.x * break62_g317.y ) );
+				float ifLocalVar17_g317 = 0;
+				if( temp_output_10_0_g317 <= 0.0 )
+				ifLocalVar17_g317 = temp_output_64_0_g317;
 				else
-				ifLocalVar17_g280 = ( ( lerpResult42_g280 * temp_output_11_0_g280 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g280.x * ( 1.0 - temp_output_11_0_g280 ) ) );
-				float ifLocalVar52_g280 = 0;
-				if( temp_output_7_0_g280 <= 0.0 )
-				ifLocalVar52_g280 = ifLocalVar17_g280;
+				ifLocalVar17_g317 = ( ( lerpResult42_g317 * temp_output_11_0_g317 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g317.x * ( 1.0 - temp_output_11_0_g317 ) ) );
+				float ifLocalVar52_g317 = 0;
+				if( temp_output_7_0_g317 <= 0.0 )
+				ifLocalVar52_g317 = ifLocalVar17_g317;
 				else
-				ifLocalVar52_g280 = ( ifLocalVar17_g280 * ( 1.0 + ( break30_g280.w * (int)_ST_WindBranchWhip.x ) ) );
-				float3 temp_output_45_0_g277 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g279 * temp_output_4_0_g278 ) * ifLocalVar52_g280 * _ST_WindBranch.y ) );
-				float temp_output_4_0_g284 = break34_g277.y;
-				float3 temp_cast_12 = (temp_output_4_0_g284).xxx;
-				float3 fValue10_g287 = temp_cast_12;
-				float3 localUnpackNormalFromFloat10_g287 = UnpackNormalFromFloat( fValue10_g287 );
-				float temp_output_3_0_g284 = break34_g277.x;
-				int temp_output_7_0_g288 = 1;
-				int temp_output_10_0_g288 = 1;
-				float3 break17_g284 = localGetInstancePos40_g277;
-				float temp_output_16_0_g284 = ( _GlobalTimers[_GlobalTimerId].y + break17_g284.x + break17_g284.y );
-				float temp_output_3_0_g288 = temp_output_16_0_g284;
-				float fTime28_g288 = temp_output_3_0_g288;
-				float temp_output_4_0_g288 = temp_output_4_0_g284;
-				float fOffset28_g288 = temp_output_4_0_g288;
-				float fTwitchFreqScale28_g288 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g288 = temp_output_3_0_g284;
-				float fWeight28_g288 = temp_output_5_0_g288;
-				int bWhip28_g288 = temp_output_7_0_g288;
-				float4 localComplexOscillationInputs28_g288 = ComplexOscillationInputs( fTime28_g288 , fOffset28_g288 , fTwitchFreqScale28_g288 , fWeight28_g288 , bWhip28_g288 );
-				float4 vData7_g290 = localComplexOscillationInputs28_g288;
-				float4 localTriangleWave7_g290 = TriangleWave( vData7_g290 );
-				float4 vData6_g290 = localTriangleWave7_g290;
-				float4 localCubicSmooth6_g290 = CubicSmooth( vData6_g290 );
-				float4 temp_output_29_0_g288 = ( ( localCubicSmooth6_g290 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g288 = temp_output_29_0_g288;
-				float temp_output_31_0_g288 = ( break30_g288.y * break30_g288.z );
-				float ifLocalVar36_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar36_g288 = 1.0;
+				ifLocalVar52_g317 = ( ifLocalVar17_g317 * ( 1.0 + ( break30_g317.w * (int)_ST_WindBranchWhip.x ) ) );
+				float3 temp_output_45_0_g314 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g316 * temp_output_4_0_g315 ) * ifLocalVar52_g317 * _ST_WindBranch.y ) );
+				float temp_output_4_0_g321 = break34_g314.y;
+				float3 temp_cast_12 = (temp_output_4_0_g321).xxx;
+				float3 fValue10_g324 = temp_cast_12;
+				float3 localUnpackNormalFromFloat10_g324 = UnpackNormalFromFloat( fValue10_g324 );
+				float temp_output_3_0_g321 = break34_g314.x;
+				int temp_output_7_0_g325 = 1;
+				int temp_output_10_0_g325 = 1;
+				float3 break17_g321 = localGetInstancePos40_g314;
+				float temp_output_16_0_g321 = ( _GlobalTimers[_GlobalTimerId].y + break17_g321.x + break17_g321.y );
+				float temp_output_3_0_g325 = temp_output_16_0_g321;
+				float fTime28_g325 = temp_output_3_0_g325;
+				float temp_output_4_0_g325 = temp_output_4_0_g321;
+				float fOffset28_g325 = temp_output_4_0_g325;
+				float fTwitchFreqScale28_g325 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g325 = temp_output_3_0_g321;
+				float fWeight28_g325 = temp_output_5_0_g325;
+				int bWhip28_g325 = temp_output_7_0_g325;
+				float4 localComplexOscillationInputs28_g325 = ComplexOscillationInputs( fTime28_g325 , fOffset28_g325 , fTwitchFreqScale28_g325 , fWeight28_g325 , bWhip28_g325 );
+				float4 vData7_g327 = localComplexOscillationInputs28_g325;
+				float4 localTriangleWave7_g327 = TriangleWave( vData7_g327 );
+				float4 vData6_g327 = localTriangleWave7_g327;
+				float4 localCubicSmooth6_g327 = CubicSmooth( vData6_g327 );
+				float4 temp_output_29_0_g325 = ( ( localCubicSmooth6_g327 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g325 = temp_output_29_0_g325;
+				float temp_output_31_0_g325 = ( break30_g325.y * break30_g325.z );
+				float ifLocalVar36_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar36_g325 = 1.0;
 				else
-				ifLocalVar36_g288 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar35_g288 = temp_output_31_0_g288;
+				ifLocalVar36_g325 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar35_g325 = temp_output_31_0_g325;
 				else
-				ifLocalVar35_g288 = ( temp_output_31_0_g288 * -1.0 );
-				float lerpResult41_g288 = lerp( temp_output_31_0_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float lerpResult42_g288 = lerp( lerpResult41_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float temp_output_11_0_g288 = _ST_WindBranchTwitch.x;
-				float fTime61_g288 = temp_output_3_0_g288;
-				float fOffset61_g288 = temp_output_4_0_g288;
-				float fWeight61_g288 = temp_output_5_0_g288;
-				int bWhip61_g288 = temp_output_7_0_g288;
-				float4 localSimpleOscillationInputs61_g288 = SimpleOscillationInputs( fTime61_g288 , fOffset61_g288 , fWeight61_g288 , bWhip61_g288 );
-				float4 vData7_g289 = localSimpleOscillationInputs61_g288;
-				float4 localTriangleWave7_g289 = TriangleWave( vData7_g289 );
-				float4 vData6_g289 = localTriangleWave7_g289;
-				float4 localCubicSmooth6_g289 = CubicSmooth( vData6_g289 );
-				float4 temp_output_66_0_g288 = ( ( localCubicSmooth6_g289 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g288 = temp_output_66_0_g288;
-				float temp_output_64_0_g288 = ( break62_g288.x + ( break62_g288.x * break62_g288.y ) );
-				float ifLocalVar17_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar17_g288 = temp_output_64_0_g288;
+				ifLocalVar35_g325 = ( temp_output_31_0_g325 * -1.0 );
+				float lerpResult41_g325 = lerp( temp_output_31_0_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float lerpResult42_g325 = lerp( lerpResult41_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float temp_output_11_0_g325 = _ST_WindBranchTwitch.x;
+				float fTime61_g325 = temp_output_3_0_g325;
+				float fOffset61_g325 = temp_output_4_0_g325;
+				float fWeight61_g325 = temp_output_5_0_g325;
+				int bWhip61_g325 = temp_output_7_0_g325;
+				float4 localSimpleOscillationInputs61_g325 = SimpleOscillationInputs( fTime61_g325 , fOffset61_g325 , fWeight61_g325 , bWhip61_g325 );
+				float4 vData7_g326 = localSimpleOscillationInputs61_g325;
+				float4 localTriangleWave7_g326 = TriangleWave( vData7_g326 );
+				float4 vData6_g326 = localTriangleWave7_g326;
+				float4 localCubicSmooth6_g326 = CubicSmooth( vData6_g326 );
+				float4 temp_output_66_0_g325 = ( ( localCubicSmooth6_g326 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g325 = temp_output_66_0_g325;
+				float temp_output_64_0_g325 = ( break62_g325.x + ( break62_g325.x * break62_g325.y ) );
+				float ifLocalVar17_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar17_g325 = temp_output_64_0_g325;
 				else
-				ifLocalVar17_g288 = ( ( lerpResult42_g288 * temp_output_11_0_g288 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g288.x * ( 1.0 - temp_output_11_0_g288 ) ) );
-				float temp_output_11_0_g284 = _ST_WindBranchWhip.x;
-				float ifLocalVar52_g288 = 0;
-				if( temp_output_7_0_g288 <= 0.0 )
-				ifLocalVar52_g288 = ifLocalVar17_g288;
+				ifLocalVar17_g325 = ( ( lerpResult42_g325 * temp_output_11_0_g325 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g325.x * ( 1.0 - temp_output_11_0_g325 ) ) );
+				float temp_output_11_0_g321 = _ST_WindBranchWhip.x;
+				float ifLocalVar52_g325 = 0;
+				if( temp_output_7_0_g325 <= 0.0 )
+				ifLocalVar52_g325 = ifLocalVar17_g325;
 				else
-				ifLocalVar52_g288 = ( ifLocalVar17_g288 * ( 1.0 + ( break30_g288.w * (int)temp_output_11_0_g284 ) ) );
-				float3 temp_output_23_0_g284 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g287 * temp_output_3_0_g284 ) * ifLocalVar52_g288 * _ST_WindBranch.y ) );
-				float temp_output_3_0_g285 = temp_output_4_0_g284;
-				float temp_output_6_0_g285 = _ST_WindTurbulences.y;
-				float4 appendResult9_g285 = (float4(( ( temp_output_16_0_g284 * 0.1 ) + temp_output_3_0_g285 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g285 * 0.1 ) + temp_output_3_0_g285 ) , 0.0 , 0.0));
-				float4 vData7_g286 = appendResult9_g285;
-				float4 localTriangleWave7_g286 = TriangleWave( vData7_g286 );
-				float4 vData6_g286 = localTriangleWave7_g286;
-				float4 localCubicSmooth6_g286 = CubicSmooth( vData6_g286 );
-				float4 break16_g285 = ( ( localCubicSmooth6_g286 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar59_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar59_g288 = temp_output_66_0_g288;
+				ifLocalVar52_g325 = ( ifLocalVar17_g325 * ( 1.0 + ( break30_g325.w * (int)temp_output_11_0_g321 ) ) );
+				float3 temp_output_23_0_g321 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g324 * temp_output_3_0_g321 ) * ifLocalVar52_g325 * _ST_WindBranch.y ) );
+				float temp_output_3_0_g322 = temp_output_4_0_g321;
+				float temp_output_6_0_g322 = _ST_WindTurbulences.y;
+				float4 appendResult9_g322 = (float4(( ( temp_output_16_0_g321 * 0.1 ) + temp_output_3_0_g322 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g322 * 0.1 ) + temp_output_3_0_g322 ) , 0.0 , 0.0));
+				float4 vData7_g323 = appendResult9_g322;
+				float4 localTriangleWave7_g323 = TriangleWave( vData7_g323 );
+				float4 vData6_g323 = localTriangleWave7_g323;
+				float4 localCubicSmooth6_g323 = CubicSmooth( vData6_g323 );
+				float4 break16_g322 = ( ( localCubicSmooth6_g323 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar59_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar59_g325 = temp_output_66_0_g325;
 				else
-				ifLocalVar59_g288 = temp_output_29_0_g288;
-				float3 ifLocalVar29_g277 = 0;
-				if( temp_output_24_0_g277 == 5 )
-				ifLocalVar29_g277 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g284 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g285.x * break16_g285.y * break16_g285.x * break16_g285.y * temp_output_6_0_g285 ) ) + ( ifLocalVar59_g288.w * _ST_WindVector.w * temp_output_11_0_g284 ) ) * temp_output_3_0_g284 ) + temp_output_23_0_g284 );
+				ifLocalVar59_g325 = temp_output_29_0_g325;
+				float3 ifLocalVar29_g314 = 0;
+				if( temp_output_24_0_g314 == 5 )
+				ifLocalVar29_g314 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g321 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g322.x * break16_g322.y * break16_g322.x * break16_g322.y * temp_output_6_0_g322 ) ) + ( ifLocalVar59_g325.w * _ST_WindVector.w * temp_output_11_0_g321 ) ) * temp_output_3_0_g321 ) + temp_output_23_0_g321 );
 				else
-				ifLocalVar29_g277 = temp_output_45_0_g277;
-				float3 ifLocalVar26_g277 = 0;
-				if( temp_output_24_0_g277 >= 3 )
-				ifLocalVar26_g277 = ifLocalVar29_g277;
+				ifLocalVar29_g314 = temp_output_45_0_g314;
+				float3 ifLocalVar26_g314 = 0;
+				if( temp_output_24_0_g314 >= 3 )
+				ifLocalVar26_g314 = ifLocalVar29_g314;
 				else
-				ifLocalVar26_g277 = temp_output_3_0_g277;
+				ifLocalVar26_g314 = temp_output_3_0_g314;
 				#ifdef GEOM_TYPE_MESH
-				float3 staticSwitch9_g277 = ifLocalVar26_g277;
+				float3 staticSwitch9_g314 = ifLocalVar26_g314;
 				#else
-				float3 staticSwitch9_g277 = temp_output_3_0_g277;
+				float3 staticSwitch9_g314 = temp_output_3_0_g314;
 				#endif
-				float3 temp_output_111_0_g187 = staticSwitch9_g277;
-				float3 vPos140_g187 = temp_output_111_0_g187;
-				float3 vRotatedWindVector140_g187 = rotatedWindVector291;
-				float3 vPos145_g187 = temp_output_111_0_g187;
-				float4 windGlobal145_g187 = _ST_WindGlobal;
-				float localComputeWindAdjust145_g187 = ComputeWindAdjust( vPos145_g187 , windGlobal145_g187 );
-				float3 break122_g187 = localGetInstancePos40_g277;
-				float temp_output_125_0_g187 = _GlobalTimers[_GlobalTimerId].x;
-				float4 appendResult126_g187 = (float4(( break122_g187.x + temp_output_125_0_g187 ) , ( break122_g187.y + ( temp_output_125_0_g187 * 0.8 ) ) , 0.0 , 0.0));
-				float4 vData7_g188 = appendResult126_g187;
-				float4 localTriangleWave7_g188 = TriangleWave( vData7_g188 );
-				float4 vData6_g188 = localTriangleWave7_g188;
-				float4 localCubicSmooth6_g188 = CubicSmooth( vData6_g188 );
-				float4 break117_g187 = ( ( localCubicSmooth6_g188 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float temp_output_90_0_g187 = ( localComputeWindAdjust145_g187 * ( ( _ST_WindGlobal.y * ( break117_g187.x + ( break117_g187.y * break117_g187.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
-				float ifLocalVar142_g187 = 0;
+				float3 temp_output_111_0_g844 = staticSwitch9_g314;
+				float3 vPos140_g844 = temp_output_111_0_g844;
+				float3 vRotatedWindVector140_g844 = rotatedWindVector291;
+				float3 vPos145_g844 = temp_output_111_0_g844;
+				float4 windGlobal145_g844 = _ST_WindGlobal;
+				float localComputeWindAdjust145_g844 = ComputeWindAdjust( vPos145_g844 , windGlobal145_g844 );
+				float3 break122_g844 = localGetInstancePos40_g314;
+				float temp_output_125_0_g844 = _GlobalTimers[_GlobalTimerId].x;
+				float4 appendResult126_g844 = (float4(( break122_g844.x + temp_output_125_0_g844 ) , ( break122_g844.y + ( temp_output_125_0_g844 * 0.8 ) ) , 0.0 , 0.0));
+				float4 vData7_g845 = appendResult126_g844;
+				float4 localTriangleWave7_g845 = TriangleWave( vData7_g845 );
+				float4 vData6_g845 = localTriangleWave7_g845;
+				float4 localCubicSmooth6_g845 = CubicSmooth( vData6_g845 );
+				float4 break117_g844 = ( ( localCubicSmooth6_g845 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float temp_output_90_0_g844 = ( localComputeWindAdjust145_g844 * ( ( _ST_WindGlobal.y * ( break117_g844.x + ( break117_g844.y * break117_g844.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
+				float ifLocalVar142_g844 = 0;
 				if( _ST_WindGlobal.w == 0.0 )
-				ifLocalVar142_g187 = 0.0;
+				ifLocalVar142_g844 = 0.0;
 				else
-				ifLocalVar142_g187 = temp_output_90_0_g187;
-				float fMoveAmount140_g187 = ifLocalVar142_g187;
-				float3 localSwizzleCombineMoveAmount140_g187 = SwizzleCombineMoveAmount( vPos140_g187 , vRotatedWindVector140_g187 , fMoveAmount140_g187 );
-				float3 ifLocalVar132_g187 = 0;
+				ifLocalVar142_g844 = temp_output_90_0_g844;
+				float fMoveAmount140_g844 = ifLocalVar142_g844;
+				float3 localSwizzleCombineMoveAmount140_g844 = SwizzleCombineMoveAmount( vPos140_g844 , vRotatedWindVector140_g844 , fMoveAmount140_g844 );
+				float3 ifLocalVar132_g844 = 0;
 				if( _WindQuality <= 0 )
-				ifLocalVar132_g187 = temp_output_111_0_g187;
+				ifLocalVar132_g844 = temp_output_111_0_g844;
 				else
-				ifLocalVar132_g187 = localSwizzleCombineMoveAmount140_g187;
+				ifLocalVar132_g844 = localSwizzleCombineMoveAmount140_g844;
 				
-				float3 temp_output_9_0_g189 = inputMesh.normalOS;
-				float3 temp_output_7_0_g264 = temp_output_9_0_g189;
-				float3 ifLocalVar30_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar30_g264 = mul( temp_output_86_0_g269, temp_output_7_0_g264 );
+				float3 temp_output_9_0_g300 = inputMesh.normalOS;
+				float3 temp_output_7_0_g301 = temp_output_9_0_g300;
+				float3 ifLocalVar30_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar30_g301 = mul( temp_output_86_0_g306, temp_output_7_0_g301 );
 				else
-				ifLocalVar30_g264 = temp_output_7_0_g264;
-				float3 ifLocalVar10_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar10_g189 = temp_output_9_0_g189;
+				ifLocalVar30_g301 = temp_output_7_0_g301;
+				float3 ifLocalVar10_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar10_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar10_g189 = ifLocalVar30_g264;
-				float3 ifLocalVar14_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar14_g189 = temp_output_9_0_g189;
+				ifLocalVar10_g300 = ifLocalVar30_g301;
+				float3 ifLocalVar14_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar14_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar14_g189 = ifLocalVar10_g189;
+				ifLocalVar14_g300 = ifLocalVar10_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch348 = ifLocalVar14_g189;
+				float3 staticSwitch348 = ifLocalVar14_g300;
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#else
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#endif
 				
+				outputPackedVaryingsMeshToPS.ase_texcoord3 = inputMesh.ase_texcoord;
+				outputPackedVaryingsMeshToPS.ase_texcoord4 = inputMesh.ase_texcoord2;
+				outputPackedVaryingsMeshToPS.ase_color = inputMesh.ase_color;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
 				#else
 				float3 defaultVertexValue = float3( 0, 0, 0 );
 				#endif
-				float3 vertexValue = ifLocalVar132_g187;
+				float3 vertexValue = ifLocalVar132_g844;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				inputMesh.positionOS.xyz = vertexValue;
@@ -4966,28 +5604,121 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				outputPackedVaryingsMeshToPS.interp00.xyz = positionRWS;
 				outputPackedVaryingsMeshToPS.interp01.xyz = normalWS;
 				outputPackedVaryingsMeshToPS.interp02.xyzw = tangentWS;
-				outputPackedVaryingsMeshToPS.interp03.xyzw = inputMesh.uv0;
-				outputPackedVaryingsMeshToPS.interp04.xyzw = inputMesh.uv1;
-				outputPackedVaryingsMeshToPS.interp05.xyzw = inputMesh.uv2;
-				outputPackedVaryingsMeshToPS.interp06.xyzw = inputMesh.uv3;
-				outputPackedVaryingsMeshToPS.interp07.xyzw = inputMesh.color;
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 				return outputPackedVaryingsMeshToPS;
 			}
+			
+			#if defined(TESSELLATION_ON)
+			struct VertexControl
+			{
+				float3 positionOS : INTERNALTESSPOS;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
 
-			void Frag(  PackedVaryingsMeshToPS packedInput
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl Vert ( AttributesMesh v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.positionOS = v.positionOS;
+				o.normalOS = v.normalOS;
+				o.tangentOS = v.tangentOS;
+				o.ase_texcoord1 = v.ase_texcoord1;
+				o.ase_texcoord2 = v.ase_texcoord2;
+				o.ase_texcoord = v.ase_texcoord;
+				o.ase_color = v.ase_color;
+				o.ase_texcoord3 = v.ase_texcoord3;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				float3 cameraPos = 0;
+				#else
+				float3 cameraPos = _WorldSpaceCameraPos;
+				#endif
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), cameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, GetObjectToWorldMatrix(), cameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), cameraPos, _ScreenParams, _FrustumPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			PackedVaryingsMeshToPS DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				AttributesMesh o = (AttributesMesh) 0;
+				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
+				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
+				o.tangentOS = patch[0].tangentOS * bary.x + patch[1].tangentOS * bary.y + patch[2].tangentOS * bary.z;
+				o.ase_texcoord1 = patch[0].ase_texcoord1 * bary.x + patch[1].ase_texcoord1 * bary.y + patch[2].ase_texcoord1 * bary.z;
+				o.ase_texcoord2 = patch[0].ase_texcoord2 * bary.x + patch[1].ase_texcoord2 * bary.y + patch[2].ase_texcoord2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
+				o.ase_texcoord3 = patch[0].ase_texcoord3 * bary.x + patch[1].ase_texcoord3 * bary.y + patch[2].ase_texcoord3 * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.positionOS.xyz - patch[i].normalOS * (dot(o.positionOS.xyz, patch[i].normalOS) - dot(patch[i].positionOS.xyz, patch[i].normalOS));
+				float phongStrength = _TessPhongStrength;
+				o.positionOS.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.positionOS.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			PackedVaryingsMeshToPS Vert ( AttributesMesh v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+
+			void Frag( PackedVaryingsMeshToPS packedInput
 						#ifdef WRITE_NORMAL_BUFFER
 						, out float4 outNormalBuffer : SV_Target0
 							#ifdef WRITE_MSAA_DEPTH
 							, out float1 depthColor : SV_Target1
 							#endif
-						#elif defined(WRITE_MSAA_DEPTH) // When only WRITE_MSAA_DEPTH is define and not WRITE_NORMAL_BUFFER it mean we are Unlit and only need depth, but we still have normal buffer binded
+						#elif defined(WRITE_MSAA_DEPTH)
 						, out float4 outNormalBuffer : SV_Target0
 						, out float1 depthColor : SV_Target1
 						#elif defined(SCENESELECTIONPASS)
 						, out float4 outColor : SV_Target0
 						#endif
-
 						#ifdef _DEPTHOFFSET_ON
 						, out float outputDepth : SV_Depth
 						#endif
@@ -4997,15 +5728,9 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( packedInput );
 				UNITY_SETUP_INSTANCE_ID( packedInput );
 
-				float3 positionRWS  = packedInput.interp00.xyz;
+				float3 positionRWS = packedInput.interp00.xyz;
 				float3 normalWS = packedInput.interp01.xyz;
 				float4 tangentWS = packedInput.interp02.xyzw;
-				float4 texCoord0 = packedInput.interp03.xyzw;
-				float4 texCoord1 = packedInput.interp04.xyzw;
-				float4 texCoord2 = packedInput.interp05.xyzw;
-				float4 texCoord3 = packedInput.interp06.xyzw;
-				float4 vertexColor = packedInput.interp07.xyzw;
-
 
 				FragInputs input;
 				ZERO_INITIALIZE(FragInputs, input);
@@ -5015,11 +5740,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 				input.positionRWS = positionRWS;
 				input.tangentToWorld = BuildTangentToWorld(tangentWS, normalWS);
-				input.texCoord0 = texCoord0;
-				input.texCoord1 = texCoord1;
-				input.texCoord2 = texCoord2;
-				input.texCoord3 = texCoord3;
-				input.color = vertexColor;
 
 				#if _DOUBLESIDED_ON && SHADER_STAGE_FRAGMENT
 				input.isFrontFace = IS_FRONT_VFACE( packedInput.cullFace, true, false);
@@ -5034,13 +5754,47 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
-				SurfaceData surfaceData;
-				BuiltinData builtinData;
 				SmoothSurfaceDescription surfaceDescription = (SmoothSurfaceDescription)0;
-				float4 appendResult170 = (float4(packedInput.interp03.x , packedInput.interp03.y , 0.0 , 0.0));
+				float3 _ZNormal = float3(0,0,1);
+				float4 appendResult170 = (float4(packedInput.ase_texcoord3.x , packedInput.ase_texcoord3.y , 0.0 , 0.0));
+				float3 tex2DNode166 = UnpackNormalScale( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
+				float ifLocalVar88 = 0;
+				UNITY_BRANCH 
+				if( packedInput.ase_color.a == 0.0 )
+				ifLocalVar88 = packedInput.ase_texcoord4.z;
+				else
+				ifLocalVar88 = 2.5;
+				float4 appendResult86 = (float4(packedInput.ase_texcoord4.x , packedInput.ase_texcoord4.y , ifLocalVar88 , 0.0));
+				float4 break98 = appendResult86;
+				float2 appendResult99 = (float2(break98.x , break98.y));
+				float4 tex2DNode97 = tex2D( _DetailTex, appendResult99 );
+				float ifLocalVar109 = 0;
+				UNITY_BRANCH 
+				if( break98.z >= 2.0 )
+				ifLocalVar109 = tex2DNode97.a;
+				else
+				ifLocalVar109 = saturate( break98.z );
+				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalScale( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
+				#ifdef GEOM_TYPE_BRANCH_DETAIL
+				float3 staticSwitch183 = lerpResult184;
+				#else
+				float3 staticSwitch183 = tex2DNode166;
+				#endif
+				#ifdef LIGHTMAP_ON
+				float3 staticSwitch167 = _ZNormal;
+				#else
+				float3 staticSwitch167 = staticSwitch183;
+				#endif
+				#ifdef EFFECT_BUMP
+				float3 staticSwitch197 = staticSwitch167;
+				#else
+				float3 staticSwitch197 = _ZNormal;
+				#endif
+				
 				float4 tex2DNode91 = tex2D( _MainTex, appendResult170.xy );
 				float temp_output_93_0 = ( tex2DNode91.a * _Color.a );
 				
+				surfaceDescription.Normal = staticSwitch197;
 				surfaceDescription.Smoothness = _Smoothness;
 				surfaceDescription.Alpha = temp_output_93_0;
 
@@ -5052,6 +5806,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceDescription.DepthOffset = 0;
 				#endif
 
+				SurfaceData surfaceData;
+				BuiltinData builtinData;
 				GetSurfaceAndBuiltinData(surfaceDescription, input, V, posInput, surfaceData, builtinData);
 
 				#ifdef _DEPTHOFFSET_ON
@@ -5098,24 +5854,24 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			HLSLPROGRAM
 
-			#define _ALPHATEST_ON 1
+			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
-			#define ASE_SRP_VERSION 70108
+			#define HAVE_MESH_MODIFICATION
+			#define ASE_SRP_VERSION 999999
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
 			#pragma shader_feature_local _DOUBLESIDED_ON
 			#pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
+			#pragma shader_feature_local _ENABLE_FOG_ON_TRANSPARENT
+			#pragma shader_feature_local _ALPHATEST_ON
+
+			#define SHADERPASS SHADERPASS_MOTION_VECTORS
+			#pragma multi_compile _ WRITE_NORMAL_BUFFER
+			#pragma multi_compile _ WRITE_MSAA_DEPTH
 
 			#pragma vertex Vert
 			#pragma fragment Frag
-
-			#if defined(_DOTS_INSTANCING)
-			#pragma instancing_options nolightprobe
-			#pragma instancing_options nolodfade
-			#else
-			#pragma instancing_options renderinglayer
-			#endif
 
 			//#define UNITY_MATERIAL_LIT
 
@@ -5125,17 +5881,14 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
 
-			#define SHADERPASS SHADERPASS_MOTION_VECTORS
-			#pragma multi_compile _ WRITE_NORMAL_BUFFER
-			#pragma multi_compile _ WRITE_MSAA_DEPTH
-
-			#define VARYINGS_NEED_POSITION_WS
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+			#ifdef DEBUG_DISPLAY
+				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
+			#endif
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
@@ -5144,17 +5897,26 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_BUMP
+			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
 
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
 			#endif
 
+
 			struct AttributesMesh
 			{
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
+				float3 previousPositionOS : TEXCOORD4;
+				#if defined (_ADD_PRECOMPUTED_VELOCITY)
+					float3 precomputedVelocity : TEXCOORD5;
+				#endif
 				float4 ase_texcoord1 : TEXCOORD1;
 				float4 ase_texcoord2 : TEXCOORD2;
 				float4 ase_texcoord : TEXCOORD0;
@@ -5163,68 +5925,52 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
-			struct VaryingsMeshToPS
-			{
-				float4 positionCS : SV_Position;
-				float3 positionRWS;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct AttributesPass
-			{
-				float3 previousPositionOS : TEXCOORD4;
-			};
-
-			struct VaryingsPassToPS
-			{
-				float4 positionCS;
-				float4 previousPositionCS;
-			};
-
-			#define VARYINGS_NEED_PASS
-			struct VaryingsToPS
-			{
-				VaryingsMeshToPS vmesh;
-				VaryingsPassToPS vpass;
-			};
-
-			struct PackedVaryingsToPS
+			struct PackedVaryingsMeshToPS
 			{
 				float4 vmeshPositionCS : SV_Position;
 				float3 vmeshInterp00 : TEXCOORD0;
-				float3 vpassInterpolators0 : TEXCOORD1;
-				float3 vpassInterpolators1 : TEXCOORD2;
+				float3 vpassInterpolators0 : TEXCOORD1; //interpolators0
+				float3 vpassInterpolators1 : TEXCOORD2; //interpolators1
 				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_color : COLOR;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
+				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
+				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
+				#endif
 			};
 
 			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindBranchAdherences;
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindLeaf1Twitch;
 			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindBranchWhip;
-			int _Cull;
-			float4 _ST_WindFrondRipple;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float4 _Color;
-			float4 _ST_WindVector;
 			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindVector;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindGlobal;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _Color;
 			float _Cutoff;
+			int _Cull;
+			int _WindQuality;
 			float _Metallic;
+			int _GlobalTimerId;
 			float _Smoothness;
 			float4 _EmissionColor;
+			float _AlphaCutoff;
 			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
 			float _StencilRef;
 			float _StencilWriteMask;
 			float _StencilRefDepth;
@@ -5245,25 +5991,36 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float _AlphaSrcBlend;
 			float _AlphaDstBlend;
 			float _ZWrite;
+			float _TransparentZWrite;
 			float _CullMode;
 			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
 			float _CullModeForward;
 			float _TransparentCullMode;
 			float _ZTestDepthEqualForOpaque;
 			float _ZTestTransparent;
 			float _TransparentBackfaceEnable;
 			float _AlphaCutoffEnable;
-			float _AlphaCutoff;
 			float _UseShadowThreshold;
 			float _DoubleSidedEnable;
 			float _DoubleSidedNormalMode;
 			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
 			CBUFFER_END
 			float4 _GlobalTimers[100];
+			sampler2D _BumpMap;
+			sampler2D _DetailTex;
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality , out float3 rotatedWindVector , out float3 rotatedBranchAnchor , float4 windVector , float4 windBranchAnchor )
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
 			{
 				if (windQuality <= 0) // WIND_QUALITY_NONE
 				{
@@ -5282,7 +6039,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float3 OffsetLeavesVertex( float3 VertexPos , float ColorAlpha , float3 texcoord1 , float2 texcoord3 )
+			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
 				VertexPos -= texcoord1.xyz;
@@ -5317,26 +6074,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				return abs((frac(vData + 0.5) * 2.0) - 1.0);
 			}
 			
-			float ComputeWindAdjust( float3 vPos , float4 windGlobal )
-			{
-				    // compute how much the height contributes
-				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
-				    if (fAdjust != 0.0) {
-				        float s = sign(fAdjust);
-				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
-				    }
-				    return fAdjust;
-			}
-			
-			float3 SwizzleCombineMoveAmount( float3 vPos , float3 vRotatedWindVector , float fMoveAmount )
-			{
-				    float fLength = length(vPos);
-				 
-				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
-				    vPos.xyz = normalize(vPos.xyz) * fLength;
-				    return vPos;
-			}
-			
 			float3 UnpackNormalFromFloat( float3 fValue )
 			{
 				     float3 vDecodeKey = float3(16.0, 1.0, 0.0625);
@@ -5355,7 +6092,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 ComplexOscillationInputs( float fTime , float fOffset , float fTwitchFreqScale , float fWeight , int bWhip )
+			float4 ComplexOscillationInputs( float fTime, float fOffset, float fTwitchFreqScale, float fWeight, int bWhip )
 			{
 				if (bWhip > 0) {
 				    return float4(fTime + fOffset, fTime * fTwitchFreqScale + fOffset, fTwitchFreqScale * 0.5 * (fTime + fOffset), fTime + fOffset + (1.0 - fWeight));
@@ -5364,7 +6101,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 SimpleOscillationInputs( float fTime , float fOffset , float fWeight , int bWhip )
+			float4 SimpleOscillationInputs( float fTime, float fOffset, float fWeight, int bWhip )
 			{
 				if (bWhip)
 				  return float4(fTime + fOffset, fTime * 0.689 + fOffset, 0.0, fTime + fOffset + (1.0 - fWeight));
@@ -5377,7 +6114,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				 return GetAbsolutePositionWS(float3(UNITY_MATRIX_M[0].w, UNITY_MATRIX_M[1].w, UNITY_MATRIX_M[2].w));
 			}
 			
-			float3x3 RotationMatrix( float3 vAxis , float fAngle )
+			float ComputeWindAdjust( float3 vPos, float4 windGlobal )
+			{
+				    // compute how much the height contributes
+				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+				    if (fAdjust != 0.0) {
+				        float s = sign(fAdjust);
+				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
+				    }
+				    return fAdjust;
+			}
+			
+			float3 SwizzleCombineMoveAmount( float3 vPos, float3 vRotatedWindVector, float fMoveAmount )
+			{
+				    float fLength = length(vPos);
+				 
+				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+				    vPos.xyz = normalize(vPos.xyz) * fLength;
+				    return vPos;
+			}
+			
+			float3x3 RotationMatrix( float3 vAxis, float fAngle )
 			{
 				    // compute sin/cos of fAngle
 				    float2 vSinCos;
@@ -5399,48 +6156,19 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			}
 			
 
-			void BuildSurfaceData(FragInputs fragInputs, inout SmoothSurfaceDescription surfaceDescription, float3 V, out SurfaceData surfaceData, out float3 bentNormalWS)
+			void BuildSurfaceData(FragInputs fragInputs, inout SmoothSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
 
-				surfaceData.perceptualSmoothness =      surfaceDescription.Smoothness;
+				surfaceData.specularOcclusion = 1.0;
 
-				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
-				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
-				#endif
-				#ifdef _MATERIAL_FEATURE_TRANSMISSION
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
-				#endif
-				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
-				#endif
+				// surface data
+				surfaceData.perceptualSmoothness =		surfaceDescription.Smoothness;
 
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
-				#endif
-				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
-				#endif
-
-				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
-				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
-				#endif
-
-				float3 normalTS = float3( 0.0f, 0.0f, 1.0f );
-				#ifdef _DOUBLESIDED_ON
-				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
-				#else
-				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
-				#endif
-				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
-				bentNormalWS = surfaceData.normalWS;
-				surfaceData.geomNormalWS = fragInputs.tangentToWorld[ 2 ];
-
+				// refraction
 				#ifdef _HAS_REFRACTION
 				if( _EnableSSRefraction )
 				{
-
 					surfaceData.transmittanceMask = ( 1.0 - surfaceDescription.Alpha );
 					surfaceDescription.Alpha = 1.0;
 				}
@@ -5459,28 +6187,80 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceData.transmittanceMask = 0.0;
 				#endif
 
-				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );    // The tangent is not normalize in tangentToWorld for mikkt. TODO: Check if it expected that we normalize with Morten. Tag: SURFACE_GRADIENT
+
+				// material features
+				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
+				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				#endif
+				#ifdef _MATERIAL_FEATURE_TRANSMISSION
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
+				#endif
+				#ifdef ASE_LIT_CLEAR_COAT
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#endif
+				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
+				#endif
+
+				// others
+				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
+				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
+				#endif
+				#ifdef _DOUBLESIDED_ON
+				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
+				#else
+				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
+				#endif
+
+				// normals
+				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
+				normalTS = surfaceDescription.Normal;
+				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
+
+				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
+
+				bentNormalWS = surfaceData.normalWS;
+
+				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );
 				surfaceData.tangentWS = Orthonormalize( surfaceData.tangentWS, surfaceData.normalWS );
+
+				// decals
+				#if HAVE_DECALS
+				if( _EnableDecals )
+				{
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
+					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+				}
+				#endif
 
 				#if defined(_SPECULAR_OCCLUSION_CUSTOM)
 				#elif defined(_SPECULAR_OCCLUSION_FROM_AO_BENT_NORMAL)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromBentAO( V, bentNormalWS, surfaceData.normalWS, surfaceData.ambientOcclusion, PerceptualSmoothnessToPerceptualRoughness( surfaceData.perceptualSmoothness ) );
 				#elif defined(_AMBIENT_OCCLUSION) && defined(_SPECULAR_OCCLUSION_FROM_AO)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion( ClampNdotV( dot( surfaceData.normalWS, V ) ), surfaceData.ambientOcclusion, PerceptualSmoothnessToRoughness( surfaceData.perceptualSmoothness ) );
-				#else
-				surfaceData.specularOcclusion = 1.0;
-				#endif
-				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
-				surfaceData.perceptualSmoothness = GeometricNormalFiltering( surfaceData.perceptualSmoothness, fragInputs.tangentToWorld[ 2 ], surfaceDescription.SpecularAAScreenSpaceVariance, surfaceDescription.SpecularAAThreshold );
 				#endif
 
+				// debug
+				#if defined(DEBUG_DISPLAY)
+				if (_DebugMipMapMode != DEBUGMIPMAPMODE_NONE)
+				{
+					surfaceData.metallic = 0;
+				}
+				ApplyDebugToSurfaceData(fragInputs.tangentToWorld, surfaceData);
+				#endif
 			}
 
-			void GetSurfaceAndBuiltinData( SmoothSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
+			void GetSurfaceAndBuiltinData(SmoothSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
 			{
 				#ifdef LOD_FADE_CROSSFADE
-				uint3 fadeMaskSeed = asuint( (int3)( V * _ScreenSize.xyx ) );
-				LODDitheringTransition( fadeMaskSeed, unity_LODFade.x );
+				LODDitheringTransition(ComputeFadeMaskSeed(V, posInput.positionSS), unity_LODFade.x);
 				#endif
 
 				#ifdef _DOUBLESIDED_ON
@@ -5499,75 +6279,18 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				builtinData.depthOffset = surfaceDescription.DepthOffset;
 				ApplyDepthOffsetPositionInput( V, surfaceDescription.DepthOffset, GetViewForwardDir(), GetWorldToHClipMatrix(), posInput );
 				#endif
-				float3 bentNormalWS;
-				BuildSurfaceData( fragInputs, surfaceDescription, V, surfaceData, bentNormalWS );
 
-				#if HAVE_DECALS
-				if( _EnableDecals )
-				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
-				}
-				#endif
+				float3 bentNormalWS;
+				BuildSurfaceData( fragInputs, surfaceDescription, V, posInput, surfaceData, bentNormalWS );
 
 				InitBuiltinData( posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[ 2 ], fragInputs.texCoord1, fragInputs.texCoord2, builtinData );
-
-				#if (SHADERPASS == SHADERPASS_DISTORTION)
-				builtinData.distortion = surfaceDescription.Distortion;
-				builtinData.distortionBlur = surfaceDescription.DistortionBlur;
-				#else
-				builtinData.distortion = float2( 0.0, 0.0 );
-				builtinData.distortionBlur = 0.0;
-				#endif
 
 				PostInitBuiltinData(V, posInput, surfaceData, builtinData);
 			}
 
-			VaryingsPassToPS UnpackVaryingsPassToPS(PackedVaryingsToPS input)
+			AttributesMesh ApplyMeshModification(AttributesMesh inputMesh, float3 timeParameters, inout PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS )
 			{
-				VaryingsPassToPS output;
-				output.positionCS = float4(input.vpassInterpolators0.xy, 0.0, input.vpassInterpolators0.z);
-				output.previousPositionCS = float4(input.vpassInterpolators1.xy, 0.0, input.vpassInterpolators1.z);
-
-				return output;
-			}
-#if UNITY_VERSION < 201930
-			float3 TransformPreviousObjectToWorldNormal(float3 normalOS)
-			{
-				#ifdef UNITY_ASSUME_UNIFORM_SCALING
-				return normalize( mul( (float3x3)unity_MatrixPreviousM, normalOS ) );
-				#else
-				return normalize( mul( normalOS, (float3x3)unity_MatrixPreviousMI ) );
-				#endif
-			}
-
-			float3 TransformPreviousObjectToWorld(float3 positionOS)
-			{
-				float4x4 previousModelMatrix = ApplyCameraTranslationToMatrix(unity_MatrixPreviousM);
-				return mul(previousModelMatrix, float4(positionOS, 1.0)).xyz;
-			}
-
-#endif
-			void VelocityPositionZBias(VaryingsToPS input)
-			{
-				#if defined(UNITY_REVERSED_Z)
-				input.vmesh.positionCS.z -= unity_MotionVectorsParams.z * input.vmesh.positionCS.w;
-				#else
-				input.vmesh.positionCS.z += unity_MotionVectorsParams.z * input.vmesh.positionCS.w;
-				#endif
-			}
-
-			PackedVaryingsToPS Vert(AttributesMesh inputMesh,
-									AttributesPass inputPass
-									 )
-			{
-				PackedVaryingsToPS outputPackedVaryingsToPS;
-				VaryingsToPS varyingsType;
-				VaryingsMeshToPS outputVaryingsMeshToPS;
-
-				UNITY_SETUP_INSTANCE_ID(inputMesh);
-				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsToPS);
-
+				_TimeParameters.xyz = timeParameters;
 				float3 temp_output_1_0_g4 = inputMesh.positionOS;
 				float3 appendResult213 = (float3(inputMesh.ase_texcoord1.xyz));
 				float3 lerpResult13_g4 = lerp( temp_output_1_0_g4 , appendResult213 , unity_LODFade.x);
@@ -5596,7 +6319,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
-				int temp_output_40_0_g189 = _WindQuality;
+				int temp_output_40_0_g300 = _WindQuality;
 				float3 VertexPos286 = inputMesh.positionOS;
 				float3 appendResult112 = (float3(_Color.r , _Color.g , _Color.b));
 				float4 appendResult281 = (float4(( appendResult112 * inputMesh.ase_color.r ) , _Color.a));
@@ -5605,58 +6328,59 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 texcoord1286 = appendResult213;
 				float2 texcoord3286 = inputMesh.ase_texcoord3.xy;
 				float3 localOffsetLeavesVertex286 = OffsetLeavesVertex( VertexPos286 , ColorAlpha286 , texcoord1286 , texcoord3286 );
-				float3 temp_output_6_0_g189 = localOffsetLeavesVertex286;
-				int temp_output_2_0_g264 = temp_output_40_0_g189;
-				float4 break25_g189 = inputMesh.ase_texcoord2;
-				float3 temp_cast_5 = (break25_g189.z).xxx;
-				float3 fValue10_g268 = temp_cast_5;
-				float3 localUnpackNormalFromFloat10_g268 = UnpackNormalFromFloat( fValue10_g268 );
-				float temp_output_4_0_g264 = break25_g189.w;
-				float ifLocalVar19_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar19_g264 = _ST_WindLeaf1Ripple.y;
+				float3 temp_output_6_0_g300 = localOffsetLeavesVertex286;
+				int temp_output_2_0_g301 = temp_output_40_0_g300;
+				float4 break25_g300 = inputMesh.ase_texcoord2;
+				float3 temp_cast_5 = (break25_g300.z).xxx;
+				float3 fValue10_g305 = temp_cast_5;
+				float3 localUnpackNormalFromFloat10_g305 = UnpackNormalFromFloat( fValue10_g305 );
+				float temp_output_4_0_g301 = break25_g300.w;
+				float ifLocalVar19_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar19_g301 = _ST_WindLeaf1Ripple.y;
 				else
-				ifLocalVar19_g264 = _ST_WindLeaf2Ripple.y;
-				float2 break24_g189 = appendResult213.xy;
-				float4 break18_g264 = _GlobalTimers[_GlobalTimerId];
-				float4 appendResult10_g266 = (float4(( ( break24_g189.x + break24_g189.y ) + break18_g264.y ) , 0.0 , 0.0 , 0.0));
-				float4 vData7_g267 = appendResult10_g266;
-				float4 localTriangleWave7_g267 = TriangleWave( vData7_g267 );
-				float4 vData6_g267 = localTriangleWave7_g267;
-				float4 localCubicSmooth6_g267 = CubicSmooth( vData6_g267 );
-				float temp_output_8_0_g264 = break25_g189.x;
-				float3 temp_output_52_0_g264 = ( temp_output_6_0_g189 + ( localUnpackNormalFromFloat10_g268 * ( ifLocalVar19_g264 * ( ( localCubicSmooth6_g267 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g264 ) );
-				float temp_output_10_0_g264 = break25_g189.y;
-				float3 temp_cast_7 = (temp_output_10_0_g264).xxx;
-				float3 fValue10_g276 = temp_cast_7;
-				float3 localUnpackNormalFromFloat10_g276 = UnpackNormalFromFloat( fValue10_g276 );
-				float3 temp_output_5_0_g269 = localUnpackNormalFromFloat10_g276;
-				float3 vAxis6_g272 = temp_output_5_0_g269;
-				float temp_output_3_0_g269 = temp_output_8_0_g264;
-				float4 ifLocalVar32_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar32_g264 = _ST_WindLeaf1Tumble;
+				ifLocalVar19_g301 = _ST_WindLeaf2Ripple.y;
+				float2 break24_g300 = appendResult213.xy;
+				float4 break18_g301 = _GlobalTimers[_GlobalTimerId];
+				float4 appendResult10_g303 = (float4(( ( break24_g300.x + break24_g300.y ) + break18_g301.y ) , 0.0 , 0.0 , 0.0));
+				float4 vData7_g304 = appendResult10_g303;
+				float4 localTriangleWave7_g304 = TriangleWave( vData7_g304 );
+				float4 vData6_g304 = localTriangleWave7_g304;
+				float4 localCubicSmooth6_g304 = CubicSmooth( vData6_g304 );
+				float temp_output_8_0_g301 = break25_g300.x;
+				float3 temp_output_52_0_g301 = ( temp_output_6_0_g300 + ( localUnpackNormalFromFloat10_g305 * ( ifLocalVar19_g301 * ( ( localCubicSmooth6_g304 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g301 ) );
+				float temp_output_10_0_g301 = break25_g300.y;
+				float3 temp_cast_7 = (temp_output_10_0_g301).xxx;
+				float3 fValue10_g313 = temp_cast_7;
+				float3 localUnpackNormalFromFloat10_g313 = UnpackNormalFromFloat( fValue10_g313 );
+				float3 temp_output_5_0_g306 = localUnpackNormalFromFloat10_g313;
+				float3 vAxis6_g309 = temp_output_5_0_g306;
+				float temp_output_3_0_g306 = temp_output_8_0_g301;
+				float4 ifLocalVar32_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar32_g301 = _ST_WindLeaf1Tumble;
 				else
-				ifLocalVar32_g264 = _ST_WindLeaf2Tumble;
-				float4 break34_g264 = ifLocalVar32_g264;
-				float temp_output_22_0_g269 = frac( ( temp_output_10_0_g264 * 30.3 ) );
-				float temp_output_25_0_g269 = ( temp_output_22_0_g269 + temp_output_22_0_g269 + temp_output_22_0_g269 );
-				float temp_output_7_0_g269 = break18_g264.z;
-				float4 appendResult34_g269 = (float4(( temp_output_25_0_g269 + temp_output_7_0_g269 ) , ( ( temp_output_7_0_g269 * 0.75 ) + ( temp_output_25_0_g269 * -1.0 ) ) , ( ( temp_output_7_0_g269 * 0.01 ) + temp_output_25_0_g269 ) , ( temp_output_25_0_g269 + ( temp_output_7_0_g269 * 1.0 ) )));
-				float4 vData7_g271 = appendResult34_g269;
-				float4 localTriangleWave7_g271 = TriangleWave( vData7_g271 );
-				float4 vData6_g271 = localTriangleWave7_g271;
-				float4 localCubicSmooth6_g271 = CubicSmooth( vData6_g271 );
-				float4 temp_output_27_0_g269 = ( ( localCubicSmooth6_g271 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break47_g269 = temp_output_27_0_g269;
-				float fAngle6_g272 = ( temp_output_3_0_g269 * break34_g264.z * ( break47_g269.x + ( break47_g269.y * break47_g269.y ) ) );
-				float3x3 localRotationMatrix6_g272 = RotationMatrix( vAxis6_g272 , fAngle6_g272 );
+				ifLocalVar32_g301 = _ST_WindLeaf2Tumble;
+				float4 break34_g301 = ifLocalVar32_g301;
+				float temp_output_22_0_g306 = frac( ( temp_output_10_0_g301 * 30.3 ) );
+				float temp_output_25_0_g306 = ( temp_output_22_0_g306 + temp_output_22_0_g306 + temp_output_22_0_g306 );
+				float temp_output_7_0_g306 = break18_g301.z;
+				float4 appendResult34_g306 = (float4(( temp_output_25_0_g306 + temp_output_7_0_g306 ) , ( ( temp_output_7_0_g306 * 0.75 ) + ( temp_output_25_0_g306 * -1.0 ) ) , ( ( temp_output_7_0_g306 * 0.01 ) + temp_output_25_0_g306 ) , ( temp_output_25_0_g306 + ( temp_output_7_0_g306 * 1.0 ) )));
+				float4 vData7_g308 = appendResult34_g306;
+				float4 localTriangleWave7_g308 = TriangleWave( vData7_g308 );
+				float4 vData6_g308 = localTriangleWave7_g308;
+				float4 localCubicSmooth6_g308 = CubicSmooth( vData6_g308 );
+				float4 temp_output_27_0_g306 = ( ( localCubicSmooth6_g308 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break47_g306 = temp_output_27_0_g306;
+				float fAngle6_g309 = ( temp_output_3_0_g306 * break34_g301.z * ( break47_g306.x + ( break47_g306.y * break47_g306.y ) ) );
+				float3x3 localRotationMatrix6_g309 = RotationMatrix( vAxis6_g309 , fAngle6_g309 );
 				int localCalculateWindInputs291 = ( 0 );
 				float windQuality291 = (float)_WindQuality;
 				float3 rotatedWindVector291 = float3( 0,0,0 );
 				float3 rotatedBranchAnchor291 = float3( 0,0,0 );
 				float4 windVector291 = _ST_WindVector;
 				float4 windBranchAnchor291 = _ST_WindBranchAnchor;
+				{
 				if (windQuality291 <= 0) // WIND_QUALITY_NONE
 				{
 				    rotatedWindVector291 = float3(0.0f, 0.0f, 0.0f);
@@ -5672,282 +6396,285 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    }
 				    rotatedBranchAnchor291 = normalize(mul(windBranchAnchor291.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor291.w;
 				}
-				float3 data116_g269 = rotatedWindVector291;
-				float3 localClampToNonZero116_g269 = ClampToNonZero( data116_g269 );
-				float3 break57_g269 = cross( temp_output_5_0_g269 , localClampToNonZero116_g269 );
-				float dotResult55_g269 = dot( float3( 0,0,0 ) , temp_output_5_0_g269 );
-				float clampResult56_g269 = clamp( dotResult55_g269 , -1.0 , 1.0 );
-				float3 appendResult59_g269 = (float3(break57_g269.x , ( clampResult56_g269 + break57_g269.y ) , break57_g269.z));
-				float3 normalizeResult60_g269 = normalize( appendResult59_g269 );
-				float3 vAxis6_g275 = normalizeResult60_g269;
-				float3 break9_g273 = float3( 0,0,0 );
-				float temp_output_4_0_g273 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g269 );
-				float4 appendResult12_g273 = (float4(( break9_g273.x + break9_g273.z + temp_output_4_0_g273 ) , ( ( 0.87 * temp_output_4_0_g273 ) + break9_g273.y ) , 0.0 , 0.0));
-				float4 vData7_g274 = appendResult12_g273;
-				float4 localTriangleWave7_g274 = TriangleWave( vData7_g274 );
-				float4 vData6_g274 = localTriangleWave7_g274;
-				float4 localCubicSmooth6_g274 = CubicSmooth( vData6_g274 );
-				float4 break14_g273 = ( ( localCubicSmooth6_g274 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar35_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar35_g264 = _ST_WindLeaf1Twitch;
+				}
+				float3 data116_g306 = rotatedWindVector291;
+				float3 localClampToNonZero116_g306 = ClampToNonZero( data116_g306 );
+				float3 break57_g306 = cross( temp_output_5_0_g306 , localClampToNonZero116_g306 );
+				float dotResult55_g306 = dot( float3( 0,0,0 ) , temp_output_5_0_g306 );
+				float clampResult56_g306 = clamp( dotResult55_g306 , -1.0 , 1.0 );
+				float3 appendResult59_g306 = (float3(break57_g306.x , ( clampResult56_g306 + break57_g306.y ) , break57_g306.z));
+				float3 normalizeResult60_g306 = normalize( appendResult59_g306 );
+				float3 vAxis6_g312 = normalizeResult60_g306;
+				float3 break9_g310 = float3( 0,0,0 );
+				float temp_output_4_0_g310 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g306 );
+				float4 appendResult12_g310 = (float4(( break9_g310.x + break9_g310.z + temp_output_4_0_g310 ) , ( ( 0.87 * temp_output_4_0_g310 ) + break9_g310.y ) , 0.0 , 0.0));
+				float4 vData7_g311 = appendResult12_g310;
+				float4 localTriangleWave7_g311 = TriangleWave( vData7_g311 );
+				float4 vData6_g311 = localTriangleWave7_g311;
+				float4 localCubicSmooth6_g311 = CubicSmooth( vData6_g311 );
+				float4 break14_g310 = ( ( localCubicSmooth6_g311 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar35_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar35_g301 = _ST_WindLeaf1Twitch;
 				else
-				ifLocalVar35_g264 = _ST_WindLeaf2Twitch;
-				float3 appendResult37_g264 = (float3(ifLocalVar35_g264.xyz));
-				float3 break76_g269 = appendResult37_g264;
-				float4 break109_g269 = temp_output_27_0_g269;
-				float fAngle6_g275 = ( temp_output_3_0_g269 * ( ( acos( clampResult56_g269 ) * break34_g264.w ) + ( pow( saturate( ( ( ( break14_g273.x * break14_g273.y * break14_g273.y ) + 1.0 ) * 0.5 ) ) , break76_g269.y ) * break76_g269.x ) + ( ( break109_g269.y + ( ( break109_g269.x * break109_g269.x ) * -1.0 ) ) * break34_g264.y ) ) );
-				float3x3 localRotationMatrix6_g275 = RotationMatrix( vAxis6_g275 , fAngle6_g275 );
-				float3x3 temp_output_86_0_g269 = mul( localRotationMatrix6_g272, localRotationMatrix6_g275 );
-				float3 temp_output_1_0_g269 = temp_output_52_0_g264;
-				float3 normalizeResult91_g269 = normalize( mul( temp_output_86_0_g269, temp_output_1_0_g269 ) );
-				float3 ifLocalVar27_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar27_g264 = ( normalizeResult91_g269 * length( temp_output_1_0_g269 ) );
+				ifLocalVar35_g301 = _ST_WindLeaf2Twitch;
+				float3 appendResult37_g301 = (float3(ifLocalVar35_g301.xyz));
+				float3 break76_g306 = appendResult37_g301;
+				float4 break109_g306 = temp_output_27_0_g306;
+				float fAngle6_g312 = ( temp_output_3_0_g306 * ( ( acos( clampResult56_g306 ) * break34_g301.w ) + ( pow( saturate( ( ( ( break14_g310.x * break14_g310.y * break14_g310.y ) + 1.0 ) * 0.5 ) ) , break76_g306.y ) * break76_g306.x ) + ( ( break109_g306.y + ( ( break109_g306.x * break109_g306.x ) * -1.0 ) ) * break34_g301.y ) ) );
+				float3x3 localRotationMatrix6_g312 = RotationMatrix( vAxis6_g312 , fAngle6_g312 );
+				float3x3 temp_output_86_0_g306 = mul( localRotationMatrix6_g309, localRotationMatrix6_g312 );
+				float3 temp_output_1_0_g306 = temp_output_52_0_g301;
+				float3 normalizeResult91_g306 = normalize( mul( temp_output_86_0_g306, temp_output_1_0_g306 ) );
+				float3 ifLocalVar27_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar27_g301 = ( normalizeResult91_g306 * length( temp_output_1_0_g306 ) );
 				else
-				ifLocalVar27_g264 = temp_output_52_0_g264;
-				float3 ifLocalVar2_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar2_g189 = temp_output_6_0_g189;
+				ifLocalVar27_g301 = temp_output_52_0_g301;
+				float3 ifLocalVar2_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar2_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar2_g189 = ifLocalVar27_g264;
-				float3 ifLocalVar1_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar1_g189 = temp_output_6_0_g189;
+				ifLocalVar2_g300 = ifLocalVar27_g301;
+				float3 ifLocalVar1_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar1_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar1_g189 = ifLocalVar2_g189;
+				ifLocalVar1_g300 = ifLocalVar2_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g189 );
+				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g300 );
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch214 = staticSwitch343;
 				#else
 				float3 staticSwitch214 = staticSwitch343;
 				#endif
-				float3 temp_output_3_0_g277 = staticSwitch214;
-				int temp_output_24_0_g277 = _WindQuality;
-				float4 break32_g277 = inputMesh.ase_texcoord;
-				float2 appendResult31_g277 = (float2(break32_g277.z , break32_g277.w));
-				float2 break34_g277 = appendResult31_g277;
-				float temp_output_5_0_g278 = break34_g277.y;
-				float3 temp_cast_10 = (temp_output_5_0_g278).xxx;
-				float3 fValue10_g279 = temp_cast_10;
-				float3 localUnpackNormalFromFloat10_g279 = UnpackNormalFromFloat( fValue10_g279 );
-				float temp_output_4_0_g278 = break34_g277.x;
-				int temp_output_7_0_g280 = 0;
-				int temp_output_10_0_g280 = 1;
-				float3 localGetInstancePos40_g277 = GetInstancePos();
-				float3 break17_g278 = localGetInstancePos40_g277;
-				float temp_output_3_0_g280 = ( break17_g278.x + break17_g278.y + _GlobalTimers[_GlobalTimerId].y );
-				float fTime28_g280 = temp_output_3_0_g280;
-				float temp_output_4_0_g280 = temp_output_5_0_g278;
-				float fOffset28_g280 = temp_output_4_0_g280;
-				float fTwitchFreqScale28_g280 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g280 = temp_output_4_0_g278;
-				float fWeight28_g280 = temp_output_5_0_g280;
-				int bWhip28_g280 = temp_output_7_0_g280;
-				float4 localComplexOscillationInputs28_g280 = ComplexOscillationInputs( fTime28_g280 , fOffset28_g280 , fTwitchFreqScale28_g280 , fWeight28_g280 , bWhip28_g280 );
-				float4 vData7_g282 = localComplexOscillationInputs28_g280;
-				float4 localTriangleWave7_g282 = TriangleWave( vData7_g282 );
-				float4 vData6_g282 = localTriangleWave7_g282;
-				float4 localCubicSmooth6_g282 = CubicSmooth( vData6_g282 );
-				float4 temp_output_29_0_g280 = ( ( localCubicSmooth6_g282 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g280 = temp_output_29_0_g280;
-				float temp_output_31_0_g280 = ( break30_g280.y * break30_g280.z );
-				float ifLocalVar36_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar36_g280 = 1.0;
+				float3 temp_output_3_0_g314 = staticSwitch214;
+				int temp_output_24_0_g314 = _WindQuality;
+				float4 break32_g314 = inputMesh.ase_texcoord;
+				float2 appendResult31_g314 = (float2(break32_g314.z , break32_g314.w));
+				float2 break34_g314 = appendResult31_g314;
+				float temp_output_5_0_g315 = break34_g314.y;
+				float3 temp_cast_10 = (temp_output_5_0_g315).xxx;
+				float3 fValue10_g316 = temp_cast_10;
+				float3 localUnpackNormalFromFloat10_g316 = UnpackNormalFromFloat( fValue10_g316 );
+				float temp_output_4_0_g315 = break34_g314.x;
+				int temp_output_7_0_g317 = 0;
+				int temp_output_10_0_g317 = 1;
+				float3 localGetInstancePos40_g314 = GetInstancePos();
+				float3 break17_g315 = localGetInstancePos40_g314;
+				float temp_output_3_0_g317 = ( break17_g315.x + break17_g315.y + _GlobalTimers[_GlobalTimerId].y );
+				float fTime28_g317 = temp_output_3_0_g317;
+				float temp_output_4_0_g317 = temp_output_5_0_g315;
+				float fOffset28_g317 = temp_output_4_0_g317;
+				float fTwitchFreqScale28_g317 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g317 = temp_output_4_0_g315;
+				float fWeight28_g317 = temp_output_5_0_g317;
+				int bWhip28_g317 = temp_output_7_0_g317;
+				float4 localComplexOscillationInputs28_g317 = ComplexOscillationInputs( fTime28_g317 , fOffset28_g317 , fTwitchFreqScale28_g317 , fWeight28_g317 , bWhip28_g317 );
+				float4 vData7_g319 = localComplexOscillationInputs28_g317;
+				float4 localTriangleWave7_g319 = TriangleWave( vData7_g319 );
+				float4 vData6_g319 = localTriangleWave7_g319;
+				float4 localCubicSmooth6_g319 = CubicSmooth( vData6_g319 );
+				float4 temp_output_29_0_g317 = ( ( localCubicSmooth6_g319 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g317 = temp_output_29_0_g317;
+				float temp_output_31_0_g317 = ( break30_g317.y * break30_g317.z );
+				float ifLocalVar36_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar36_g317 = 1.0;
 				else
-				ifLocalVar36_g280 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar35_g280 = temp_output_31_0_g280;
+				ifLocalVar36_g317 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar35_g317 = temp_output_31_0_g317;
 				else
-				ifLocalVar35_g280 = ( temp_output_31_0_g280 * -1.0 );
-				float lerpResult41_g280 = lerp( temp_output_31_0_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float lerpResult42_g280 = lerp( lerpResult41_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float temp_output_11_0_g280 = _ST_WindBranchTwitch.x;
-				float fTime61_g280 = temp_output_3_0_g280;
-				float fOffset61_g280 = temp_output_4_0_g280;
-				float fWeight61_g280 = temp_output_5_0_g280;
-				int bWhip61_g280 = temp_output_7_0_g280;
-				float4 localSimpleOscillationInputs61_g280 = SimpleOscillationInputs( fTime61_g280 , fOffset61_g280 , fWeight61_g280 , bWhip61_g280 );
-				float4 vData7_g281 = localSimpleOscillationInputs61_g280;
-				float4 localTriangleWave7_g281 = TriangleWave( vData7_g281 );
-				float4 vData6_g281 = localTriangleWave7_g281;
-				float4 localCubicSmooth6_g281 = CubicSmooth( vData6_g281 );
-				float4 temp_output_66_0_g280 = ( ( localCubicSmooth6_g281 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g280 = temp_output_66_0_g280;
-				float temp_output_64_0_g280 = ( break62_g280.x + ( break62_g280.x * break62_g280.y ) );
-				float ifLocalVar17_g280 = 0;
-				if( temp_output_10_0_g280 <= 0.0 )
-				ifLocalVar17_g280 = temp_output_64_0_g280;
+				ifLocalVar35_g317 = ( temp_output_31_0_g317 * -1.0 );
+				float lerpResult41_g317 = lerp( temp_output_31_0_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float lerpResult42_g317 = lerp( lerpResult41_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float temp_output_11_0_g317 = _ST_WindBranchTwitch.x;
+				float fTime61_g317 = temp_output_3_0_g317;
+				float fOffset61_g317 = temp_output_4_0_g317;
+				float fWeight61_g317 = temp_output_5_0_g317;
+				int bWhip61_g317 = temp_output_7_0_g317;
+				float4 localSimpleOscillationInputs61_g317 = SimpleOscillationInputs( fTime61_g317 , fOffset61_g317 , fWeight61_g317 , bWhip61_g317 );
+				float4 vData7_g318 = localSimpleOscillationInputs61_g317;
+				float4 localTriangleWave7_g318 = TriangleWave( vData7_g318 );
+				float4 vData6_g318 = localTriangleWave7_g318;
+				float4 localCubicSmooth6_g318 = CubicSmooth( vData6_g318 );
+				float4 temp_output_66_0_g317 = ( ( localCubicSmooth6_g318 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g317 = temp_output_66_0_g317;
+				float temp_output_64_0_g317 = ( break62_g317.x + ( break62_g317.x * break62_g317.y ) );
+				float ifLocalVar17_g317 = 0;
+				if( temp_output_10_0_g317 <= 0.0 )
+				ifLocalVar17_g317 = temp_output_64_0_g317;
 				else
-				ifLocalVar17_g280 = ( ( lerpResult42_g280 * temp_output_11_0_g280 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g280.x * ( 1.0 - temp_output_11_0_g280 ) ) );
-				float ifLocalVar52_g280 = 0;
-				if( temp_output_7_0_g280 <= 0.0 )
-				ifLocalVar52_g280 = ifLocalVar17_g280;
+				ifLocalVar17_g317 = ( ( lerpResult42_g317 * temp_output_11_0_g317 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g317.x * ( 1.0 - temp_output_11_0_g317 ) ) );
+				float ifLocalVar52_g317 = 0;
+				if( temp_output_7_0_g317 <= 0.0 )
+				ifLocalVar52_g317 = ifLocalVar17_g317;
 				else
-				ifLocalVar52_g280 = ( ifLocalVar17_g280 * ( 1.0 + ( break30_g280.w * (int)_ST_WindBranchWhip.x ) ) );
-				float3 temp_output_45_0_g277 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g279 * temp_output_4_0_g278 ) * ifLocalVar52_g280 * _ST_WindBranch.y ) );
-				float temp_output_4_0_g284 = break34_g277.y;
-				float3 temp_cast_12 = (temp_output_4_0_g284).xxx;
-				float3 fValue10_g287 = temp_cast_12;
-				float3 localUnpackNormalFromFloat10_g287 = UnpackNormalFromFloat( fValue10_g287 );
-				float temp_output_3_0_g284 = break34_g277.x;
-				int temp_output_7_0_g288 = 1;
-				int temp_output_10_0_g288 = 1;
-				float3 break17_g284 = localGetInstancePos40_g277;
-				float temp_output_16_0_g284 = ( _GlobalTimers[_GlobalTimerId].y + break17_g284.x + break17_g284.y );
-				float temp_output_3_0_g288 = temp_output_16_0_g284;
-				float fTime28_g288 = temp_output_3_0_g288;
-				float temp_output_4_0_g288 = temp_output_4_0_g284;
-				float fOffset28_g288 = temp_output_4_0_g288;
-				float fTwitchFreqScale28_g288 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g288 = temp_output_3_0_g284;
-				float fWeight28_g288 = temp_output_5_0_g288;
-				int bWhip28_g288 = temp_output_7_0_g288;
-				float4 localComplexOscillationInputs28_g288 = ComplexOscillationInputs( fTime28_g288 , fOffset28_g288 , fTwitchFreqScale28_g288 , fWeight28_g288 , bWhip28_g288 );
-				float4 vData7_g290 = localComplexOscillationInputs28_g288;
-				float4 localTriangleWave7_g290 = TriangleWave( vData7_g290 );
-				float4 vData6_g290 = localTriangleWave7_g290;
-				float4 localCubicSmooth6_g290 = CubicSmooth( vData6_g290 );
-				float4 temp_output_29_0_g288 = ( ( localCubicSmooth6_g290 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g288 = temp_output_29_0_g288;
-				float temp_output_31_0_g288 = ( break30_g288.y * break30_g288.z );
-				float ifLocalVar36_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar36_g288 = 1.0;
+				ifLocalVar52_g317 = ( ifLocalVar17_g317 * ( 1.0 + ( break30_g317.w * (int)_ST_WindBranchWhip.x ) ) );
+				float3 temp_output_45_0_g314 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g316 * temp_output_4_0_g315 ) * ifLocalVar52_g317 * _ST_WindBranch.y ) );
+				float temp_output_4_0_g321 = break34_g314.y;
+				float3 temp_cast_12 = (temp_output_4_0_g321).xxx;
+				float3 fValue10_g324 = temp_cast_12;
+				float3 localUnpackNormalFromFloat10_g324 = UnpackNormalFromFloat( fValue10_g324 );
+				float temp_output_3_0_g321 = break34_g314.x;
+				int temp_output_7_0_g325 = 1;
+				int temp_output_10_0_g325 = 1;
+				float3 break17_g321 = localGetInstancePos40_g314;
+				float temp_output_16_0_g321 = ( _GlobalTimers[_GlobalTimerId].y + break17_g321.x + break17_g321.y );
+				float temp_output_3_0_g325 = temp_output_16_0_g321;
+				float fTime28_g325 = temp_output_3_0_g325;
+				float temp_output_4_0_g325 = temp_output_4_0_g321;
+				float fOffset28_g325 = temp_output_4_0_g325;
+				float fTwitchFreqScale28_g325 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g325 = temp_output_3_0_g321;
+				float fWeight28_g325 = temp_output_5_0_g325;
+				int bWhip28_g325 = temp_output_7_0_g325;
+				float4 localComplexOscillationInputs28_g325 = ComplexOscillationInputs( fTime28_g325 , fOffset28_g325 , fTwitchFreqScale28_g325 , fWeight28_g325 , bWhip28_g325 );
+				float4 vData7_g327 = localComplexOscillationInputs28_g325;
+				float4 localTriangleWave7_g327 = TriangleWave( vData7_g327 );
+				float4 vData6_g327 = localTriangleWave7_g327;
+				float4 localCubicSmooth6_g327 = CubicSmooth( vData6_g327 );
+				float4 temp_output_29_0_g325 = ( ( localCubicSmooth6_g327 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g325 = temp_output_29_0_g325;
+				float temp_output_31_0_g325 = ( break30_g325.y * break30_g325.z );
+				float ifLocalVar36_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar36_g325 = 1.0;
 				else
-				ifLocalVar36_g288 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar35_g288 = temp_output_31_0_g288;
+				ifLocalVar36_g325 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar35_g325 = temp_output_31_0_g325;
 				else
-				ifLocalVar35_g288 = ( temp_output_31_0_g288 * -1.0 );
-				float lerpResult41_g288 = lerp( temp_output_31_0_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float lerpResult42_g288 = lerp( lerpResult41_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float temp_output_11_0_g288 = _ST_WindBranchTwitch.x;
-				float fTime61_g288 = temp_output_3_0_g288;
-				float fOffset61_g288 = temp_output_4_0_g288;
-				float fWeight61_g288 = temp_output_5_0_g288;
-				int bWhip61_g288 = temp_output_7_0_g288;
-				float4 localSimpleOscillationInputs61_g288 = SimpleOscillationInputs( fTime61_g288 , fOffset61_g288 , fWeight61_g288 , bWhip61_g288 );
-				float4 vData7_g289 = localSimpleOscillationInputs61_g288;
-				float4 localTriangleWave7_g289 = TriangleWave( vData7_g289 );
-				float4 vData6_g289 = localTriangleWave7_g289;
-				float4 localCubicSmooth6_g289 = CubicSmooth( vData6_g289 );
-				float4 temp_output_66_0_g288 = ( ( localCubicSmooth6_g289 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g288 = temp_output_66_0_g288;
-				float temp_output_64_0_g288 = ( break62_g288.x + ( break62_g288.x * break62_g288.y ) );
-				float ifLocalVar17_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar17_g288 = temp_output_64_0_g288;
+				ifLocalVar35_g325 = ( temp_output_31_0_g325 * -1.0 );
+				float lerpResult41_g325 = lerp( temp_output_31_0_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float lerpResult42_g325 = lerp( lerpResult41_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float temp_output_11_0_g325 = _ST_WindBranchTwitch.x;
+				float fTime61_g325 = temp_output_3_0_g325;
+				float fOffset61_g325 = temp_output_4_0_g325;
+				float fWeight61_g325 = temp_output_5_0_g325;
+				int bWhip61_g325 = temp_output_7_0_g325;
+				float4 localSimpleOscillationInputs61_g325 = SimpleOscillationInputs( fTime61_g325 , fOffset61_g325 , fWeight61_g325 , bWhip61_g325 );
+				float4 vData7_g326 = localSimpleOscillationInputs61_g325;
+				float4 localTriangleWave7_g326 = TriangleWave( vData7_g326 );
+				float4 vData6_g326 = localTriangleWave7_g326;
+				float4 localCubicSmooth6_g326 = CubicSmooth( vData6_g326 );
+				float4 temp_output_66_0_g325 = ( ( localCubicSmooth6_g326 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g325 = temp_output_66_0_g325;
+				float temp_output_64_0_g325 = ( break62_g325.x + ( break62_g325.x * break62_g325.y ) );
+				float ifLocalVar17_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar17_g325 = temp_output_64_0_g325;
 				else
-				ifLocalVar17_g288 = ( ( lerpResult42_g288 * temp_output_11_0_g288 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g288.x * ( 1.0 - temp_output_11_0_g288 ) ) );
-				float temp_output_11_0_g284 = _ST_WindBranchWhip.x;
-				float ifLocalVar52_g288 = 0;
-				if( temp_output_7_0_g288 <= 0.0 )
-				ifLocalVar52_g288 = ifLocalVar17_g288;
+				ifLocalVar17_g325 = ( ( lerpResult42_g325 * temp_output_11_0_g325 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g325.x * ( 1.0 - temp_output_11_0_g325 ) ) );
+				float temp_output_11_0_g321 = _ST_WindBranchWhip.x;
+				float ifLocalVar52_g325 = 0;
+				if( temp_output_7_0_g325 <= 0.0 )
+				ifLocalVar52_g325 = ifLocalVar17_g325;
 				else
-				ifLocalVar52_g288 = ( ifLocalVar17_g288 * ( 1.0 + ( break30_g288.w * (int)temp_output_11_0_g284 ) ) );
-				float3 temp_output_23_0_g284 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g287 * temp_output_3_0_g284 ) * ifLocalVar52_g288 * _ST_WindBranch.y ) );
-				float temp_output_3_0_g285 = temp_output_4_0_g284;
-				float temp_output_6_0_g285 = _ST_WindTurbulences.y;
-				float4 appendResult9_g285 = (float4(( ( temp_output_16_0_g284 * 0.1 ) + temp_output_3_0_g285 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g285 * 0.1 ) + temp_output_3_0_g285 ) , 0.0 , 0.0));
-				float4 vData7_g286 = appendResult9_g285;
-				float4 localTriangleWave7_g286 = TriangleWave( vData7_g286 );
-				float4 vData6_g286 = localTriangleWave7_g286;
-				float4 localCubicSmooth6_g286 = CubicSmooth( vData6_g286 );
-				float4 break16_g285 = ( ( localCubicSmooth6_g286 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar59_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar59_g288 = temp_output_66_0_g288;
+				ifLocalVar52_g325 = ( ifLocalVar17_g325 * ( 1.0 + ( break30_g325.w * (int)temp_output_11_0_g321 ) ) );
+				float3 temp_output_23_0_g321 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g324 * temp_output_3_0_g321 ) * ifLocalVar52_g325 * _ST_WindBranch.y ) );
+				float temp_output_3_0_g322 = temp_output_4_0_g321;
+				float temp_output_6_0_g322 = _ST_WindTurbulences.y;
+				float4 appendResult9_g322 = (float4(( ( temp_output_16_0_g321 * 0.1 ) + temp_output_3_0_g322 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g322 * 0.1 ) + temp_output_3_0_g322 ) , 0.0 , 0.0));
+				float4 vData7_g323 = appendResult9_g322;
+				float4 localTriangleWave7_g323 = TriangleWave( vData7_g323 );
+				float4 vData6_g323 = localTriangleWave7_g323;
+				float4 localCubicSmooth6_g323 = CubicSmooth( vData6_g323 );
+				float4 break16_g322 = ( ( localCubicSmooth6_g323 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar59_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar59_g325 = temp_output_66_0_g325;
 				else
-				ifLocalVar59_g288 = temp_output_29_0_g288;
-				float3 ifLocalVar29_g277 = 0;
-				if( temp_output_24_0_g277 == 5 )
-				ifLocalVar29_g277 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g284 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g285.x * break16_g285.y * break16_g285.x * break16_g285.y * temp_output_6_0_g285 ) ) + ( ifLocalVar59_g288.w * _ST_WindVector.w * temp_output_11_0_g284 ) ) * temp_output_3_0_g284 ) + temp_output_23_0_g284 );
+				ifLocalVar59_g325 = temp_output_29_0_g325;
+				float3 ifLocalVar29_g314 = 0;
+				if( temp_output_24_0_g314 == 5 )
+				ifLocalVar29_g314 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g321 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g322.x * break16_g322.y * break16_g322.x * break16_g322.y * temp_output_6_0_g322 ) ) + ( ifLocalVar59_g325.w * _ST_WindVector.w * temp_output_11_0_g321 ) ) * temp_output_3_0_g321 ) + temp_output_23_0_g321 );
 				else
-				ifLocalVar29_g277 = temp_output_45_0_g277;
-				float3 ifLocalVar26_g277 = 0;
-				if( temp_output_24_0_g277 >= 3 )
-				ifLocalVar26_g277 = ifLocalVar29_g277;
+				ifLocalVar29_g314 = temp_output_45_0_g314;
+				float3 ifLocalVar26_g314 = 0;
+				if( temp_output_24_0_g314 >= 3 )
+				ifLocalVar26_g314 = ifLocalVar29_g314;
 				else
-				ifLocalVar26_g277 = temp_output_3_0_g277;
+				ifLocalVar26_g314 = temp_output_3_0_g314;
 				#ifdef GEOM_TYPE_MESH
-				float3 staticSwitch9_g277 = ifLocalVar26_g277;
+				float3 staticSwitch9_g314 = ifLocalVar26_g314;
 				#else
-				float3 staticSwitch9_g277 = temp_output_3_0_g277;
+				float3 staticSwitch9_g314 = temp_output_3_0_g314;
 				#endif
-				float3 temp_output_111_0_g187 = staticSwitch9_g277;
-				float3 vPos140_g187 = temp_output_111_0_g187;
-				float3 vRotatedWindVector140_g187 = rotatedWindVector291;
-				float3 vPos145_g187 = temp_output_111_0_g187;
-				float4 windGlobal145_g187 = _ST_WindGlobal;
-				float localComputeWindAdjust145_g187 = ComputeWindAdjust( vPos145_g187 , windGlobal145_g187 );
-				float3 break122_g187 = localGetInstancePos40_g277;
-				float temp_output_125_0_g187 = _GlobalTimers[_GlobalTimerId].x;
-				float4 appendResult126_g187 = (float4(( break122_g187.x + temp_output_125_0_g187 ) , ( break122_g187.y + ( temp_output_125_0_g187 * 0.8 ) ) , 0.0 , 0.0));
-				float4 vData7_g188 = appendResult126_g187;
-				float4 localTriangleWave7_g188 = TriangleWave( vData7_g188 );
-				float4 vData6_g188 = localTriangleWave7_g188;
-				float4 localCubicSmooth6_g188 = CubicSmooth( vData6_g188 );
-				float4 break117_g187 = ( ( localCubicSmooth6_g188 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float temp_output_90_0_g187 = ( localComputeWindAdjust145_g187 * ( ( _ST_WindGlobal.y * ( break117_g187.x + ( break117_g187.y * break117_g187.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
-				float ifLocalVar142_g187 = 0;
+				float3 temp_output_111_0_g844 = staticSwitch9_g314;
+				float3 vPos140_g844 = temp_output_111_0_g844;
+				float3 vRotatedWindVector140_g844 = rotatedWindVector291;
+				float3 vPos145_g844 = temp_output_111_0_g844;
+				float4 windGlobal145_g844 = _ST_WindGlobal;
+				float localComputeWindAdjust145_g844 = ComputeWindAdjust( vPos145_g844 , windGlobal145_g844 );
+				float3 break122_g844 = localGetInstancePos40_g314;
+				float temp_output_125_0_g844 = _GlobalTimers[_GlobalTimerId].x;
+				float4 appendResult126_g844 = (float4(( break122_g844.x + temp_output_125_0_g844 ) , ( break122_g844.y + ( temp_output_125_0_g844 * 0.8 ) ) , 0.0 , 0.0));
+				float4 vData7_g845 = appendResult126_g844;
+				float4 localTriangleWave7_g845 = TriangleWave( vData7_g845 );
+				float4 vData6_g845 = localTriangleWave7_g845;
+				float4 localCubicSmooth6_g845 = CubicSmooth( vData6_g845 );
+				float4 break117_g844 = ( ( localCubicSmooth6_g845 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float temp_output_90_0_g844 = ( localComputeWindAdjust145_g844 * ( ( _ST_WindGlobal.y * ( break117_g844.x + ( break117_g844.y * break117_g844.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
+				float ifLocalVar142_g844 = 0;
 				if( _ST_WindGlobal.w == 0.0 )
-				ifLocalVar142_g187 = 0.0;
+				ifLocalVar142_g844 = 0.0;
 				else
-				ifLocalVar142_g187 = temp_output_90_0_g187;
-				float fMoveAmount140_g187 = ifLocalVar142_g187;
-				float3 localSwizzleCombineMoveAmount140_g187 = SwizzleCombineMoveAmount( vPos140_g187 , vRotatedWindVector140_g187 , fMoveAmount140_g187 );
-				float3 ifLocalVar132_g187 = 0;
+				ifLocalVar142_g844 = temp_output_90_0_g844;
+				float fMoveAmount140_g844 = ifLocalVar142_g844;
+				float3 localSwizzleCombineMoveAmount140_g844 = SwizzleCombineMoveAmount( vPos140_g844 , vRotatedWindVector140_g844 , fMoveAmount140_g844 );
+				float3 ifLocalVar132_g844 = 0;
 				if( _WindQuality <= 0 )
-				ifLocalVar132_g187 = temp_output_111_0_g187;
+				ifLocalVar132_g844 = temp_output_111_0_g844;
 				else
-				ifLocalVar132_g187 = localSwizzleCombineMoveAmount140_g187;
+				ifLocalVar132_g844 = localSwizzleCombineMoveAmount140_g844;
 				
-				float3 temp_output_9_0_g189 = inputMesh.normalOS;
-				float3 temp_output_7_0_g264 = temp_output_9_0_g189;
-				float3 ifLocalVar30_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar30_g264 = mul( temp_output_86_0_g269, temp_output_7_0_g264 );
+				float3 temp_output_9_0_g300 = inputMesh.normalOS;
+				float3 temp_output_7_0_g301 = temp_output_9_0_g300;
+				float3 ifLocalVar30_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar30_g301 = mul( temp_output_86_0_g306, temp_output_7_0_g301 );
 				else
-				ifLocalVar30_g264 = temp_output_7_0_g264;
-				float3 ifLocalVar10_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar10_g189 = temp_output_9_0_g189;
+				ifLocalVar30_g301 = temp_output_7_0_g301;
+				float3 ifLocalVar10_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar10_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar10_g189 = ifLocalVar30_g264;
-				float3 ifLocalVar14_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar14_g189 = temp_output_9_0_g189;
+				ifLocalVar10_g300 = ifLocalVar30_g301;
+				float3 ifLocalVar14_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar14_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar14_g189 = ifLocalVar10_g189;
+				ifLocalVar14_g300 = ifLocalVar10_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch348 = ifLocalVar14_g189;
+				float3 staticSwitch348 = ifLocalVar14_g300;
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#else
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#endif
 				
-				outputPackedVaryingsToPS.ase_texcoord3 = inputMesh.ase_texcoord;
+				outputPackedVaryingsMeshToPS.ase_texcoord3 = inputMesh.ase_texcoord;
+				outputPackedVaryingsMeshToPS.ase_texcoord4 = inputMesh.ase_texcoord2;
+				outputPackedVaryingsMeshToPS.ase_color = inputMesh.ase_color;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
 				#else
 				float3 defaultVertexValue = float3( 0, 0, 0 );
 				#endif
-				float3 vertexValue = ifLocalVar132_g187;
+				float3 vertexValue = ifLocalVar132_g844;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				inputMesh.positionOS.xyz = vertexValue;
@@ -5955,55 +6682,201 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 				inputMesh.normalOS = staticSwitch348;
+				return inputMesh;
+			}
+
+			PackedVaryingsMeshToPS VertexFunction(AttributesMesh inputMesh)
+			{
+				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS = (PackedVaryingsMeshToPS)0;
+				AttributesMesh defaultMesh = inputMesh;
+
+				UNITY_SETUP_INSTANCE_ID(inputMesh);
+				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
+
+				inputMesh = ApplyMeshModification( inputMesh, _TimeParameters.xyz, outputPackedVaryingsMeshToPS);
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
+				float3 normalWS = TransformObjectToWorldNormal(inputMesh.normalOS);
 
-				outputVaryingsMeshToPS.positionRWS = positionRWS;
-				outputVaryingsMeshToPS.positionCS = TransformWorldToHClip(positionRWS);
+				float3 VMESHpositionRWS = positionRWS;
+				float4 VMESHpositionCS = TransformWorldToHClip(positionRWS);
 
-				varyingsType.vmesh = outputVaryingsMeshToPS;
-
-				VelocityPositionZBias(varyingsType);
-				varyingsType.vpass.positionCS = mul(_NonJitteredViewProjMatrix, float4(varyingsType.vmesh.positionRWS, 1.0));
+				float4 VPASSpreviousPositionCS;
+				float4 VPASSpositionCS = mul(UNITY_MATRIX_UNJITTERED_VP, float4(VMESHpositionRWS, 1.0));
 
 				bool forceNoMotion = unity_MotionVectorsParams.y == 0.0;
 				if (forceNoMotion)
 				{
-					varyingsType.vpass.previousPositionCS = float4(0.0, 0.0, 0.0, 1.0);
+					VPASSpreviousPositionCS = float4(0.0, 0.0, 0.0, 1.0);
 				}
 				else
 				{
-					bool hasDeformation = unity_MotionVectorsParams.x > 0.0; // Skin or morph target
-					float3 previousPositionRWS = TransformPreviousObjectToWorld(hasDeformation ? inputPass.previousPositionOS : inputMesh.positionOS);
-					varyingsType.vpass.previousPositionCS = mul(_PrevViewProjMatrix, float4(previousPositionRWS, 1.0));
+					bool hasDeformation = unity_MotionVectorsParams.x > 0.0;
+					float3 effectivePositionOS = (hasDeformation ? inputMesh.previousPositionOS : defaultMesh.positionOS);
+					#if defined(_ADD_PRECOMPUTED_VELOCITY)
+					effectivePositionOS -= inputMesh.precomputedVelocity;
+					#endif
+
+					#if defined(HAVE_MESH_MODIFICATION)
+						AttributesMesh previousMesh = defaultMesh;
+						previousMesh.positionOS = effectivePositionOS ;
+						PackedVaryingsMeshToPS test = (PackedVaryingsMeshToPS)0;
+						float3 curTime = _TimeParameters.xyz;
+						previousMesh = ApplyMeshModification(previousMesh, _LastTimeParameters.xyz, test);
+						_TimeParameters.xyz = curTime;
+						float3 previousPositionRWS = TransformPreviousObjectToWorld(previousMesh.positionOS);
+					#else
+						float3 previousPositionRWS = TransformPreviousObjectToWorld(effectivePositionOS);
+					#endif
+
+					#ifdef ATTRIBUTES_NEED_NORMAL
+						float3 normalWS = TransformPreviousObjectToWorldNormal(defaultMesh.normalOS);
+					#else
+						float3 normalWS = float3(0.0, 0.0, 0.0);
+					#endif
+
+					#if defined(HAVE_VERTEX_MODIFICATION)
+						//ApplyVertexModification(inputMesh, normalWS, previousPositionRWS, _LastTimeParameters.xyz);
+					#endif
+
+					VPASSpreviousPositionCS = mul(UNITY_MATRIX_PREV_VP, float4(previousPositionRWS, 1.0));
 				}
 
-				outputPackedVaryingsToPS.vmeshPositionCS = varyingsType.vmesh.positionCS;
-				outputPackedVaryingsToPS.vmeshInterp00.xyz = varyingsType.vmesh.positionRWS;
+				outputPackedVaryingsMeshToPS.vmeshPositionCS = VMESHpositionCS;
+				outputPackedVaryingsMeshToPS.vmeshInterp00.xyz = VMESHpositionRWS;
 
-				outputPackedVaryingsToPS.vpassInterpolators0 = float3(varyingsType.vpass.positionCS.xyw);
-				outputPackedVaryingsToPS.vpassInterpolators1 = float3(varyingsType.vpass.previousPositionCS.xyw);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsToPS );
-				return outputPackedVaryingsToPS;
+				outputPackedVaryingsMeshToPS.vpassInterpolators0 = float3(VPASSpositionCS.xyw);
+				outputPackedVaryingsMeshToPS.vpassInterpolators1 = float3(VPASSpreviousPositionCS.xyw);
+				return outputPackedVaryingsMeshToPS;
 			}
 
-			void Frag(  PackedVaryingsToPS packedInput
-						, out float4 outMotionVector : SV_Target0
-						#ifdef WRITE_NORMAL_BUFFER
-						, out float4 outNormalBuffer : SV_Target1
-							#ifdef WRITE_MSAA_DEPTH
-								, out float1 depthColor : SV_Target2
-							#endif
-						#elif defined(WRITE_MSAA_DEPTH)
-						, out float4 outNormalBuffer : SV_Target1
-						, out float1 depthColor : SV_Target2
-						#endif
+			#if defined(TESSELLATION_ON)
+			struct VertexControl
+			{
+				float3 positionOS : INTERNALTESSPOS;
+				float3 normalOS : NORMAL;
+				float3 previousPositionOS : TEXCOORD4;
+				#if defined (_ADD_PRECOMPUTED_VELOCITY)
+					float3 precomputedVelocity : TEXCOORD5;
+				#endif
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
 
-						#ifdef _DEPTHOFFSET_ON
-							, out float outputDepth : SV_Depth
-						#endif
-						
-					)
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl Vert ( AttributesMesh v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.positionOS = v.positionOS;
+				o.normalOS = v.normalOS;
+				o.previousPositionOS = v.previousPositionOS;
+				#if defined (_ADD_PRECOMPUTED_VELOCITY)
+				o.precomputedVelocity = v.precomputedVelocity;
+				#endif
+				o.ase_texcoord1 = v.ase_texcoord1;
+				o.ase_texcoord2 = v.ase_texcoord2;
+				o.ase_texcoord = v.ase_texcoord;
+				o.ase_color = v.ase_color;
+				o.ase_texcoord3 = v.ase_texcoord3;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				float3 cameraPos = 0;
+				#else
+				float3 cameraPos = _WorldSpaceCameraPos;
+				#endif
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), cameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, GetObjectToWorldMatrix(), cameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), cameraPos, _ScreenParams, _FrustumPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			PackedVaryingsMeshToPS DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				AttributesMesh o = (AttributesMesh) 0;
+				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
+				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
+				o.previousPositionOS = patch[0].previousPositionOS * bary.x + patch[1].previousPositionOS * bary.y + patch[2].previousPositionOS * bary.z;
+				#if defined (_ADD_PRECOMPUTED_VELOCITY)
+					o.precomputedVelocity = patch[0].precomputedVelocity * bary.x + patch[1].precomputedVelocity * bary.y + patch[2].precomputedVelocity * bary.z;
+				#endif
+				o.ase_texcoord1 = patch[0].ase_texcoord1 * bary.x + patch[1].ase_texcoord1 * bary.y + patch[2].ase_texcoord1 * bary.z;
+				o.ase_texcoord2 = patch[0].ase_texcoord2 * bary.x + patch[1].ase_texcoord2 * bary.y + patch[2].ase_texcoord2 * bary.z;
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
+				o.ase_texcoord3 = patch[0].ase_texcoord3 * bary.x + patch[1].ase_texcoord3 * bary.y + patch[2].ase_texcoord3 * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.positionOS.xyz - patch[i].normalOS * (dot(o.positionOS.xyz, patch[i].normalOS) - dot(patch[i].positionOS.xyz, patch[i].normalOS));
+				float phongStrength = _TessPhongStrength;
+				o.positionOS.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.positionOS.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			PackedVaryingsMeshToPS Vert ( AttributesMesh v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
+
+			void Frag( PackedVaryingsMeshToPS packedInput
+				, out float4 outMotionVector : SV_Target0
+				#ifdef WRITE_NORMAL_BUFFER
+				, out float4 outNormalBuffer : SV_Target1
+					#ifdef WRITE_MSAA_DEPTH
+						, out float1 depthColor : SV_Target2
+					#endif
+				#elif defined(WRITE_MSAA_DEPTH)
+				, out float4 outNormalBuffer : SV_Target1
+				, out float1 depthColor : SV_Target2
+				#endif
+
+				#ifdef _DEPTHOFFSET_ON
+					, out float outputDepth : SV_Depth
+				#endif
+				
+				)
 			{
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( packedInput );
 				UNITY_SETUP_INSTANCE_ID( packedInput );
@@ -6021,10 +6894,46 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				BuiltinData builtinData;
 
 				SmoothSurfaceDescription surfaceDescription = (SmoothSurfaceDescription)0;
+				float3 _ZNormal = float3(0,0,1);
 				float4 appendResult170 = (float4(packedInput.ase_texcoord3.x , packedInput.ase_texcoord3.y , 0.0 , 0.0));
+				float3 tex2DNode166 = UnpackNormalScale( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
+				float ifLocalVar88 = 0;
+				UNITY_BRANCH 
+				if( packedInput.ase_color.a == 0.0 )
+				ifLocalVar88 = packedInput.ase_texcoord4.z;
+				else
+				ifLocalVar88 = 2.5;
+				float4 appendResult86 = (float4(packedInput.ase_texcoord4.x , packedInput.ase_texcoord4.y , ifLocalVar88 , 0.0));
+				float4 break98 = appendResult86;
+				float2 appendResult99 = (float2(break98.x , break98.y));
+				float4 tex2DNode97 = tex2D( _DetailTex, appendResult99 );
+				float ifLocalVar109 = 0;
+				UNITY_BRANCH 
+				if( break98.z >= 2.0 )
+				ifLocalVar109 = tex2DNode97.a;
+				else
+				ifLocalVar109 = saturate( break98.z );
+				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalScale( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
+				#ifdef GEOM_TYPE_BRANCH_DETAIL
+				float3 staticSwitch183 = lerpResult184;
+				#else
+				float3 staticSwitch183 = tex2DNode166;
+				#endif
+				#ifdef LIGHTMAP_ON
+				float3 staticSwitch167 = _ZNormal;
+				#else
+				float3 staticSwitch167 = staticSwitch183;
+				#endif
+				#ifdef EFFECT_BUMP
+				float3 staticSwitch197 = staticSwitch167;
+				#else
+				float3 staticSwitch197 = _ZNormal;
+				#endif
+				
 				float4 tex2DNode91 = tex2D( _MainTex, appendResult170.xy );
 				float temp_output_93_0 = ( tex2DNode91.a * _Color.a );
 				
+				surfaceDescription.Normal = staticSwitch197;
 				surfaceDescription.Smoothness = _Smoothness;
 				surfaceDescription.Alpha = temp_output_93_0;
 
@@ -6038,13 +6947,15 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 				GetSurfaceAndBuiltinData( surfaceDescription, input, V, posInput, surfaceData, builtinData );
 
-				VaryingsPassToPS inputPass = UnpackVaryingsPassToPS( packedInput );
+				float4 VPASSpositionCS = float4(packedInput.vpassInterpolators0.xy, 0.0, packedInput.vpassInterpolators0.z);
+				float4 VPASSpreviousPositionCS = float4(packedInput.vpassInterpolators1.xy, 0.0, packedInput.vpassInterpolators1.z);
+
 				#ifdef _DEPTHOFFSET_ON
-				inputPass.positionCS.w += builtinData.depthOffset;
-				inputPass.previousPositionCS.w += builtinData.depthOffset;
+				VPASSpositionCS.w += builtinData.depthOffset;
+				VPASSpreviousPositionCS.w += builtinData.depthOffset;
 				#endif
 
-				float2 motionVector = CalculateMotionVector( inputPass.positionCS, inputPass.previousPositionCS );
+				float2 motionVector = CalculateMotionVector( VPASSpositionCS, VPASSpreviousPositionCS );
 				EncodeMotionVector( motionVector * 0.5, outMotionVector );
 
 				bool forceNoMotion = unity_MotionVectorsParams.y == 0.0;
@@ -6077,12 +6988,9 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			Name "Forward"
 			Tags { "LightMode"="Forward" }
 
-			Blend [_SrcBlend] [_DstBlend] , [_AlphaSrcBlend] [_AlphaDstBlend]
-
+			Blend [_SrcBlend] [_DstBlend], [_AlphaSrcBlend] [_AlphaDstBlend]
 			Cull [_CullModeForward]
-
 			ZTest [_ZTestDepthEqualForOpaque]
-
 			ZWrite [_ZWrite]
 
 			Stencil
@@ -6100,25 +7008,34 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			HLSLPROGRAM
 
-			#define SHADERPASS_FORWARD_BYPASS_ALPHA_TEST 1
-			#define _ALPHATEST_ON 1
+			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
-			#define ASE_SRP_VERSION 70108
+			#define HAVE_MESH_MODIFICATION
+			#define ASE_SRP_VERSION 999999
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
 			#pragma shader_feature_local _DOUBLESIDED_ON
 			#pragma shader_feature_local _ _BLENDMODE_ALPHA _BLENDMODE_ADD _BLENDMODE_PRE_MULTIPLY
+			#pragma shader_feature_local _ENABLE_FOG_ON_TRANSPARENT
+			#pragma shader_feature_local _ALPHATEST_ON
+
+			#if !defined(DEBUG_DISPLAY) && defined(_ALPHATEST_ON)
+			#define SHADERPASS_FORWARD_BYPASS_ALPHA_TEST
+			#endif
+
+			#define SHADERPASS SHADERPASS_FORWARD
+			#pragma multi_compile _ DEBUG_DISPLAY
+			#pragma multi_compile _ LIGHTMAP_ON
+			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
+			#pragma multi_compile _ DYNAMICLIGHTMAP_ON
+			#pragma multi_compile _ SHADOWS_SHADOWMASK
+			#pragma multi_compile DECALS_OFF DECALS_3RT DECALS_4RT
+			#pragma multi_compile USE_FPTL_LIGHTLIST USE_CLUSTERED_LIGHTLIST
+			#pragma multi_compile SHADOW_LOW SHADOW_MEDIUM SHADOW_HIGH
 
 			#pragma vertex Vert
 			#pragma fragment Frag
-
-			#if defined(_DOTS_INSTANCING)
-			#pragma instancing_options nolightprobe
-			#pragma instancing_options nolodfade
-			#else
-			#pragma instancing_options renderinglayer
-			#endif
 
 			//#define UNITY_MATERIAL_LIT
 
@@ -6128,36 +7045,16 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
 
-			#define SHADERPASS SHADERPASS_FORWARD
-			#pragma multi_compile _ LIGHTMAP_ON
-			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
-			#pragma multi_compile _ DYNAMICLIGHTMAP_ON
-			#pragma multi_compile _ SHADOWS_SHADOWMASK
-			#pragma multi_compile DECALS_OFF DECALS_3RT DECALS_4RT
-			#pragma multi_compile USE_FPTL_LIGHTLIST USE_CLUSTERED_LIGHTLIST
-			#pragma multi_compile SHADOW_LOW SHADOW_MEDIUM SHADOW_HIGH SHADOW_VERY_HIGH
-			//#define USE_CLUSTERED_LIGHTLIST
-
-			#define ATTRIBUTES_NEED_NORMAL
-			#define ATTRIBUTES_NEED_TANGENT
-			#define ATTRIBUTES_NEED_TEXCOORD1
-			#define ATTRIBUTES_NEED_TEXCOORD2
-			#define VARYINGS_NEED_POSITION_WS
-			#define VARYINGS_NEED_TANGENT_TO_WORLD
-			#define VARYINGS_NEED_TEXCOORD1
-			#define VARYINGS_NEED_TEXCOORD2
-
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+			#ifdef DEBUG_DISPLAY
+				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
+			#endif
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/Lighting.hlsl"
-
 			#define HAS_LIGHTLOOP
-
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/LightLoop/LightLoopDef.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/LightLoop/LightLoop.hlsl"
@@ -6167,6 +7064,10 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_NORMAL
+			#define ASE_NEEDS_FRAG_COLOR
 			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
 			#pragma shader_feature_local EFFECT_HUE_VARIATION
 			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
@@ -6177,9 +7078,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#define ASE_NEED_CULLFACE 1
 			#endif
 
-			int _ObjectId;
-			int _PassValue;
-
 			struct AttributesMesh
 			{
 				float3 positionOS : POSITION;
@@ -6187,6 +7085,12 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 tangentOS : TANGENT;
 				float4 uv1 : TEXCOORD1;
 				float4 uv2 : TEXCOORD2;
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+					float3 previousPositionOS : TEXCOORD4;
+					#if defined (_ADD_PRECOMPUTED_VELOCITY)
+						float3 precomputedVelocity : TEXCOORD5;
+					#endif
+				#endif
 				float4 ase_texcoord : TEXCOORD0;
 				float4 ase_color : COLOR;
 				float4 ase_texcoord3 : TEXCOORD3;
@@ -6201,9 +7105,13 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 interp02 : TEXCOORD2;
 				float4 interp03 : TEXCOORD3;
 				float4 interp04 : TEXCOORD4;
-				float4 ase_texcoord5 : TEXCOORD5;
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+					float3 vpassPositionCS : TEXCOORD5;
+					float3 vpassPreviousPositionCS : TEXCOORD6;
+				#endif
+				float4 ase_texcoord7 : TEXCOORD7;
 				float4 ase_color : COLOR;
-				float4 ase_texcoord6 : TEXCOORD6;
+				float4 ase_texcoord8 : TEXCOORD8;
 				float3 ase_normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
@@ -6213,31 +7121,35 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			};
 
 			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindBranchAdherences;
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindLeaf1Twitch;
 			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindBranchWhip;
-			int _Cull;
-			float4 _ST_WindFrondRipple;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float4 _Color;
-			float4 _ST_WindVector;
 			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindVector;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindGlobal;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _Color;
 			float _Cutoff;
+			int _Cull;
+			int _WindQuality;
 			float _Metallic;
+			int _GlobalTimerId;
 			float _Smoothness;
 			float4 _EmissionColor;
+			float _AlphaCutoff;
 			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
 			float _StencilRef;
 			float _StencilWriteMask;
 			float _StencilRefDepth;
@@ -6258,19 +7170,28 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			float _AlphaSrcBlend;
 			float _AlphaDstBlend;
 			float _ZWrite;
+			float _TransparentZWrite;
 			float _CullMode;
 			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
 			float _CullModeForward;
 			float _TransparentCullMode;
 			float _ZTestDepthEqualForOpaque;
 			float _ZTestTransparent;
 			float _TransparentBackfaceEnable;
 			float _AlphaCutoffEnable;
-			float _AlphaCutoff;
 			float _UseShadowThreshold;
 			float _DoubleSidedEnable;
 			float _DoubleSidedNormalMode;
 			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
 			CBUFFER_END
 			float4 _GlobalTimers[100];
 			sampler2D _MainTex;
@@ -6278,7 +7199,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _BumpMap;
 
 
-			void CalculateWindInputs( float windQuality , out float3 rotatedWindVector , out float3 rotatedBranchAnchor , float4 windVector , float4 windBranchAnchor )
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
 			{
 				if (windQuality <= 0) // WIND_QUALITY_NONE
 				{
@@ -6297,7 +7218,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float3 OffsetLeavesVertex( float3 VertexPos , float ColorAlpha , float3 texcoord1 , float2 texcoord3 )
+			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
 				VertexPos -= texcoord1.xyz;
@@ -6332,26 +7253,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				return abs((frac(vData + 0.5) * 2.0) - 1.0);
 			}
 			
-			float ComputeWindAdjust( float3 vPos , float4 windGlobal )
-			{
-				    // compute how much the height contributes
-				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
-				    if (fAdjust != 0.0) {
-				        float s = sign(fAdjust);
-				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
-				    }
-				    return fAdjust;
-			}
-			
-			float3 SwizzleCombineMoveAmount( float3 vPos , float3 vRotatedWindVector , float fMoveAmount )
-			{
-				    float fLength = length(vPos);
-				 
-				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
-				    vPos.xyz = normalize(vPos.xyz) * fLength;
-				    return vPos;
-			}
-			
 			float3 UnpackNormalFromFloat( float3 fValue )
 			{
 				     float3 vDecodeKey = float3(16.0, 1.0, 0.0625);
@@ -6370,7 +7271,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 ComplexOscillationInputs( float fTime , float fOffset , float fTwitchFreqScale , float fWeight , int bWhip )
+			float4 ComplexOscillationInputs( float fTime, float fOffset, float fTwitchFreqScale, float fWeight, int bWhip )
 			{
 				if (bWhip > 0) {
 				    return float4(fTime + fOffset, fTime * fTwitchFreqScale + fOffset, fTwitchFreqScale * 0.5 * (fTime + fOffset), fTime + fOffset + (1.0 - fWeight));
@@ -6379,7 +7280,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				}
 			}
 			
-			float4 SimpleOscillationInputs( float fTime , float fOffset , float fWeight , int bWhip )
+			float4 SimpleOscillationInputs( float fTime, float fOffset, float fWeight, int bWhip )
 			{
 				if (bWhip)
 				  return float4(fTime + fOffset, fTime * 0.689 + fOffset, 0.0, fTime + fOffset + (1.0 - fWeight));
@@ -6392,7 +7293,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				 return GetAbsolutePositionWS(float3(UNITY_MATRIX_M[0].w, UNITY_MATRIX_M[1].w, UNITY_MATRIX_M[2].w));
 			}
 			
-			float3x3 RotationMatrix( float3 vAxis , float fAngle )
+			float ComputeWindAdjust( float3 vPos, float4 windGlobal )
+			{
+				    // compute how much the height contributes
+				    float fAdjust = max(vPos.y - (1.0 / windGlobal.z) * 0.25, 0.0) * windGlobal.z;
+				    if (fAdjust != 0.0) {
+				        float s = sign(fAdjust);
+				        fAdjust = pow(abs(fAdjust), windGlobal.w) * s;
+				    }
+				    return fAdjust;
+			}
+			
+			float3 SwizzleCombineMoveAmount( float3 vPos, float3 vRotatedWindVector, float fMoveAmount )
+			{
+				    float fLength = length(vPos);
+				 
+				    vPos.xz += vRotatedWindVector.xz * fMoveAmount;
+				    vPos.xyz = normalize(vPos.xyz) * fLength;
+				    return vPos;
+			}
+			
+			float3x3 RotationMatrix( float3 vAxis, float fAngle )
 			{
 				    // compute sin/cos of fAngle
 				    float2 vSinCos;
@@ -6414,66 +7335,43 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			}
 			
 
-			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, out SurfaceData surfaceData, out float3 bentNormalWS)
+			void BuildSurfaceData(FragInputs fragInputs, inout GlobalSurfaceDescription surfaceDescription, float3 V, PositionInputs posInput, out SurfaceData surfaceData, out float3 bentNormalWS)
 			{
 				ZERO_INITIALIZE(SurfaceData, surfaceData);
 
-				surfaceData.baseColor =                 surfaceDescription.Albedo;
-				surfaceData.perceptualSmoothness =      surfaceDescription.Smoothness;
+				surfaceData.specularOcclusion = 1.0;
+
+				// surface data
+				surfaceData.baseColor =					surfaceDescription.Albedo;
+				surfaceData.perceptualSmoothness =		surfaceDescription.Smoothness;
+				surfaceData.ambientOcclusion =			surfaceDescription.Occlusion;
+				surfaceData.metallic =					surfaceDescription.Metallic;
+				surfaceData.coatMask =					surfaceDescription.CoatMask;
+
 				#ifdef _SPECULAR_OCCLUSION_CUSTOM
-				surfaceData.specularOcclusion = surfaceDescription.SpecularOcclusion;
+				surfaceData.specularOcclusion =			surfaceDescription.SpecularOcclusion;
 				#endif
-				surfaceData.ambientOcclusion = surfaceDescription.Occlusion;
-				surfaceData.metallic = surfaceDescription.Metallic;
-				surfaceData.coatMask = surfaceDescription.CoatMask;
-
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.iridescenceMask = surfaceDescription.IridescenceMask;
-				surfaceData.iridescenceThickness = surfaceDescription.IridescenceThickness;
-				#endif
-				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
 				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				surfaceData.subsurfaceMask =			surfaceDescription.SubsurfaceMask;
 				#endif
-				#ifdef _MATERIAL_FEATURE_TRANSMISSION
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#if defined(_HAS_REFRACTION) || defined(_MATERIAL_FEATURE_TRANSMISSION)
+				surfaceData.thickness =					surfaceDescription.Thickness;
 				#endif
-				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
-				#endif
-
-				#ifdef ASE_LIT_CLEAR_COAT
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
-				#endif
-
-				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#if defined( _MATERIAL_FEATURE_SUBSURFACE_SCATTERING ) || defined( _MATERIAL_FEATURE_TRANSMISSION )
+				surfaceData.diffusionProfileHash =		asuint(surfaceDescription.DiffusionProfile);
 				#endif
 				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
-				surfaceData.specularColor = surfaceDescription.Specular;
-				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
+				surfaceData.specularColor =				surfaceDescription.Specular;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.anisotropy =				surfaceDescription.Anisotropy;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.iridescenceMask =			surfaceDescription.IridescenceMask;
+				surfaceData.iridescenceThickness =		surfaceDescription.IridescenceThickness;
 				#endif
 
-				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
-				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
-				#endif
-
-				float3 normalTS = float3( 0.0f, 0.0f, 1.0f );
-				normalTS = surfaceDescription.Normal;
-				#ifdef _DOUBLESIDED_ON
-				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
-				#else
-				float3 doubleSidedConstants = float3(1.0, 1.0, 1.0);
-				#endif
-				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
-
-				bentNormalWS = surfaceData.normalWS;
-				surfaceData.geomNormalWS = fragInputs.tangentToWorld[ 2 ];
-
-				#ifdef ASE_BENT_NORMAL
-				GetNormalWS( fragInputs, surfaceDescription.BentNormal, bentNormalWS, doubleSidedConstants );
-				#endif
-
+				// refraction
 				#ifdef _HAS_REFRACTION
 				if( _EnableSSRefraction )
 				{
@@ -6499,43 +7397,90 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceData.transmittanceMask = 0.0;
 				#endif
 
-				#if defined(_HAS_REFRACTION) || defined(_MATERIAL_FEATURE_TRANSMISSION)
-				surfaceData.thickness = surfaceDescription.Thickness;
-				#endif
 
+				// material features
+				surfaceData.materialFeatures = MATERIALFEATUREFLAGS_LIT_STANDARD;
 				#ifdef _MATERIAL_FEATURE_SUBSURFACE_SCATTERING
-				surfaceData.subsurfaceMask = surfaceDescription.SubsurfaceMask;
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SUBSURFACE_SCATTERING;
+				#endif
+				#ifdef _MATERIAL_FEATURE_TRANSMISSION
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_TRANSMISSION;
+				#endif
+				#ifdef _MATERIAL_FEATURE_ANISOTROPY
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_ANISOTROPY;
+				#endif
+				#ifdef ASE_LIT_CLEAR_COAT
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_CLEAR_COAT;
+				#endif
+				#ifdef _MATERIAL_FEATURE_IRIDESCENCE
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_IRIDESCENCE;
+				#endif
+				#ifdef _MATERIAL_FEATURE_SPECULAR_COLOR
+				surfaceData.materialFeatures |= MATERIALFEATUREFLAGS_LIT_SPECULAR_COLOR;
 				#endif
 
-				#if defined( _MATERIAL_FEATURE_SUBSURFACE_SCATTERING ) || defined( _MATERIAL_FEATURE_TRANSMISSION )
-				surfaceData.diffusionProfileHash = asuint(surfaceDescription.DiffusionProfile);
+				// others
+				#if defined (_MATERIAL_FEATURE_SPECULAR_COLOR) && defined (_ENERGY_CONSERVING_SPECULAR)
+				surfaceData.baseColor *= ( 1.0 - Max3( surfaceData.specularColor.r, surfaceData.specularColor.g, surfaceData.specularColor.b ) );
 				#endif
-				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );    // The tangent is not normalize in tangentToWorld for mikkt. TODO: Check if it expected that we normalize with Morten. Tag: SURFACE_GRADIENT
+				#ifdef _DOUBLESIDED_ON
+				float3 doubleSidedConstants = _DoubleSidedConstants.xyz;
+				#else
+				float3 doubleSidedConstants = float3( 1.0, 1.0, 1.0 );
+				#endif
+
+				// normals
+				float3 normalTS = float3(0.0f, 0.0f, 1.0f);
+				normalTS = surfaceDescription.Normal;
+				GetNormalWS( fragInputs, normalTS, surfaceData.normalWS, doubleSidedConstants );
+
+				surfaceData.geomNormalWS = fragInputs.tangentToWorld[2];
+
+				bentNormalWS = surfaceData.normalWS;
+				#ifdef ASE_BENT_NORMAL
+				GetNormalWS( fragInputs, surfaceDescription.BentNormal, bentNormalWS, doubleSidedConstants );
+				#endif
+
+				surfaceData.tangentWS = normalize( fragInputs.tangentToWorld[ 0 ].xyz );
 				#ifdef _MATERIAL_FEATURE_ANISOTROPY
-				surfaceData.anisotropy = surfaceDescription.Anisotropy;
 				surfaceData.tangentWS = TransformTangentToWorld( surfaceDescription.Tangent, fragInputs.tangentToWorld );
 				#endif
 				surfaceData.tangentWS = Orthonormalize( surfaceData.tangentWS, surfaceData.normalWS );
+
+				// decals
+				#if HAVE_DECALS
+				if( _EnableDecals )
+				{
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
+					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+				}
+				#endif
 
 				#if defined(_SPECULAR_OCCLUSION_CUSTOM)
 				#elif defined(_SPECULAR_OCCLUSION_FROM_AO_BENT_NORMAL)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromBentAO( V, bentNormalWS, surfaceData.normalWS, surfaceData.ambientOcclusion, PerceptualSmoothnessToPerceptualRoughness( surfaceData.perceptualSmoothness ) );
 				#elif defined(_AMBIENT_OCCLUSION) && defined(_SPECULAR_OCCLUSION_FROM_AO)
 				surfaceData.specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion( ClampNdotV( dot( surfaceData.normalWS, V ) ), surfaceData.ambientOcclusion, PerceptualSmoothnessToRoughness( surfaceData.perceptualSmoothness ) );
-				#else
-				surfaceData.specularOcclusion = 1.0;
 				#endif
+
 				#ifdef _ENABLE_GEOMETRIC_SPECULAR_AA
 				surfaceData.perceptualSmoothness = GeometricNormalFiltering( surfaceData.perceptualSmoothness, fragInputs.tangentToWorld[ 2 ], surfaceDescription.SpecularAAScreenSpaceVariance, surfaceDescription.SpecularAAThreshold );
 				#endif
 
+				// debug
+				#if defined(DEBUG_DISPLAY)
+				if (_DebugMipMapMode != DEBUGMIPMAPMODE_NONE)
+				{
+					surfaceData.metallic = 0;
+				}
+				ApplyDebugToSurfaceData(fragInputs.tangentToWorld, surfaceData);
+				#endif
 			}
 
-			void GetSurfaceAndBuiltinData(GlobalSurfaceDescription surfaceDescription,FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
+			void GetSurfaceAndBuiltinData(GlobalSurfaceDescription surfaceDescription, FragInputs fragInputs, float3 V, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
 			{
 				#ifdef LOD_FADE_CROSSFADE
-				uint3 fadeMaskSeed = asuint( (int3)( V * _ScreenSize.xyx ) );
-				LODDitheringTransition( fadeMaskSeed, unity_LODFade.x );
+				LODDitheringTransition(ComputeFadeMaskSeed(V, posInput.positionSS), unity_LODFade.x);
 				#endif
 
 				#ifdef _DOUBLESIDED_ON
@@ -6556,15 +7501,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 
 				float3 bentNormalWS;
-				BuildSurfaceData( fragInputs, surfaceDescription, V, surfaceData, bentNormalWS );
-
-				#if HAVE_DECALS
-				if( _EnableDecals )
-				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
-				}
-				#endif
+				BuildSurfaceData( fragInputs, surfaceDescription, V, posInput, surfaceData, bentNormalWS );
 
 				InitBuiltinData( posInput, surfaceDescription.Alpha, bentNormalWS, -fragInputs.tangentToWorld[ 2 ], fragInputs.texCoord1, fragInputs.texCoord2, builtinData );
 
@@ -6577,25 +7514,12 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 				builtinData.emissiveColor = surfaceDescription.Emission;
 
-				#if (SHADERPASS == SHADERPASS_DISTORTION)
-				builtinData.distortion = surfaceDescription.Distortion;
-				builtinData.distortionBlur = surfaceDescription.DistortionBlur;
-				#else
-				builtinData.distortion = float2( 0.0, 0.0 );
-				builtinData.distortionBlur = 0.0;
-				#endif
-
 				PostInitBuiltinData(V, posInput, surfaceData, builtinData);
 			}
 
-			PackedVaryingsMeshToPS Vert(AttributesMesh inputMesh )
+			AttributesMesh ApplyMeshModification(AttributesMesh inputMesh, float3 timeParameters, inout PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS )
 			{
-
-				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS;
-
-				UNITY_SETUP_INSTANCE_ID(inputMesh);
-				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
-
+				_TimeParameters.xyz = timeParameters;
 				float3 temp_output_1_0_g4 = inputMesh.positionOS;
 				float3 appendResult213 = (float3(inputMesh.uv1.xyz));
 				float3 lerpResult13_g4 = lerp( temp_output_1_0_g4 , appendResult213 , unity_LODFade.x);
@@ -6624,7 +7548,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
-				int temp_output_40_0_g189 = _WindQuality;
+				int temp_output_40_0_g300 = _WindQuality;
 				float3 VertexPos286 = inputMesh.positionOS;
 				float3 appendResult112 = (float3(_Color.r , _Color.g , _Color.b));
 				float4 appendResult281 = (float4(( appendResult112 * inputMesh.ase_color.r ) , _Color.a));
@@ -6633,58 +7557,59 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 texcoord1286 = appendResult213;
 				float2 texcoord3286 = inputMesh.ase_texcoord3.xy;
 				float3 localOffsetLeavesVertex286 = OffsetLeavesVertex( VertexPos286 , ColorAlpha286 , texcoord1286 , texcoord3286 );
-				float3 temp_output_6_0_g189 = localOffsetLeavesVertex286;
-				int temp_output_2_0_g264 = temp_output_40_0_g189;
-				float4 break25_g189 = inputMesh.uv2;
-				float3 temp_cast_5 = (break25_g189.z).xxx;
-				float3 fValue10_g268 = temp_cast_5;
-				float3 localUnpackNormalFromFloat10_g268 = UnpackNormalFromFloat( fValue10_g268 );
-				float temp_output_4_0_g264 = break25_g189.w;
-				float ifLocalVar19_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar19_g264 = _ST_WindLeaf1Ripple.y;
+				float3 temp_output_6_0_g300 = localOffsetLeavesVertex286;
+				int temp_output_2_0_g301 = temp_output_40_0_g300;
+				float4 break25_g300 = inputMesh.uv2;
+				float3 temp_cast_5 = (break25_g300.z).xxx;
+				float3 fValue10_g305 = temp_cast_5;
+				float3 localUnpackNormalFromFloat10_g305 = UnpackNormalFromFloat( fValue10_g305 );
+				float temp_output_4_0_g301 = break25_g300.w;
+				float ifLocalVar19_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar19_g301 = _ST_WindLeaf1Ripple.y;
 				else
-				ifLocalVar19_g264 = _ST_WindLeaf2Ripple.y;
-				float2 break24_g189 = appendResult213.xy;
-				float4 break18_g264 = _GlobalTimers[_GlobalTimerId];
-				float4 appendResult10_g266 = (float4(( ( break24_g189.x + break24_g189.y ) + break18_g264.y ) , 0.0 , 0.0 , 0.0));
-				float4 vData7_g267 = appendResult10_g266;
-				float4 localTriangleWave7_g267 = TriangleWave( vData7_g267 );
-				float4 vData6_g267 = localTriangleWave7_g267;
-				float4 localCubicSmooth6_g267 = CubicSmooth( vData6_g267 );
-				float temp_output_8_0_g264 = break25_g189.x;
-				float3 temp_output_52_0_g264 = ( temp_output_6_0_g189 + ( localUnpackNormalFromFloat10_g268 * ( ifLocalVar19_g264 * ( ( localCubicSmooth6_g267 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g264 ) );
-				float temp_output_10_0_g264 = break25_g189.y;
-				float3 temp_cast_7 = (temp_output_10_0_g264).xxx;
-				float3 fValue10_g276 = temp_cast_7;
-				float3 localUnpackNormalFromFloat10_g276 = UnpackNormalFromFloat( fValue10_g276 );
-				float3 temp_output_5_0_g269 = localUnpackNormalFromFloat10_g276;
-				float3 vAxis6_g272 = temp_output_5_0_g269;
-				float temp_output_3_0_g269 = temp_output_8_0_g264;
-				float4 ifLocalVar32_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar32_g264 = _ST_WindLeaf1Tumble;
+				ifLocalVar19_g301 = _ST_WindLeaf2Ripple.y;
+				float2 break24_g300 = appendResult213.xy;
+				float4 break18_g301 = _GlobalTimers[_GlobalTimerId];
+				float4 appendResult10_g303 = (float4(( ( break24_g300.x + break24_g300.y ) + break18_g301.y ) , 0.0 , 0.0 , 0.0));
+				float4 vData7_g304 = appendResult10_g303;
+				float4 localTriangleWave7_g304 = TriangleWave( vData7_g304 );
+				float4 vData6_g304 = localTriangleWave7_g304;
+				float4 localCubicSmooth6_g304 = CubicSmooth( vData6_g304 );
+				float temp_output_8_0_g301 = break25_g300.x;
+				float3 temp_output_52_0_g301 = ( temp_output_6_0_g300 + ( localUnpackNormalFromFloat10_g305 * ( ifLocalVar19_g301 * ( ( localCubicSmooth6_g304 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x ) * temp_output_8_0_g301 ) );
+				float temp_output_10_0_g301 = break25_g300.y;
+				float3 temp_cast_7 = (temp_output_10_0_g301).xxx;
+				float3 fValue10_g313 = temp_cast_7;
+				float3 localUnpackNormalFromFloat10_g313 = UnpackNormalFromFloat( fValue10_g313 );
+				float3 temp_output_5_0_g306 = localUnpackNormalFromFloat10_g313;
+				float3 vAxis6_g309 = temp_output_5_0_g306;
+				float temp_output_3_0_g306 = temp_output_8_0_g301;
+				float4 ifLocalVar32_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar32_g301 = _ST_WindLeaf1Tumble;
 				else
-				ifLocalVar32_g264 = _ST_WindLeaf2Tumble;
-				float4 break34_g264 = ifLocalVar32_g264;
-				float temp_output_22_0_g269 = frac( ( temp_output_10_0_g264 * 30.3 ) );
-				float temp_output_25_0_g269 = ( temp_output_22_0_g269 + temp_output_22_0_g269 + temp_output_22_0_g269 );
-				float temp_output_7_0_g269 = break18_g264.z;
-				float4 appendResult34_g269 = (float4(( temp_output_25_0_g269 + temp_output_7_0_g269 ) , ( ( temp_output_7_0_g269 * 0.75 ) + ( temp_output_25_0_g269 * -1.0 ) ) , ( ( temp_output_7_0_g269 * 0.01 ) + temp_output_25_0_g269 ) , ( temp_output_25_0_g269 + ( temp_output_7_0_g269 * 1.0 ) )));
-				float4 vData7_g271 = appendResult34_g269;
-				float4 localTriangleWave7_g271 = TriangleWave( vData7_g271 );
-				float4 vData6_g271 = localTriangleWave7_g271;
-				float4 localCubicSmooth6_g271 = CubicSmooth( vData6_g271 );
-				float4 temp_output_27_0_g269 = ( ( localCubicSmooth6_g271 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break47_g269 = temp_output_27_0_g269;
-				float fAngle6_g272 = ( temp_output_3_0_g269 * break34_g264.z * ( break47_g269.x + ( break47_g269.y * break47_g269.y ) ) );
-				float3x3 localRotationMatrix6_g272 = RotationMatrix( vAxis6_g272 , fAngle6_g272 );
+				ifLocalVar32_g301 = _ST_WindLeaf2Tumble;
+				float4 break34_g301 = ifLocalVar32_g301;
+				float temp_output_22_0_g306 = frac( ( temp_output_10_0_g301 * 30.3 ) );
+				float temp_output_25_0_g306 = ( temp_output_22_0_g306 + temp_output_22_0_g306 + temp_output_22_0_g306 );
+				float temp_output_7_0_g306 = break18_g301.z;
+				float4 appendResult34_g306 = (float4(( temp_output_25_0_g306 + temp_output_7_0_g306 ) , ( ( temp_output_7_0_g306 * 0.75 ) + ( temp_output_25_0_g306 * -1.0 ) ) , ( ( temp_output_7_0_g306 * 0.01 ) + temp_output_25_0_g306 ) , ( temp_output_25_0_g306 + ( temp_output_7_0_g306 * 1.0 ) )));
+				float4 vData7_g308 = appendResult34_g306;
+				float4 localTriangleWave7_g308 = TriangleWave( vData7_g308 );
+				float4 vData6_g308 = localTriangleWave7_g308;
+				float4 localCubicSmooth6_g308 = CubicSmooth( vData6_g308 );
+				float4 temp_output_27_0_g306 = ( ( localCubicSmooth6_g308 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break47_g306 = temp_output_27_0_g306;
+				float fAngle6_g309 = ( temp_output_3_0_g306 * break34_g301.z * ( break47_g306.x + ( break47_g306.y * break47_g306.y ) ) );
+				float3x3 localRotationMatrix6_g309 = RotationMatrix( vAxis6_g309 , fAngle6_g309 );
 				int localCalculateWindInputs291 = ( 0 );
 				float windQuality291 = (float)_WindQuality;
 				float3 rotatedWindVector291 = float3( 0,0,0 );
 				float3 rotatedBranchAnchor291 = float3( 0,0,0 );
 				float4 windVector291 = _ST_WindVector;
 				float4 windBranchAnchor291 = _ST_WindBranchAnchor;
+				{
 				if (windQuality291 <= 0) // WIND_QUALITY_NONE
 				{
 				    rotatedWindVector291 = float3(0.0f, 0.0f, 0.0f);
@@ -6700,277 +7625,278 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    }
 				    rotatedBranchAnchor291 = normalize(mul(windBranchAnchor291.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor291.w;
 				}
-				float3 data116_g269 = rotatedWindVector291;
-				float3 localClampToNonZero116_g269 = ClampToNonZero( data116_g269 );
-				float3 break57_g269 = cross( temp_output_5_0_g269 , localClampToNonZero116_g269 );
-				float dotResult55_g269 = dot( float3( 0,0,0 ) , temp_output_5_0_g269 );
-				float clampResult56_g269 = clamp( dotResult55_g269 , -1.0 , 1.0 );
-				float3 appendResult59_g269 = (float3(break57_g269.x , ( clampResult56_g269 + break57_g269.y ) , break57_g269.z));
-				float3 normalizeResult60_g269 = normalize( appendResult59_g269 );
-				float3 vAxis6_g275 = normalizeResult60_g269;
-				float3 break9_g273 = float3( 0,0,0 );
-				float temp_output_4_0_g273 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g269 );
-				float4 appendResult12_g273 = (float4(( break9_g273.x + break9_g273.z + temp_output_4_0_g273 ) , ( ( 0.87 * temp_output_4_0_g273 ) + break9_g273.y ) , 0.0 , 0.0));
-				float4 vData7_g274 = appendResult12_g273;
-				float4 localTriangleWave7_g274 = TriangleWave( vData7_g274 );
-				float4 vData6_g274 = localTriangleWave7_g274;
-				float4 localCubicSmooth6_g274 = CubicSmooth( vData6_g274 );
-				float4 break14_g273 = ( ( localCubicSmooth6_g274 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar35_g264 = 0;
-				if( temp_output_4_0_g264 <= 0.0 )
-				ifLocalVar35_g264 = _ST_WindLeaf1Twitch;
+				}
+				float3 data116_g306 = rotatedWindVector291;
+				float3 localClampToNonZero116_g306 = ClampToNonZero( data116_g306 );
+				float3 break57_g306 = cross( temp_output_5_0_g306 , localClampToNonZero116_g306 );
+				float dotResult55_g306 = dot( float3( 0,0,0 ) , temp_output_5_0_g306 );
+				float clampResult56_g306 = clamp( dotResult55_g306 , -1.0 , 1.0 );
+				float3 appendResult59_g306 = (float3(break57_g306.x , ( clampResult56_g306 + break57_g306.y ) , break57_g306.z));
+				float3 normalizeResult60_g306 = normalize( appendResult59_g306 );
+				float3 vAxis6_g312 = normalizeResult60_g306;
+				float3 break9_g310 = float3( 0,0,0 );
+				float temp_output_4_0_g310 = ( _GlobalTimers[_GlobalTimerId].y + temp_output_25_0_g306 );
+				float4 appendResult12_g310 = (float4(( break9_g310.x + break9_g310.z + temp_output_4_0_g310 ) , ( ( 0.87 * temp_output_4_0_g310 ) + break9_g310.y ) , 0.0 , 0.0));
+				float4 vData7_g311 = appendResult12_g310;
+				float4 localTriangleWave7_g311 = TriangleWave( vData7_g311 );
+				float4 vData6_g311 = localTriangleWave7_g311;
+				float4 localCubicSmooth6_g311 = CubicSmooth( vData6_g311 );
+				float4 break14_g310 = ( ( localCubicSmooth6_g311 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar35_g301 = 0;
+				if( temp_output_4_0_g301 <= 0.0 )
+				ifLocalVar35_g301 = _ST_WindLeaf1Twitch;
 				else
-				ifLocalVar35_g264 = _ST_WindLeaf2Twitch;
-				float3 appendResult37_g264 = (float3(ifLocalVar35_g264.xyz));
-				float3 break76_g269 = appendResult37_g264;
-				float4 break109_g269 = temp_output_27_0_g269;
-				float fAngle6_g275 = ( temp_output_3_0_g269 * ( ( acos( clampResult56_g269 ) * break34_g264.w ) + ( pow( saturate( ( ( ( break14_g273.x * break14_g273.y * break14_g273.y ) + 1.0 ) * 0.5 ) ) , break76_g269.y ) * break76_g269.x ) + ( ( break109_g269.y + ( ( break109_g269.x * break109_g269.x ) * -1.0 ) ) * break34_g264.y ) ) );
-				float3x3 localRotationMatrix6_g275 = RotationMatrix( vAxis6_g275 , fAngle6_g275 );
-				float3x3 temp_output_86_0_g269 = mul( localRotationMatrix6_g272, localRotationMatrix6_g275 );
-				float3 temp_output_1_0_g269 = temp_output_52_0_g264;
-				float3 normalizeResult91_g269 = normalize( mul( temp_output_86_0_g269, temp_output_1_0_g269 ) );
-				float3 ifLocalVar27_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar27_g264 = ( normalizeResult91_g269 * length( temp_output_1_0_g269 ) );
+				ifLocalVar35_g301 = _ST_WindLeaf2Twitch;
+				float3 appendResult37_g301 = (float3(ifLocalVar35_g301.xyz));
+				float3 break76_g306 = appendResult37_g301;
+				float4 break109_g306 = temp_output_27_0_g306;
+				float fAngle6_g312 = ( temp_output_3_0_g306 * ( ( acos( clampResult56_g306 ) * break34_g301.w ) + ( pow( saturate( ( ( ( break14_g310.x * break14_g310.y * break14_g310.y ) + 1.0 ) * 0.5 ) ) , break76_g306.y ) * break76_g306.x ) + ( ( break109_g306.y + ( ( break109_g306.x * break109_g306.x ) * -1.0 ) ) * break34_g301.y ) ) );
+				float3x3 localRotationMatrix6_g312 = RotationMatrix( vAxis6_g312 , fAngle6_g312 );
+				float3x3 temp_output_86_0_g306 = mul( localRotationMatrix6_g309, localRotationMatrix6_g312 );
+				float3 temp_output_1_0_g306 = temp_output_52_0_g301;
+				float3 normalizeResult91_g306 = normalize( mul( temp_output_86_0_g306, temp_output_1_0_g306 ) );
+				float3 ifLocalVar27_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar27_g301 = ( normalizeResult91_g306 * length( temp_output_1_0_g306 ) );
 				else
-				ifLocalVar27_g264 = temp_output_52_0_g264;
-				float3 ifLocalVar2_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar2_g189 = temp_output_6_0_g189;
+				ifLocalVar27_g301 = temp_output_52_0_g301;
+				float3 ifLocalVar2_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar2_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar2_g189 = ifLocalVar27_g264;
-				float3 ifLocalVar1_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar1_g189 = temp_output_6_0_g189;
+				ifLocalVar2_g300 = ifLocalVar27_g301;
+				float3 ifLocalVar1_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar1_g300 = temp_output_6_0_g300;
 				else
-				ifLocalVar1_g189 = ifLocalVar2_g189;
+				ifLocalVar1_g300 = ifLocalVar2_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch214 = staticSwitch343;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g189 );
+				float3 staticSwitch214 = ( appendResult213 + ifLocalVar1_g300 );
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch214 = staticSwitch343;
 				#else
 				float3 staticSwitch214 = staticSwitch343;
 				#endif
-				float3 temp_output_3_0_g277 = staticSwitch214;
-				int temp_output_24_0_g277 = _WindQuality;
-				float4 break32_g277 = inputMesh.ase_texcoord;
-				float2 appendResult31_g277 = (float2(break32_g277.z , break32_g277.w));
-				float2 break34_g277 = appendResult31_g277;
-				float temp_output_5_0_g278 = break34_g277.y;
-				float3 temp_cast_10 = (temp_output_5_0_g278).xxx;
-				float3 fValue10_g279 = temp_cast_10;
-				float3 localUnpackNormalFromFloat10_g279 = UnpackNormalFromFloat( fValue10_g279 );
-				float temp_output_4_0_g278 = break34_g277.x;
-				int temp_output_7_0_g280 = 0;
-				int temp_output_10_0_g280 = 1;
-				float3 localGetInstancePos40_g277 = GetInstancePos();
-				float3 break17_g278 = localGetInstancePos40_g277;
-				float temp_output_3_0_g280 = ( break17_g278.x + break17_g278.y + _GlobalTimers[_GlobalTimerId].y );
-				float fTime28_g280 = temp_output_3_0_g280;
-				float temp_output_4_0_g280 = temp_output_5_0_g278;
-				float fOffset28_g280 = temp_output_4_0_g280;
-				float fTwitchFreqScale28_g280 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g280 = temp_output_4_0_g278;
-				float fWeight28_g280 = temp_output_5_0_g280;
-				int bWhip28_g280 = temp_output_7_0_g280;
-				float4 localComplexOscillationInputs28_g280 = ComplexOscillationInputs( fTime28_g280 , fOffset28_g280 , fTwitchFreqScale28_g280 , fWeight28_g280 , bWhip28_g280 );
-				float4 vData7_g282 = localComplexOscillationInputs28_g280;
-				float4 localTriangleWave7_g282 = TriangleWave( vData7_g282 );
-				float4 vData6_g282 = localTriangleWave7_g282;
-				float4 localCubicSmooth6_g282 = CubicSmooth( vData6_g282 );
-				float4 temp_output_29_0_g280 = ( ( localCubicSmooth6_g282 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g280 = temp_output_29_0_g280;
-				float temp_output_31_0_g280 = ( break30_g280.y * break30_g280.z );
-				float ifLocalVar36_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar36_g280 = 1.0;
+				float3 temp_output_3_0_g314 = staticSwitch214;
+				int temp_output_24_0_g314 = _WindQuality;
+				float4 break32_g314 = inputMesh.ase_texcoord;
+				float2 appendResult31_g314 = (float2(break32_g314.z , break32_g314.w));
+				float2 break34_g314 = appendResult31_g314;
+				float temp_output_5_0_g315 = break34_g314.y;
+				float3 temp_cast_10 = (temp_output_5_0_g315).xxx;
+				float3 fValue10_g316 = temp_cast_10;
+				float3 localUnpackNormalFromFloat10_g316 = UnpackNormalFromFloat( fValue10_g316 );
+				float temp_output_4_0_g315 = break34_g314.x;
+				int temp_output_7_0_g317 = 0;
+				int temp_output_10_0_g317 = 1;
+				float3 localGetInstancePos40_g314 = GetInstancePos();
+				float3 break17_g315 = localGetInstancePos40_g314;
+				float temp_output_3_0_g317 = ( break17_g315.x + break17_g315.y + _GlobalTimers[_GlobalTimerId].y );
+				float fTime28_g317 = temp_output_3_0_g317;
+				float temp_output_4_0_g317 = temp_output_5_0_g315;
+				float fOffset28_g317 = temp_output_4_0_g317;
+				float fTwitchFreqScale28_g317 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g317 = temp_output_4_0_g315;
+				float fWeight28_g317 = temp_output_5_0_g317;
+				int bWhip28_g317 = temp_output_7_0_g317;
+				float4 localComplexOscillationInputs28_g317 = ComplexOscillationInputs( fTime28_g317 , fOffset28_g317 , fTwitchFreqScale28_g317 , fWeight28_g317 , bWhip28_g317 );
+				float4 vData7_g319 = localComplexOscillationInputs28_g317;
+				float4 localTriangleWave7_g319 = TriangleWave( vData7_g319 );
+				float4 vData6_g319 = localTriangleWave7_g319;
+				float4 localCubicSmooth6_g319 = CubicSmooth( vData6_g319 );
+				float4 temp_output_29_0_g317 = ( ( localCubicSmooth6_g319 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g317 = temp_output_29_0_g317;
+				float temp_output_31_0_g317 = ( break30_g317.y * break30_g317.z );
+				float ifLocalVar36_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar36_g317 = 1.0;
 				else
-				ifLocalVar36_g280 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g280 = 0;
-				if( temp_output_31_0_g280 >= 0.0 )
-				ifLocalVar35_g280 = temp_output_31_0_g280;
+				ifLocalVar36_g317 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g317 = 0;
+				if( temp_output_31_0_g317 >= 0.0 )
+				ifLocalVar35_g317 = temp_output_31_0_g317;
 				else
-				ifLocalVar35_g280 = ( temp_output_31_0_g280 * -1.0 );
-				float lerpResult41_g280 = lerp( temp_output_31_0_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float lerpResult42_g280 = lerp( lerpResult41_g280 , ifLocalVar36_g280 , ifLocalVar35_g280);
-				float temp_output_11_0_g280 = _ST_WindBranchTwitch.x;
-				float fTime61_g280 = temp_output_3_0_g280;
-				float fOffset61_g280 = temp_output_4_0_g280;
-				float fWeight61_g280 = temp_output_5_0_g280;
-				int bWhip61_g280 = temp_output_7_0_g280;
-				float4 localSimpleOscillationInputs61_g280 = SimpleOscillationInputs( fTime61_g280 , fOffset61_g280 , fWeight61_g280 , bWhip61_g280 );
-				float4 vData7_g281 = localSimpleOscillationInputs61_g280;
-				float4 localTriangleWave7_g281 = TriangleWave( vData7_g281 );
-				float4 vData6_g281 = localTriangleWave7_g281;
-				float4 localCubicSmooth6_g281 = CubicSmooth( vData6_g281 );
-				float4 temp_output_66_0_g280 = ( ( localCubicSmooth6_g281 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g280 = temp_output_66_0_g280;
-				float temp_output_64_0_g280 = ( break62_g280.x + ( break62_g280.x * break62_g280.y ) );
-				float ifLocalVar17_g280 = 0;
-				if( temp_output_10_0_g280 <= 0.0 )
-				ifLocalVar17_g280 = temp_output_64_0_g280;
+				ifLocalVar35_g317 = ( temp_output_31_0_g317 * -1.0 );
+				float lerpResult41_g317 = lerp( temp_output_31_0_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float lerpResult42_g317 = lerp( lerpResult41_g317 , ifLocalVar36_g317 , ifLocalVar35_g317);
+				float temp_output_11_0_g317 = _ST_WindBranchTwitch.x;
+				float fTime61_g317 = temp_output_3_0_g317;
+				float fOffset61_g317 = temp_output_4_0_g317;
+				float fWeight61_g317 = temp_output_5_0_g317;
+				int bWhip61_g317 = temp_output_7_0_g317;
+				float4 localSimpleOscillationInputs61_g317 = SimpleOscillationInputs( fTime61_g317 , fOffset61_g317 , fWeight61_g317 , bWhip61_g317 );
+				float4 vData7_g318 = localSimpleOscillationInputs61_g317;
+				float4 localTriangleWave7_g318 = TriangleWave( vData7_g318 );
+				float4 vData6_g318 = localTriangleWave7_g318;
+				float4 localCubicSmooth6_g318 = CubicSmooth( vData6_g318 );
+				float4 temp_output_66_0_g317 = ( ( localCubicSmooth6_g318 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g317 = temp_output_66_0_g317;
+				float temp_output_64_0_g317 = ( break62_g317.x + ( break62_g317.x * break62_g317.y ) );
+				float ifLocalVar17_g317 = 0;
+				if( temp_output_10_0_g317 <= 0.0 )
+				ifLocalVar17_g317 = temp_output_64_0_g317;
 				else
-				ifLocalVar17_g280 = ( ( lerpResult42_g280 * temp_output_11_0_g280 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g280.x * ( 1.0 - temp_output_11_0_g280 ) ) );
-				float ifLocalVar52_g280 = 0;
-				if( temp_output_7_0_g280 <= 0.0 )
-				ifLocalVar52_g280 = ifLocalVar17_g280;
+				ifLocalVar17_g317 = ( ( lerpResult42_g317 * temp_output_11_0_g317 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g317.x * ( 1.0 - temp_output_11_0_g317 ) ) );
+				float ifLocalVar52_g317 = 0;
+				if( temp_output_7_0_g317 <= 0.0 )
+				ifLocalVar52_g317 = ifLocalVar17_g317;
 				else
-				ifLocalVar52_g280 = ( ifLocalVar17_g280 * ( 1.0 + ( break30_g280.w * (int)_ST_WindBranchWhip.x ) ) );
-				float3 temp_output_45_0_g277 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g279 * temp_output_4_0_g278 ) * ifLocalVar52_g280 * _ST_WindBranch.y ) );
-				float temp_output_4_0_g284 = break34_g277.y;
-				float3 temp_cast_12 = (temp_output_4_0_g284).xxx;
-				float3 fValue10_g287 = temp_cast_12;
-				float3 localUnpackNormalFromFloat10_g287 = UnpackNormalFromFloat( fValue10_g287 );
-				float temp_output_3_0_g284 = break34_g277.x;
-				int temp_output_7_0_g288 = 1;
-				int temp_output_10_0_g288 = 1;
-				float3 break17_g284 = localGetInstancePos40_g277;
-				float temp_output_16_0_g284 = ( _GlobalTimers[_GlobalTimerId].y + break17_g284.x + break17_g284.y );
-				float temp_output_3_0_g288 = temp_output_16_0_g284;
-				float fTime28_g288 = temp_output_3_0_g288;
-				float temp_output_4_0_g288 = temp_output_4_0_g284;
-				float fOffset28_g288 = temp_output_4_0_g288;
-				float fTwitchFreqScale28_g288 = _ST_WindBranchTwitch.y;
-				float temp_output_5_0_g288 = temp_output_3_0_g284;
-				float fWeight28_g288 = temp_output_5_0_g288;
-				int bWhip28_g288 = temp_output_7_0_g288;
-				float4 localComplexOscillationInputs28_g288 = ComplexOscillationInputs( fTime28_g288 , fOffset28_g288 , fTwitchFreqScale28_g288 , fWeight28_g288 , bWhip28_g288 );
-				float4 vData7_g290 = localComplexOscillationInputs28_g288;
-				float4 localTriangleWave7_g290 = TriangleWave( vData7_g290 );
-				float4 vData6_g290 = localTriangleWave7_g290;
-				float4 localCubicSmooth6_g290 = CubicSmooth( vData6_g290 );
-				float4 temp_output_29_0_g288 = ( ( localCubicSmooth6_g290 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break30_g288 = temp_output_29_0_g288;
-				float temp_output_31_0_g288 = ( break30_g288.y * break30_g288.z );
-				float ifLocalVar36_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar36_g288 = 1.0;
+				ifLocalVar52_g317 = ( ifLocalVar17_g317 * ( 1.0 + ( break30_g317.w * (int)_ST_WindBranchWhip.x ) ) );
+				float3 temp_output_45_0_g314 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g316 * temp_output_4_0_g315 ) * ifLocalVar52_g317 * _ST_WindBranch.y ) );
+				float temp_output_4_0_g321 = break34_g314.y;
+				float3 temp_cast_12 = (temp_output_4_0_g321).xxx;
+				float3 fValue10_g324 = temp_cast_12;
+				float3 localUnpackNormalFromFloat10_g324 = UnpackNormalFromFloat( fValue10_g324 );
+				float temp_output_3_0_g321 = break34_g314.x;
+				int temp_output_7_0_g325 = 1;
+				int temp_output_10_0_g325 = 1;
+				float3 break17_g321 = localGetInstancePos40_g314;
+				float temp_output_16_0_g321 = ( _GlobalTimers[_GlobalTimerId].y + break17_g321.x + break17_g321.y );
+				float temp_output_3_0_g325 = temp_output_16_0_g321;
+				float fTime28_g325 = temp_output_3_0_g325;
+				float temp_output_4_0_g325 = temp_output_4_0_g321;
+				float fOffset28_g325 = temp_output_4_0_g325;
+				float fTwitchFreqScale28_g325 = _ST_WindBranchTwitch.y;
+				float temp_output_5_0_g325 = temp_output_3_0_g321;
+				float fWeight28_g325 = temp_output_5_0_g325;
+				int bWhip28_g325 = temp_output_7_0_g325;
+				float4 localComplexOscillationInputs28_g325 = ComplexOscillationInputs( fTime28_g325 , fOffset28_g325 , fTwitchFreqScale28_g325 , fWeight28_g325 , bWhip28_g325 );
+				float4 vData7_g327 = localComplexOscillationInputs28_g325;
+				float4 localTriangleWave7_g327 = TriangleWave( vData7_g327 );
+				float4 vData6_g327 = localTriangleWave7_g327;
+				float4 localCubicSmooth6_g327 = CubicSmooth( vData6_g327 );
+				float4 temp_output_29_0_g325 = ( ( localCubicSmooth6_g327 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break30_g325 = temp_output_29_0_g325;
+				float temp_output_31_0_g325 = ( break30_g325.y * break30_g325.z );
+				float ifLocalVar36_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar36_g325 = 1.0;
 				else
-				ifLocalVar36_g288 = ( 1.0 * -1.0 );
-				float ifLocalVar35_g288 = 0;
-				if( temp_output_31_0_g288 >= 0.0 )
-				ifLocalVar35_g288 = temp_output_31_0_g288;
+				ifLocalVar36_g325 = ( 1.0 * -1.0 );
+				float ifLocalVar35_g325 = 0;
+				if( temp_output_31_0_g325 >= 0.0 )
+				ifLocalVar35_g325 = temp_output_31_0_g325;
 				else
-				ifLocalVar35_g288 = ( temp_output_31_0_g288 * -1.0 );
-				float lerpResult41_g288 = lerp( temp_output_31_0_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float lerpResult42_g288 = lerp( lerpResult41_g288 , ifLocalVar36_g288 , ifLocalVar35_g288);
-				float temp_output_11_0_g288 = _ST_WindBranchTwitch.x;
-				float fTime61_g288 = temp_output_3_0_g288;
-				float fOffset61_g288 = temp_output_4_0_g288;
-				float fWeight61_g288 = temp_output_5_0_g288;
-				int bWhip61_g288 = temp_output_7_0_g288;
-				float4 localSimpleOscillationInputs61_g288 = SimpleOscillationInputs( fTime61_g288 , fOffset61_g288 , fWeight61_g288 , bWhip61_g288 );
-				float4 vData7_g289 = localSimpleOscillationInputs61_g288;
-				float4 localTriangleWave7_g289 = TriangleWave( vData7_g289 );
-				float4 vData6_g289 = localTriangleWave7_g289;
-				float4 localCubicSmooth6_g289 = CubicSmooth( vData6_g289 );
-				float4 temp_output_66_0_g288 = ( ( localCubicSmooth6_g289 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 break62_g288 = temp_output_66_0_g288;
-				float temp_output_64_0_g288 = ( break62_g288.x + ( break62_g288.x * break62_g288.y ) );
-				float ifLocalVar17_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar17_g288 = temp_output_64_0_g288;
+				ifLocalVar35_g325 = ( temp_output_31_0_g325 * -1.0 );
+				float lerpResult41_g325 = lerp( temp_output_31_0_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float lerpResult42_g325 = lerp( lerpResult41_g325 , ifLocalVar36_g325 , ifLocalVar35_g325);
+				float temp_output_11_0_g325 = _ST_WindBranchTwitch.x;
+				float fTime61_g325 = temp_output_3_0_g325;
+				float fOffset61_g325 = temp_output_4_0_g325;
+				float fWeight61_g325 = temp_output_5_0_g325;
+				int bWhip61_g325 = temp_output_7_0_g325;
+				float4 localSimpleOscillationInputs61_g325 = SimpleOscillationInputs( fTime61_g325 , fOffset61_g325 , fWeight61_g325 , bWhip61_g325 );
+				float4 vData7_g326 = localSimpleOscillationInputs61_g325;
+				float4 localTriangleWave7_g326 = TriangleWave( vData7_g326 );
+				float4 vData6_g326 = localTriangleWave7_g326;
+				float4 localCubicSmooth6_g326 = CubicSmooth( vData6_g326 );
+				float4 temp_output_66_0_g325 = ( ( localCubicSmooth6_g326 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 break62_g325 = temp_output_66_0_g325;
+				float temp_output_64_0_g325 = ( break62_g325.x + ( break62_g325.x * break62_g325.y ) );
+				float ifLocalVar17_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar17_g325 = temp_output_64_0_g325;
 				else
-				ifLocalVar17_g288 = ( ( lerpResult42_g288 * temp_output_11_0_g288 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g288.x * ( 1.0 - temp_output_11_0_g288 ) ) );
-				float temp_output_11_0_g284 = _ST_WindBranchWhip.x;
-				float ifLocalVar52_g288 = 0;
-				if( temp_output_7_0_g288 <= 0.0 )
-				ifLocalVar52_g288 = ifLocalVar17_g288;
+				ifLocalVar17_g325 = ( ( lerpResult42_g325 * temp_output_11_0_g325 * ( 1.0 - _ST_WindVector.w ) ) + ( break30_g325.x * ( 1.0 - temp_output_11_0_g325 ) ) );
+				float temp_output_11_0_g321 = _ST_WindBranchWhip.x;
+				float ifLocalVar52_g325 = 0;
+				if( temp_output_7_0_g325 <= 0.0 )
+				ifLocalVar52_g325 = ifLocalVar17_g325;
 				else
-				ifLocalVar52_g288 = ( ifLocalVar17_g288 * ( 1.0 + ( break30_g288.w * (int)temp_output_11_0_g284 ) ) );
-				float3 temp_output_23_0_g284 = ( temp_output_3_0_g277 + ( ( localUnpackNormalFromFloat10_g287 * temp_output_3_0_g284 ) * ifLocalVar52_g288 * _ST_WindBranch.y ) );
-				float temp_output_3_0_g285 = temp_output_4_0_g284;
-				float temp_output_6_0_g285 = _ST_WindTurbulences.y;
-				float4 appendResult9_g285 = (float4(( ( temp_output_16_0_g284 * 0.1 ) + temp_output_3_0_g285 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g285 * 0.1 ) + temp_output_3_0_g285 ) , 0.0 , 0.0));
-				float4 vData7_g286 = appendResult9_g285;
-				float4 localTriangleWave7_g286 = TriangleWave( vData7_g286 );
-				float4 vData6_g286 = localTriangleWave7_g286;
-				float4 localCubicSmooth6_g286 = CubicSmooth( vData6_g286 );
-				float4 break16_g285 = ( ( localCubicSmooth6_g286 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float4 ifLocalVar59_g288 = 0;
-				if( temp_output_10_0_g288 <= 0.0 )
-				ifLocalVar59_g288 = temp_output_66_0_g288;
+				ifLocalVar52_g325 = ( ifLocalVar17_g325 * ( 1.0 + ( break30_g325.w * (int)temp_output_11_0_g321 ) ) );
+				float3 temp_output_23_0_g321 = ( temp_output_3_0_g314 + ( ( localUnpackNormalFromFloat10_g324 * temp_output_3_0_g321 ) * ifLocalVar52_g325 * _ST_WindBranch.y ) );
+				float temp_output_3_0_g322 = temp_output_4_0_g321;
+				float temp_output_6_0_g322 = _ST_WindTurbulences.y;
+				float4 appendResult9_g322 = (float4(( ( temp_output_16_0_g321 * 0.1 ) + temp_output_3_0_g322 ) , ( ( _ST_WindAnimation.x * temp_output_6_0_g322 * 0.1 ) + temp_output_3_0_g322 ) , 0.0 , 0.0));
+				float4 vData7_g323 = appendResult9_g322;
+				float4 localTriangleWave7_g323 = TriangleWave( vData7_g323 );
+				float4 vData6_g323 = localTriangleWave7_g323;
+				float4 localCubicSmooth6_g323 = CubicSmooth( vData6_g323 );
+				float4 break16_g322 = ( ( localCubicSmooth6_g323 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float4 ifLocalVar59_g325 = 0;
+				if( temp_output_10_0_g325 <= 0.0 )
+				ifLocalVar59_g325 = temp_output_66_0_g325;
 				else
-				ifLocalVar59_g288 = temp_output_29_0_g288;
-				float3 ifLocalVar29_g277 = 0;
-				if( temp_output_24_0_g277 == 5 )
-				ifLocalVar29_g277 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g284 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g285.x * break16_g285.y * break16_g285.x * break16_g285.y * temp_output_6_0_g285 ) ) + ( ifLocalVar59_g288.w * _ST_WindVector.w * temp_output_11_0_g284 ) ) * temp_output_3_0_g284 ) + temp_output_23_0_g284 );
+				ifLocalVar59_g325 = temp_output_29_0_g325;
+				float3 ifLocalVar29_g314 = 0;
+				if( temp_output_24_0_g314 == 5 )
+				ifLocalVar29_g314 = ( ( ( rotatedBranchAnchor291 + ( temp_output_23_0_g321 * float3( -1,0,0 ) ) ) * _ST_WindBranchAdherences.y * ( ( 1.0 - ( break16_g322.x * break16_g322.y * break16_g322.x * break16_g322.y * temp_output_6_0_g322 ) ) + ( ifLocalVar59_g325.w * _ST_WindVector.w * temp_output_11_0_g321 ) ) * temp_output_3_0_g321 ) + temp_output_23_0_g321 );
 				else
-				ifLocalVar29_g277 = temp_output_45_0_g277;
-				float3 ifLocalVar26_g277 = 0;
-				if( temp_output_24_0_g277 >= 3 )
-				ifLocalVar26_g277 = ifLocalVar29_g277;
+				ifLocalVar29_g314 = temp_output_45_0_g314;
+				float3 ifLocalVar26_g314 = 0;
+				if( temp_output_24_0_g314 >= 3 )
+				ifLocalVar26_g314 = ifLocalVar29_g314;
 				else
-				ifLocalVar26_g277 = temp_output_3_0_g277;
+				ifLocalVar26_g314 = temp_output_3_0_g314;
 				#ifdef GEOM_TYPE_MESH
-				float3 staticSwitch9_g277 = ifLocalVar26_g277;
+				float3 staticSwitch9_g314 = ifLocalVar26_g314;
 				#else
-				float3 staticSwitch9_g277 = temp_output_3_0_g277;
+				float3 staticSwitch9_g314 = temp_output_3_0_g314;
 				#endif
-				float3 temp_output_111_0_g187 = staticSwitch9_g277;
-				float3 vPos140_g187 = temp_output_111_0_g187;
-				float3 vRotatedWindVector140_g187 = rotatedWindVector291;
-				float3 vPos145_g187 = temp_output_111_0_g187;
-				float4 windGlobal145_g187 = _ST_WindGlobal;
-				float localComputeWindAdjust145_g187 = ComputeWindAdjust( vPos145_g187 , windGlobal145_g187 );
-				float3 break122_g187 = localGetInstancePos40_g277;
-				float temp_output_125_0_g187 = _GlobalTimers[_GlobalTimerId].x;
-				float4 appendResult126_g187 = (float4(( break122_g187.x + temp_output_125_0_g187 ) , ( break122_g187.y + ( temp_output_125_0_g187 * 0.8 ) ) , 0.0 , 0.0));
-				float4 vData7_g188 = appendResult126_g187;
-				float4 localTriangleWave7_g188 = TriangleWave( vData7_g188 );
-				float4 vData6_g188 = localTriangleWave7_g188;
-				float4 localCubicSmooth6_g188 = CubicSmooth( vData6_g188 );
-				float4 break117_g187 = ( ( localCubicSmooth6_g188 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
-				float temp_output_90_0_g187 = ( localComputeWindAdjust145_g187 * ( ( _ST_WindGlobal.y * ( break117_g187.x + ( break117_g187.y * break117_g187.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
-				float ifLocalVar142_g187 = 0;
+				float3 temp_output_111_0_g844 = staticSwitch9_g314;
+				float3 vPos140_g844 = temp_output_111_0_g844;
+				float3 vRotatedWindVector140_g844 = rotatedWindVector291;
+				float3 vPos145_g844 = temp_output_111_0_g844;
+				float4 windGlobal145_g844 = _ST_WindGlobal;
+				float localComputeWindAdjust145_g844 = ComputeWindAdjust( vPos145_g844 , windGlobal145_g844 );
+				float3 break122_g844 = localGetInstancePos40_g314;
+				float temp_output_125_0_g844 = _GlobalTimers[_GlobalTimerId].x;
+				float4 appendResult126_g844 = (float4(( break122_g844.x + temp_output_125_0_g844 ) , ( break122_g844.y + ( temp_output_125_0_g844 * 0.8 ) ) , 0.0 , 0.0));
+				float4 vData7_g845 = appendResult126_g844;
+				float4 localTriangleWave7_g845 = TriangleWave( vData7_g845 );
+				float4 vData6_g845 = localTriangleWave7_g845;
+				float4 localCubicSmooth6_g845 = CubicSmooth( vData6_g845 );
+				float4 break117_g844 = ( ( localCubicSmooth6_g845 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) );
+				float temp_output_90_0_g844 = ( localComputeWindAdjust145_g844 * ( ( _ST_WindGlobal.y * ( break117_g844.x + ( break117_g844.y * break117_g844.y ) ) ) + ( _ST_WindBranchAdherences.x / _ST_WindGlobal.z ) ) );
+				float ifLocalVar142_g844 = 0;
 				if( _ST_WindGlobal.w == 0.0 )
-				ifLocalVar142_g187 = 0.0;
+				ifLocalVar142_g844 = 0.0;
 				else
-				ifLocalVar142_g187 = temp_output_90_0_g187;
-				float fMoveAmount140_g187 = ifLocalVar142_g187;
-				float3 localSwizzleCombineMoveAmount140_g187 = SwizzleCombineMoveAmount( vPos140_g187 , vRotatedWindVector140_g187 , fMoveAmount140_g187 );
-				float3 ifLocalVar132_g187 = 0;
+				ifLocalVar142_g844 = temp_output_90_0_g844;
+				float fMoveAmount140_g844 = ifLocalVar142_g844;
+				float3 localSwizzleCombineMoveAmount140_g844 = SwizzleCombineMoveAmount( vPos140_g844 , vRotatedWindVector140_g844 , fMoveAmount140_g844 );
+				float3 ifLocalVar132_g844 = 0;
 				if( _WindQuality <= 0 )
-				ifLocalVar132_g187 = temp_output_111_0_g187;
+				ifLocalVar132_g844 = temp_output_111_0_g844;
 				else
-				ifLocalVar132_g187 = localSwizzleCombineMoveAmount140_g187;
+				ifLocalVar132_g844 = localSwizzleCombineMoveAmount140_g844;
 				
-				float3 temp_output_9_0_g189 = inputMesh.normalOS;
-				float3 temp_output_7_0_g264 = temp_output_9_0_g189;
-				float3 ifLocalVar30_g264 = 0;
-				if( temp_output_2_0_g264 == 4 )
-				ifLocalVar30_g264 = mul( temp_output_86_0_g269, temp_output_7_0_g264 );
+				float3 temp_output_9_0_g300 = inputMesh.normalOS;
+				float3 temp_output_7_0_g301 = temp_output_9_0_g300;
+				float3 ifLocalVar30_g301 = 0;
+				if( temp_output_2_0_g301 == 4 )
+				ifLocalVar30_g301 = mul( temp_output_86_0_g306, temp_output_7_0_g301 );
 				else
-				ifLocalVar30_g264 = temp_output_7_0_g264;
-				float3 ifLocalVar10_g189 = 0;
-				if( temp_output_40_0_g189 <= 1.0 )
-				ifLocalVar10_g189 = temp_output_9_0_g189;
+				ifLocalVar30_g301 = temp_output_7_0_g301;
+				float3 ifLocalVar10_g300 = 0;
+				if( temp_output_40_0_g300 <= 1.0 )
+				ifLocalVar10_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar10_g189 = ifLocalVar30_g264;
-				float3 ifLocalVar14_g189 = 0;
-				if( temp_output_40_0_g189 >= 5.0 )
-				ifLocalVar14_g189 = temp_output_9_0_g189;
+				ifLocalVar10_g300 = ifLocalVar30_g301;
+				float3 ifLocalVar14_g300 = 0;
+				if( temp_output_40_0_g300 >= 5.0 )
+				ifLocalVar14_g300 = temp_output_9_0_g300;
 				else
-				ifLocalVar14_g189 = ifLocalVar10_g189;
+				ifLocalVar14_g300 = ifLocalVar10_g300;
 				#if defined(GEOM_TYPE_BRANCH)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_FROND)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#elif defined(GEOM_TYPE_LEAF)
-				float3 staticSwitch348 = ifLocalVar14_g189;
+				float3 staticSwitch348 = ifLocalVar14_g300;
 				#elif defined(GEOM_TYPE_BRANCH_DETAIL)
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#else
 				float3 staticSwitch348 = inputMesh.normalOS;
 				#endif
 				
-				outputPackedVaryingsMeshToPS.ase_texcoord5 = inputMesh.ase_texcoord;
+				outputPackedVaryingsMeshToPS.ase_texcoord7 = inputMesh.ase_texcoord;
 				outputPackedVaryingsMeshToPS.ase_color = inputMesh.ase_color;
-				outputPackedVaryingsMeshToPS.ase_texcoord6 = float4(inputMesh.positionOS,1);
+				outputPackedVaryingsMeshToPS.ase_texcoord8 = float4(inputMesh.positionOS,1);
 				outputPackedVaryingsMeshToPS.ase_normal = inputMesh.normalOS;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
@@ -6978,7 +7904,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 				float3 defaultVertexValue = float3( 0, 0, 0 );
 				#endif
-				float3 vertexValue = ifLocalVar132_g187;
+				float3 vertexValue = ifLocalVar132_g844;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				inputMesh.positionOS.xyz = vertexValue;
@@ -6986,11 +7912,67 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				inputMesh.positionOS.xyz += vertexValue;
 				#endif
 				inputMesh.normalOS = staticSwitch348;
-				inputMesh.tangentOS =  inputMesh.tangentOS ;
+				inputMesh.tangentOS = inputMesh.tangentOS;
+				return inputMesh;
+			}
+
+			PackedVaryingsMeshToPS VertexFunction(AttributesMesh inputMesh)
+			{
+				PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS = (PackedVaryingsMeshToPS)0;
+				AttributesMesh defaultMesh = inputMesh;
+
+				UNITY_SETUP_INSTANCE_ID(inputMesh);
+				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
+
+				inputMesh = ApplyMeshModification( inputMesh, _TimeParameters.xyz, outputPackedVaryingsMeshToPS);
 
 				float3 positionRWS = TransformObjectToWorld(inputMesh.positionOS);
 				float3 normalWS = TransformObjectToWorldNormal(inputMesh.normalOS);
 				float4 tangentWS = float4(TransformObjectToWorldDir(inputMesh.tangentOS.xyz), inputMesh.tangentOS.w);
+
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+				float4 VPASSpreviousPositionCS;
+				float4 VPASSpositionCS = mul(UNITY_MATRIX_UNJITTERED_VP, float4(positionRWS, 1.0));
+
+				bool forceNoMotion = unity_MotionVectorsParams.y == 0.0;
+				if (forceNoMotion)
+				{
+					VPASSpreviousPositionCS = float4(0.0, 0.0, 0.0, 1.0);
+				}
+				else
+				{
+					bool hasDeformation = unity_MotionVectorsParams.x > 0.0;
+					float3 effectivePositionOS = (hasDeformation ? inputMesh.previousPositionOS : defaultMesh.positionOS);
+					#if defined(_ADD_PRECOMPUTED_VELOCITY)
+					effectivePositionOS -= inputMesh.precomputedVelocity;
+					#endif
+
+					#if defined(HAVE_MESH_MODIFICATION)
+						AttributesMesh previousMesh = defaultMesh;
+						previousMesh.positionOS = effectivePositionOS ;
+						PackedVaryingsMeshToPS test = (PackedVaryingsMeshToPS)0;
+						float3 curTime = _TimeParameters.xyz;
+						previousMesh = ApplyMeshModification(previousMesh, _LastTimeParameters.xyz, test);
+						_TimeParameters.xyz = curTime;
+						float3 previousPositionRWS = TransformPreviousObjectToWorld(previousMesh.positionOS);
+					#else
+						float3 previousPositionRWS = TransformPreviousObjectToWorld(effectivePositionOS);
+					#endif
+
+					#ifdef ATTRIBUTES_NEED_NORMAL
+						float3 normalWS = TransformPreviousObjectToWorldNormal(defaultMesh.normalOS);
+					#else
+						float3 normalWS = float3(0.0, 0.0, 0.0);
+					#endif
+
+					#if defined(HAVE_VERTEX_MODIFICATION)
+						//ApplyVertexModification(inputMesh, normalWS, previousPositionRWS, _LastTimeParameters.xyz);
+					#endif
+
+					VPASSpreviousPositionCS = mul(UNITY_MATRIX_PREV_VP, float4(previousPositionRWS, 1.0));
+				}
+				#endif
 
 				outputPackedVaryingsMeshToPS.positionCS = TransformWorldToHClip(positionRWS);
 				outputPackedVaryingsMeshToPS.interp00.xyz = positionRWS;
@@ -6998,9 +7980,131 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				outputPackedVaryingsMeshToPS.interp02.xyzw = tangentWS;
 				outputPackedVaryingsMeshToPS.interp03.xyzw = inputMesh.uv1;
 				outputPackedVaryingsMeshToPS.interp04.xyzw = inputMesh.uv2;
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
+
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+					outputPackedVaryingsMeshToPS.vpassPositionCS = float3(VPASSpositionCS.xyw);
+					outputPackedVaryingsMeshToPS.vpassPreviousPositionCS = float3(VPASSpreviousPositionCS.xyw);
+				#endif
 				return outputPackedVaryingsMeshToPS;
 			}
+
+			#if defined(TESSELLATION_ON)
+			struct VertexControl
+			{
+				float3 positionOS : INTERNALTESSPOS;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
+				float4 uv1 : TEXCOORD1;
+				float4 uv2 : TEXCOORD2;
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+					float3 previousPositionOS : TEXCOORD4;
+					#if defined (_ADD_PRECOMPUTED_VELOCITY)
+						float3 precomputedVelocity : TEXCOORD5;
+					#endif
+				#endif
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside : SV_InsideTessFactor;
+			};
+
+			VertexControl Vert ( AttributesMesh v )
+			{
+				VertexControl o;
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				o.positionOS = v.positionOS;
+				o.normalOS = v.normalOS;
+				o.tangentOS = v.tangentOS;
+				o.uv1 = v.uv1;
+				o.uv2 = v.uv2;
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+					o.previousPositionOS = v.previousPositionOS;
+					#if defined (_ADD_PRECOMPUTED_VELOCITY)
+						o.precomputedVelocity = v.precomputedVelocity;
+					#endif
+				#endif
+				o.ase_texcoord = v.ase_texcoord;
+				o.ase_color = v.ase_color;
+				o.ase_texcoord3 = v.ase_texcoord3;
+				return o;
+			}
+
+			TessellationFactors TessellationFunction (InputPatch<VertexControl,3> v)
+			{
+				TessellationFactors o;
+				float4 tf = 1;
+				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
+				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
+				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				float3 cameraPos = 0;
+				#else
+				float3 cameraPos = _WorldSpaceCameraPos;
+				#endif
+				#if defined(ASE_FIXED_TESSELLATION)
+				tf = FixedTess( tessValue );
+				#elif defined(ASE_DISTANCE_TESSELLATION)
+				tf = DistanceBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), tessValue, tessMin, tessMax, GetObjectToWorldMatrix(), cameraPos );
+				#elif defined(ASE_LENGTH_TESSELLATION)
+				tf = EdgeLengthBasedTess(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, GetObjectToWorldMatrix(), cameraPos, _ScreenParams );
+				#elif defined(ASE_LENGTH_CULL_TESSELLATION)
+				tf = EdgeLengthBasedTessCull(float4(v[0].positionOS,1), float4(v[1].positionOS,1), float4(v[2].positionOS,1), edgeLength, tessMaxDisp, GetObjectToWorldMatrix(), cameraPos, _ScreenParams, _FrustumPlanes );
+				#endif
+				o.edge[0] = tf.x; o.edge[1] = tf.y; o.edge[2] = tf.z; o.inside = tf.w;
+				return o;
+			}
+
+			[domain("tri")]
+			[partitioning("fractional_odd")]
+			[outputtopology("triangle_cw")]
+			[patchconstantfunc("TessellationFunction")]
+			[outputcontrolpoints(3)]
+			VertexControl HullFunction(InputPatch<VertexControl, 3> patch, uint id : SV_OutputControlPointID)
+			{
+			   return patch[id];
+			}
+
+			[domain("tri")]
+			PackedVaryingsMeshToPS DomainFunction(TessellationFactors factors, OutputPatch<VertexControl, 3> patch, float3 bary : SV_DomainLocation)
+			{
+				AttributesMesh o = (AttributesMesh) 0;
+				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
+				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
+				o.tangentOS = patch[0].tangentOS * bary.x + patch[1].tangentOS * bary.y + patch[2].tangentOS * bary.z;
+				o.uv1 = patch[0].uv1 * bary.x + patch[1].uv1 * bary.y + patch[2].uv1 * bary.z;
+				o.uv2 = patch[0].uv2 * bary.x + patch[1].uv2 * bary.y + patch[2].uv2 * bary.z;
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+					o.previousPositionOS = patch[0].previousPositionOS * bary.x + patch[1].previousPositionOS * bary.y + patch[2].previousPositionOS * bary.z;
+					#if defined (_ADD_PRECOMPUTED_VELOCITY)
+						o.precomputedVelocity = patch[0].precomputedVelocity * bary.x + patch[1].precomputedVelocity * bary.y + patch[2].precomputedVelocity * bary.z;
+					#endif
+				#endif
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
+				o.ase_texcoord3 = patch[0].ase_texcoord3 * bary.x + patch[1].ase_texcoord3 * bary.y + patch[2].ase_texcoord3 * bary.z;
+				#if defined(ASE_PHONG_TESSELLATION)
+				float3 pp[3];
+				for (int i = 0; i < 3; ++i)
+					pp[i] = o.positionOS.xyz - patch[i].normalOS * (dot(o.positionOS.xyz, patch[i].normalOS) - dot(patch[i].positionOS.xyz, patch[i].normalOS));
+				float phongStrength = _TessPhongStrength;
+				o.positionOS.xyz = phongStrength * (pp[0]*bary.x + pp[1]*bary.y + pp[2]*bary.z) + (1.0f-phongStrength) * o.positionOS.xyz;
+				#endif
+				UNITY_TRANSFER_INSTANCE_ID(patch[0], o);
+				return VertexFunction(o);
+			}
+			#else
+			PackedVaryingsMeshToPS Vert ( AttributesMesh v )
+			{
+				return VertexFunction( v );
+			}
+			#endif
 
 			void Frag(PackedVaryingsMeshToPS packedInput,
 					#ifdef OUTPUT_SPLIT_LIGHTING
@@ -7019,6 +8123,10 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 					
 						)
 			{
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+					outMotionVec = float4(2.0, 0.0, 0.0, 0.0);
+				#endif
+
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( packedInput );
 				UNITY_SETUP_INSTANCE_ID( packedInput );
 				float3 positionRWS = packedInput.interp00.xyz;
@@ -7044,17 +8152,14 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				half isFrontFace = input.isFrontFace;
 
 				input.positionSS.xy = _OffScreenRendering > 0 ? (input.positionSS.xy * _OffScreenDownsampleFactor) : input.positionSS.xy;
-
 				uint2 tileIndex = uint2(input.positionSS.xy) / GetTileSize ();
 
 				PositionInputs posInput = GetPositionInput( input.positionSS.xy, _ScreenSize.zw, input.positionSS.z, input.positionSS.w, input.positionRWS.xyz, tileIndex );
 
-				float3 normalizedWorldViewDir = GetWorldSpaceNormalizeViewDir(input.positionRWS);
+				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
-				SurfaceData surfaceData;
-				BuiltinData builtinData;
 				GlobalSurfaceDescription surfaceDescription = (GlobalSurfaceDescription)0;
-				float4 appendResult170 = (float4(packedInput.ase_texcoord5.x , packedInput.ase_texcoord5.y , 0.0 , 0.0));
+				float4 appendResult170 = (float4(packedInput.ase_texcoord7.x , packedInput.ase_texcoord7.y , 0.0 , 0.0));
 				float4 tex2DNode91 = tex2D( _MainTex, appendResult170.xy );
 				float temp_output_93_0 = ( tex2DNode91.a * _Color.a );
 				clip( temp_output_93_0 - _Cutoff);
@@ -7089,7 +8194,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 color77 = IsGammaSpace() ? float4(1,0.5,0,0.1019608) : float4(1,0.2140411,0,0.1019608);
 				float3 appendResult126 = (float3(color77.r , color77.g , color77.b));
 				#ifdef EFFECT_HUE_VARIATION
-				float staticSwitch76 = saturate( ( color77.a * ( frac( ( GetObjectToWorldMatrix()[0].w + GetObjectToWorldMatrix()[1].w + GetObjectToWorldMatrix()[2].w ) ) + ( ( frac( ( packedInput.ase_texcoord6.xyz.x + packedInput.ase_normal.x + packedInput.ase_normal.y ) ) * 0.0 ) + -0.3 ) ) ) );
+				float staticSwitch76 = saturate( ( color77.a * ( frac( ( GetObjectToWorldMatrix()[0].w + GetObjectToWorldMatrix()[1].w + GetObjectToWorldMatrix()[2].w ) ) + ( ( frac( ( packedInput.ase_texcoord8.xyz.x + packedInput.ase_normal.x + packedInput.ase_normal.y ) ) * 0.0 ) + -0.3 ) ) ) );
 				#else
 				float staticSwitch76 = 0.0;
 				#endif
@@ -7108,8 +8213,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float4 appendResult155 = (float4(break158.r , break158.g , break158.b , staticSwitch143.r));
 				
 				float3 _ZNormal = float3(0,0,1);
-				float3 tex2DNode166 = UnpackNormalmapRGorAG( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
-				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalmapRGorAG( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
+				float3 tex2DNode166 = UnpackNormalScale( tex2D( _BumpMap, appendResult170.xy ), 1.0f );
+				float3 lerpResult184 = lerp( tex2DNode166 , UnpackNormalScale( tex2D( _BumpMap, appendResult99 ), 1.0f ) , ifLocalVar109);
 				#ifdef GEOM_TYPE_BRANCH_DETAIL
 				float3 staticSwitch183 = lerpResult184;
 				#else
@@ -7193,65 +8298,120 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				surfaceDescription.DepthOffset = 0;
 				#endif
 
-				GetSurfaceAndBuiltinData(surfaceDescription,input, normalizedWorldViewDir, posInput, surfaceData, builtinData);
+				SurfaceData surfaceData;
+				BuiltinData builtinData;
+				GetSurfaceAndBuiltinData(surfaceDescription,input, V, posInput, surfaceData, builtinData);
 
 				BSDFData bsdfData = ConvertSurfaceDataToBSDFData(input.positionSS.xy, surfaceData);
 
-				PreLightData preLightData = GetPreLightData(normalizedWorldViewDir, posInput, bsdfData);
+				PreLightData preLightData = GetPreLightData(V, posInput, bsdfData);
 
 				outColor = float4(0.0, 0.0, 0.0, 0.0);
+				#ifdef DEBUG_DISPLAY
+				#ifdef OUTPUT_SPLIT_LIGHTING
+					outDiffuseLighting = 0;
+					ENCODE_INTO_SSSBUFFER(surfaceData, posInput.positionSS, outSSSBuffer);
+				#endif
 
+				bool viewMaterial = false;
+				int bufferSize = int(_DebugViewMaterialArray[0]);
+				if (bufferSize != 0)
 				{
-					#ifdef _SURFACE_TYPE_TRANSPARENT
-					uint featureFlags = LIGHT_FEATURE_MASK_FLAGS_TRANSPARENT;
-					#else
-					uint featureFlags = LIGHT_FEATURE_MASK_FLAGS_OPAQUE;
-					#endif
-					float3 diffuseLighting;
-					float3 specularLighting;
+					bool needLinearToSRGB = false;
+					float3 result = float3(1.0, 0.0, 1.0);
 
-					LightLoop( normalizedWorldViewDir, posInput, preLightData, bsdfData, builtinData, featureFlags, diffuseLighting, specularLighting );
+					for (int index = 1; index <= bufferSize; index++)
+					{
+						int indexMaterialProperty = int(_DebugViewMaterialArray[index]);
 
-					diffuseLighting *= GetCurrentExposureMultiplier();
-					specularLighting *= GetCurrentExposureMultiplier();
+						if (indexMaterialProperty != 0)
+						{
+							viewMaterial = true;
 
-					#ifdef OUTPUT_SPLIT_LIGHTING
-					if( _EnableSubsurfaceScattering != 0 && ShouldOutputSplitLighting( bsdfData ) )
-					{
-						outColor = float4( specularLighting, 1.0 );
-						outDiffuseLighting = float4( TagLightingForSSS( diffuseLighting ), 1.0 );
+							GetPropertiesDataDebug(indexMaterialProperty, result, needLinearToSRGB);
+							GetVaryingsDataDebug(indexMaterialProperty, input, result, needLinearToSRGB);
+							GetBuiltinDataDebug(indexMaterialProperty, builtinData, result, needLinearToSRGB);
+							GetSurfaceDataDebug(indexMaterialProperty, surfaceData, result, needLinearToSRGB);
+							GetBSDFDataDebug(indexMaterialProperty, bsdfData, result, needLinearToSRGB);
+						}
 					}
-					else
-					{
-						outColor = float4( diffuseLighting + specularLighting, 1.0 );
-						outDiffuseLighting = 0;
-					}
-					ENCODE_INTO_SSSBUFFER( surfaceData, posInput.positionSS, outSSSBuffer );
-					#else
-					outColor = ApplyBlendMode( diffuseLighting, specularLighting, builtinData.opacity );
-					outColor = EvaluateAtmosphericScattering( posInput, normalizedWorldViewDir, outColor );
-					#endif
-					#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
-					/*VaryingsPassToPS inputPass = UnpackVaryingsPassToPS(packedInput.vpass);
-					bool forceNoMotion = any(unity_MotionVectorsParams.yw == 0.0);
-					if (forceNoMotion)
-					{
-						outMotionVec = float4(2.0, 0.0, 0.0, 0.0);
-					}
-					else
-					{
-						float2 motionVec = CalculateMotionVector(inputPass.positionCS, inputPass.previousPositionCS);
-						EncodeMotionVector(motionVec * 0.5, outMotionVec);
-						outMotionVec.zw = 1.0;
-					}*/
-					#endif
+
+					if (!needLinearToSRGB)
+						result = SRGBToLinear(max(0, result));
+
+					outColor = float4(result, 1.0);
 				}
+
+				if (!viewMaterial)
+				{
+					if (_DebugFullScreenMode == FULLSCREENDEBUGMODE_VALIDATE_DIFFUSE_COLOR || _DebugFullScreenMode == FULLSCREENDEBUGMODE_VALIDATE_SPECULAR_COLOR)
+					{
+						float3 result = float3(0.0, 0.0, 0.0);
+
+						GetPBRValidatorDebug(surfaceData, result);
+
+						outColor = float4(result, 1.0f);
+					}
+					else if (_DebugFullScreenMode == FULLSCREENDEBUGMODE_TRANSPARENCY_OVERDRAW)
+					{
+						float4 result = _DebugTransparencyOverdrawWeight * float4(TRANSPARENCY_OVERDRAW_COST, TRANSPARENCY_OVERDRAW_COST, TRANSPARENCY_OVERDRAW_COST, TRANSPARENCY_OVERDRAW_A);
+						outColor = result;
+					}
+					else
+				#endif
+					{
+				#ifdef _SURFACE_TYPE_TRANSPARENT
+						uint featureFlags = LIGHT_FEATURE_MASK_FLAGS_TRANSPARENT;
+				#else
+						uint featureFlags = LIGHT_FEATURE_MASK_FLAGS_OPAQUE;
+				#endif
+						float3 diffuseLighting;
+						float3 specularLighting;
+
+						LightLoop(V, posInput, preLightData, bsdfData, builtinData, featureFlags, diffuseLighting, specularLighting);
+
+						diffuseLighting *= GetCurrentExposureMultiplier();
+						specularLighting *= GetCurrentExposureMultiplier();
+
+				#ifdef OUTPUT_SPLIT_LIGHTING
+						if (_EnableSubsurfaceScattering != 0 && ShouldOutputSplitLighting(bsdfData))
+						{
+							outColor = float4(specularLighting, 1.0);
+							outDiffuseLighting = float4(TagLightingForSSS(diffuseLighting), 1.0);
+						}
+						else
+						{
+							outColor = float4(diffuseLighting + specularLighting, 1.0);
+							outDiffuseLighting = 0;
+						}
+						ENCODE_INTO_SSSBUFFER(surfaceData, posInput.positionSS, outSSSBuffer);
+				#else
+						outColor = ApplyBlendMode(diffuseLighting, specularLighting, builtinData.opacity);
+						outColor = EvaluateAtmosphericScattering(posInput, V, outColor);
+				#endif
+
+				#ifdef _WRITE_TRANSPARENT_MOTION_VECTOR
+						float4 VPASSpositionCS = float4(packedInput.vpassPositionCS.xy, 0.0, packedInput.vpassPositionCS.z);
+						float4 VPASSpreviousPositionCS = float4(packedInput.vpassPreviousPositionCS.xy, 0.0, packedInput.vpassPreviousPositionCS.z);
+
+						bool forceNoMotion = any(unity_MotionVectorsParams.yw == 0.0);
+						if (!forceNoMotion)
+						{
+							float2 motionVec = CalculateMotionVector(VPASSpositionCS, VPASSpreviousPositionCS);
+							EncodeMotionVector(motionVec * 0.5, outMotionVec);
+							outMotionVec.zw = 1.0;
+						}
+				#endif
+					}
+
+				#ifdef DEBUG_DISPLAY
+				}
+				#endif
 
 				#ifdef _DEPTHOFFSET_ON
 				outputDepth = posInput.deviceDepth;
 				#endif
 			}
-
 			ENDHLSL
 		}
 		
@@ -7261,218 +8421,216 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 	
 }
 /*ASEBEGIN
-Version=17700
--1876;142;1787;822;-7793.548;-1481.022;3.398941;True;False
-Node;AmplifyShaderEditor.CommentaryNode;173;2194.767,-2025.062;Inherit;False;2167.77;991.0375;;11;132;133;11;91;92;19;93;12;24;115;171;Main Color;1,1,1,1;0;0
+Version=18712
+2232;168;1322;765;-12066.53;125.9842;2.745338;True;False
+Node;AmplifyShaderEditor.CommentaryNode;173;2194.767,-2025.062;Inherit;False;2167.77;991.0375;;10;133;11;91;92;19;93;12;24;115;171;Main Color;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;172;1226.255,-624.801;Inherit;False;2732.474;1494.328;;13;203;15;108;97;186;121;100;88;87;80;89;90;81;Detail Color;0,0.7881474,1,0.6862745;0;0
 Node;AmplifyShaderEditor.CommentaryNode;24;2249.629,-1711.891;Inherit;False;455.2046;611.0229;TexCoord 0;3;27;26;23;UV0;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;81;1276.255,-574.801;Inherit;False;443.4149;713.2007;TexCoord 2 / UV2;4;84;83;82;85;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RangedFloatNode;90;1370.346,192.3052;Inherit;False;Constant;_25fOutofblend;2.5f (Out of blend);9;0;Create;True;0;0;False;0;2.5;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;89;1415.897,458.5242;Inherit;False;Constant;_Zero0;Zero (0);9;0;Create;True;0;0;False;0;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;23;2283.592,-1670.853;Inherit;True;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;84;1303.255,-526.8008;Inherit;True;2;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.CommentaryNode;171;2788.396,-1646.913;Inherit;False;211;233;;1;170;MainTexUV;1,1,1,1;0;0
 Node;AmplifyShaderEditor.VertexColorNode;80;1403.681,282.6865;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;84;1303.255,-526.8008;Inherit;True;2;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;23;2283.592,-1670.853;Inherit;True;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;89;1415.897,458.5242;Inherit;False;Constant;_Zero0;Zero (0);9;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;90;1370.346,192.3052;Inherit;False;Constant;_25fOutofblend;2.5f (Out of blend);9;0;Create;True;0;0;0;False;0;False;2.5;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.CommentaryNode;57;5620.813,2237.653;Inherit;False;2917.239;1201.42;HueVariationAmount;22;175;176;65;126;76;74;78;75;77;73;72;62;61;63;71;59;60;69;79;58;70;66;;0.8396226,0.3099036,0,0.6862745;0;0
-Node;AmplifyShaderEditor.TexturePropertyNode;12;2244.767,-1975.062;Inherit;True;Property;_MainTex;Base (RGB) Trans (A);39;0;Create;False;0;0;False;0;None;cde82b8d9975adc4fac034c3ab93e838;False;white;Auto;Texture2D;-1;0;1;SAMPLER2D;0
+Node;AmplifyShaderEditor.TexturePropertyNode;12;2244.767,-1975.062;Inherit;True;Property;_MainTex;Base (RGB) Trans (A);39;0;Create;False;0;0;0;False;0;False;None;cde82b8d9975adc4fac034c3ab93e838;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.PosVertexDataNode;66;6243.449,2920.815;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.NormalVertexDataNode;70;6244.381,3078.449;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.DynamicAppendNode;170;2838.396,-1596.913;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CommentaryNode;87;1962.104,141.7319;Inherit;False;211;233;Detail / interpolator2;1;86;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.ConditionalIfNode;88;1794.649,221.5802;Inherit;False;True;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;86;1998.917,201.8755;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.ObjectToWorldMatrixNode;79;5674.062,2766.096;Inherit;False;0;1;FLOAT4x4;0
-Node;AmplifyShaderEditor.SamplerNode;91;3012.186,-1970.513;Inherit;True;Property;_sampler_MainTex;sampler_MainTex;9;0;Create;True;0;0;False;0;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.ColorNode;11;3070.872,-1763.529;Inherit;False;Property;_Color;Main Color;40;0;Create;False;0;0;False;0;1,1,1,1;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.CommentaryNode;58;5952.414,2454.798;Inherit;False;186;251;Row0;1;68;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;69;6545.188,2999.21;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;59;5957.914,2983.298;Inherit;False;186;251;Row2;1;64;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;100;2198.421,141.5869;Inherit;False;456.3221;236.7136;Detail UV;2;99;98;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;59;5957.914,2983.298;Inherit;False;186;251;Row2;1;64;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.ObjectToWorldMatrixNode;79;5674.062,2766.096;Inherit;False;0;1;FLOAT4x4;0
+Node;AmplifyShaderEditor.CommentaryNode;58;5952.414,2454.798;Inherit;False;186;251;Row0;1;68;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.ColorNode;11;3070.872,-1763.529;Inherit;False;Property;_Color;Main Color;40;0;Create;False;0;0;0;False;0;False;1,1,1,1;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.CommentaryNode;60;5952.414,2715.798;Inherit;False;186;251;Row1;1;67;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.VectorFromMatrixNode;64;5978.914,3028.298;Inherit;False;Row;2;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;19;3569.288,-1685.841;Inherit;False;Property;_Cutoff;Alpha Cutoff;41;0;Create;False;0;0;False;0;0.333;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;93;3585.288,-1797.841;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FractNode;71;6690.018,3013.017;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.VectorFromMatrixNode;68;5974.126,2516.859;Inherit;False;Row;0;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.BreakToComponentsNode;98;2217.913,202.5835;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.SamplerNode;91;3012.186,-1970.513;Inherit;True;Property;_sampler_MainTex;sampler_MainTex;9;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.VectorFromMatrixNode;67;5973.414,2760.798;Inherit;False;Row;1;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TexturePropertyNode;15;3152.632,-205.5548;Inherit;True;Property;_DetailTex;Detail;42;0;Create;False;0;0;False;0;None;None;False;white;Auto;Texture2D;-1;0;1;SAMPLER2D;0
-Node;AmplifyShaderEditor.DynamicAppendNode;99;2532.83,182.5556;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.RangedFloatNode;63;6813.518,3228.818;Inherit;False;Constant;_03;-0.3;9;0;Create;True;0;0;False;0;-0.3;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;61;6210.079,2727.939;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;62;6830.487,3126.81;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ClipNode;92;3921.288,-1973.841;Inherit;False;3;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;98;2217.913,202.5835;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.VectorFromMatrixNode;68;5974.126,2516.859;Inherit;False;Row;0;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;19;3569.288,-1685.841;Inherit;False;Property;_Cutoff;Alpha Cutoff;41;0;Create;False;0;0;0;False;0;False;0.333;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;93;3585.288,-1797.841;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.VectorFromMatrixNode;64;5978.914,3028.298;Inherit;False;Row;2;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.FractNode;71;6690.018,3013.017;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.CommentaryNode;186;3442.062,486.8726;Inherit;False;468.8325;281.7501;Comment;3;109;111;110;Detail Blend (Interpolator2.z);1,1,1,1;0;0
+Node;AmplifyShaderEditor.ClipNode;92;3921.288,-1973.841;Inherit;False;3;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;62;6830.487,3126.81;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;63;6813.518,3228.818;Inherit;False;Constant;_03;-0.3;9;0;Create;True;0;0;0;False;0;False;-0.3;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;99;2532.83,182.5556;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.TexturePropertyNode;15;3152.632,-205.5548;Inherit;True;Property;_DetailTex;Detail;42;0;Create;False;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.SimpleAddOpNode;61;6210.079,2727.939;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;72;7013.716,3154.717;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;121;2667.443,343.7025;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FractNode;73;6385.899,2729.762;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;103;4047.956,-503.7873;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.SamplerNode;97;3408.422,-47.69156;Inherit;True;Property;_TextureSample0;Texture Sample 0;9;0;Create;True;0;0;False;0;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;110;3492.062,569.3832;Inherit;False;Constant;_20;2.0;10;0;Create;True;0;0;False;0;2;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;97;3408.422,-47.69156;Inherit;True;Property;_TextureSample0;Texture Sample 0;9;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;110;3492.062,569.3832;Inherit;False;Constant;_20;2.0;10;0;Create;True;0;0;0;False;0;False;2;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SaturateNode;111;3492.386,657.6226;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;77;7118.185,2749.966;Inherit;False;Constant;_HueVariation;HueVariation;2;0;Create;True;0;0;False;0;1,0.5,0,0.1019608;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleAddOpNode;75;7177.795,3034.794;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.DynamicAppendNode;104;4348.097,-529.744;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.DynamicAppendNode;108;3768.563,-31.0387;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;121;2667.443,343.7025;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ConditionalIfNode;109;3720.895,536.8726;Inherit;False;True;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;104;4348.097,-529.744;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.ColorNode;77;7118.185,2749.966;Inherit;False;Constant;_HueVariation;HueVariation;2;0;Create;True;0;0;0;False;0;False;1,0.5,0,0.1019608;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleAddOpNode;75;7177.795,3034.794;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;108;3768.563,-31.0387;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;78;7341.183,3015.637;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.LerpOp;102;4585.617,-459.3582;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SaturateNode;74;7507.495,3029.713;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;106;4864.48,-344.6127;Inherit;False;COLOR;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.DynamicAppendNode;126;7524.619,2680.196;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;163;5565.259,262.3572;Inherit;False;4008.559;1589.607;;23;155;160;158;152;159;151;150;149;147;148;142;141;139;138;140;134;137;130;131;125;124;282;285;Detail / Hue Variation / Color / Main Color merge;1,0.3874164,0,1;0;0
-Node;AmplifyShaderEditor.StaticSwitch;76;7775.425,2990.763;Inherit;False;Property;EFFECT_HUE_VARIATION;EFFECT_HUE_VARIATION;6;0;Create;False;0;0;False;0;0;0;0;False;;AsIs;2;Key0;Key1;Create;True;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;101;5109.324,-255.8965;Inherit;False;Property;GEOM_TYPE_BRANCH_DETAIL;GEOM_TYPE_BRANCH_DETAIL;8;0;Create;False;0;0;False;0;0;0;0;False;;AsIs;2;Key0;Key1;Create;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.StaticSwitch;76;7775.425,2990.763;Inherit;False;Property;EFFECT_HUE_VARIATION;EFFECT_HUE_VARIATION;20;0;Create;False;0;0;0;False;0;False;0;0;0;False;;Toggle;2;Key0;Key1;Create;True;True;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;101;5109.324,-255.8965;Inherit;False;Property;GEOM_TYPE_BRANCH_DETAIL;GEOM_TYPE_BRANCH_DETAIL;21;0;Create;False;0;0;0;False;0;False;0;0;0;False;;Toggle;2;Key0;Key1;Create;True;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.WireNode;176;8436.476,2302.197;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;175;8333.388,2296.366;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;124;5615.259,862.1586;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.DynamicAppendNode;125;5872.052,862.4498;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;131;6014.706,1573.679;Inherit;False;232;209;ShiftedColor;1;123;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.WireNode;284;5886.238,1835.386;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;285;5957.611,1788.638;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.DynamicAppendNode;125;5872.052,862.4498;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.LerpOp;123;6064.706,1623.679;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;115;3406.029,-1581.84;Inherit;False;577.179;505.5438;Frag Out Color;4;112;113;116;281;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;116;3438.029,-1373.84;Inherit;False;221;230;AO Factor;1;114;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;134;6290.765,1434.143;Inherit;False;FLOAT3;1;0;FLOAT3;0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.CommentaryNode;130;6359.237,826.8611;Inherit;False;360.9258;348.3654;Max Base;2;129;127;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;137;6655.351,1253.441;Inherit;False;350.5195;339.6144;New Max Base;2;135;136;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.VertexColorNode;114;3470.029,-1325.84;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleMaxOpNode;129;6409.237,1040.226;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMaxOpNode;135;6705.351,1458.055;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;112;3438.029,-1533.84;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.VertexColorNode;114;3470.029,-1325.84;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMaxOpNode;136;6853.87,1303.441;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;113;3671.844,-1475.353;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMaxOpNode;127;6568.163,876.8608;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMaxOpNode;136;6853.87,1303.441;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;140;7082.527,1145.803;Inherit;False;Constant;_PointFive;PointFive;10;0;Create;True;0;0;False;0;0.5;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;140;7082.527,1145.803;Inherit;False;Constant;_PointFive;PointFive;10;0;Create;True;0;0;0;False;0;False;0.5;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleDivideOpNode;138;7041.933,1007.864;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.CommentaryNode;289;10140.54,836.7368;Inherit;False;4049.502;1386.498;;25;426;451;447;429;514;438;359;436;343;358;362;355;360;286;322;357;361;344;356;287;230;328;244;222;335;Vertex Offset + Wind;0,0.6799812,1,1;0;0
 Node;AmplifyShaderEditor.DynamicAppendNode;281;3848.358,-1344.869;Inherit;False;COLOR;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.CommentaryNode;222;10208,1440;Inherit;False;433.8535;257;TexCoord 1;2;213;210;UV1 (TexCoord1);1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;335;10205.95,1094.748;Inherit;False;411.7002;271.2999;;2;334;336;UV0 (TexCoord0);1,1,1,1;0;0
 Node;AmplifyShaderEditor.WireNode;204;2727.313,913.7491;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;139;7324.831,988.9368;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;335;10205.95,1094.748;Inherit;False;411.7002;271.2999;;2;334;336;UV0 (TexCoord0);1,1,1,1;0;0
 Node;AmplifyShaderEditor.WireNode;283;9675.411,217.5244;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.CommentaryNode;244;10224,1728;Inherit;False;416.5674;287.2026;Vert.Out.Color;2;249;243;;1,0.2705882,0,1;0;0
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;334;10240.35,1149.948;Inherit;False;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;210;10256,1488;Inherit;False;1;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.CommentaryNode;174;3207.826,1079.653;Inherit;False;954.8297;519.4311;;1;166;Main Normal;0.1664293,0.189116,0.6415094,1;0;0
-Node;AmplifyShaderEditor.TexturePropertyNode;17;2725.198,1498.954;Inherit;True;Property;_BumpMap;Normal Map;43;0;Create;False;0;0;False;0;None;df175d4e267d9ad4a86121a4c51243a7;True;bump;Auto;Texture2D;-1;0;1;SAMPLER2D;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;139;7324.831,988.9368;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;222;10208,1440;Inherit;False;433.8535;257;TexCoord 1;2;213;210;UV1 (TexCoord1);1,1,1,1;0;0
+Node;AmplifyShaderEditor.WireNode;202;2711.112,1885.618;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;141;7474.696,1035.156;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;244;10224,1728;Inherit;False;416.5674;287.2026;Vert.Out.Color;2;249;243;;1,0.2705882,0,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;182;3659.828,1858.601;Inherit;False;396.0571;277.584;;1;177;Detail Normal;1,1,1,1;0;0
 Node;AmplifyShaderEditor.WireNode;369;10061.95,1685.337;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.CommentaryNode;174;3207.826,1079.653;Inherit;False;954.8297;519.4311;;1;166;Main Normal;0.1664293,0.189116,0.6415094,1;0;0
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;210;10256,1488;Inherit;False;1;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;334;10240.35,1149.948;Inherit;False;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;203;2920.113,276.9621;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.WireNode;202;2711.112,1885.618;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.SamplerNode;166;3272.843,1288.355;Inherit;True;Property;_sampler_BumpMap;sampler_BumpMap;10;0;Create;True;0;0;False;0;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.DynamicAppendNode;243;10256,1776;Inherit;False;COLOR;4;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SamplerNode;177;3703.953,1909.933;Inherit;True;Property;_TextureSample1;Texture Sample 1;10;0;Create;True;0;0;False;0;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.PosVertexDataNode;230;10390.96,917.5551;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.DynamicAppendNode;336;10484.84,1247.025;Inherit;False;FLOAT2;4;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.DynamicAppendNode;213;10464,1488;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;192;4212.457,1843.174;Inherit;False;1258.676;427.3699;Comment;5;168;197;167;183;184;Normal Blend;1,1,1,1;0;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;142;7615.894,1660.912;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;328;10887.72,1192.563;Inherit;False;377.1025;259.9496;;2;331;327;UV2 (TexCoord2);1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;287;10752,1936;Inherit;False;270;209;;1;270;UV3 (Texcoord3);1,1,1,1;0;0
+Node;AmplifyShaderEditor.TexturePropertyNode;17;2725.198,1498.954;Inherit;True;Property;_BumpMap;Normal Map;43;0;Create;False;0;0;0;False;0;False;None;df175d4e267d9ad4a86121a4c51243a7;True;bump;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.CommentaryNode;207;10144,2432;Inherit;False;1773.109;1210.919;;18;306;302;305;304;300;296;303;301;299;294;297;308;295;298;293;21;291;576;Wind;0.4292453,0.6763586,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;287;10752,1936;Inherit;False;270;209;;1;270;UV3 (Texcoord3);1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;328;10887.72,1192.563;Inherit;False;377.1025;259.9496;;2;331;327;UV2 (TexCoord2);1,1,1,1;0;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;142;7615.894,1660.912;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.CommentaryNode;192;4212.457,1843.174;Inherit;False;1258.676;427.3699;Comment;5;168;197;167;183;184;Normal Blend;1,1,1,1;0;0
+Node;AmplifyShaderEditor.SamplerNode;166;3272.843,1288.355;Inherit;True;Property;_sampler_BumpMap;sampler_BumpMap;10;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.DynamicAppendNode;213;10464,1488;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.PosVertexDataNode;230;10390.96,917.5551;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;177;3703.953,1909.933;Inherit;True;Property;_TextureSample1;Texture Sample 1;10;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.DynamicAppendNode;243;10256,1776;Inherit;False;COLOR;4;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.DynamicAppendNode;336;10484.84,1247.025;Inherit;False;FLOAT2;4;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SaturateNode;147;7726.354,956.4596;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;344;10813.18,888.2999;Inherit;False;LOD_OffsetBranchesAndFronds;-1;;4;bd34f6904df38174191e2d1a96667ec3;0;2;1;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.Vector4Node;293;10224,2528;Inherit;False;Property;_ST_WindVector;_ST_WindVector;62;1;[HideInInspector];Create;False;0;0;False;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;298;10176,2720;Inherit;False;Property;_ST_WindBranchAnchor;_ST_WindBranchAnchor;56;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.TexCoordVertexDataNode;327;10908.25,1241.847;Inherit;False;2;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.BreakToComponentsNode;249;10432,1824;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;270;10800,1984;Inherit;False;3;2;0;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.IntNode;21;10576,2512;Inherit;False;Property;_WindQuality;Wind Quality;47;1;[Enum];Create;False;6;None;0;Fastest;1;Fast;2;Better;3;Best;4;Palm;5;0;True;0;0;0;0;1;INT;0
-Node;AmplifyShaderEditor.BreakToComponentsNode;148;7433.802,709.155;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.LerpOp;184;4262.457,2030.375;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.Vector4Node;298;10176,2720;Inherit;False;Property;_ST_WindBranchAnchor;_ST_WindBranchAnchor;56;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;356;10824,1158.327;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.FunctionNode;344;10813.18,888.2999;Inherit;False;LOD_OffsetBranchesAndFronds;-1;;4;bd34f6904df38174191e2d1a96667ec3;0;2;1;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;270;10800,1984;Inherit;False;3;2;0;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.IntNode;21;10576,2512;Inherit;False;Property;_WindQuality;Wind Quality;47;1;[Enum];Create;False;0;6;None;0;Fastest;1;Fast;2;Better;3;Best;4;Palm;5;0;True;0;False;0;0;False;0;1;INT;0
+Node;AmplifyShaderEditor.Vector4Node;293;10224,2528;Inherit;False;Property;_ST_WindVector;_ST_WindVector;62;1;[HideInInspector];Create;False;0;0;0;False;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.LerpOp;184;4262.457,2030.375;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;249;10432,1824;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.BreakToComponentsNode;148;7433.802,709.155;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.DynamicAppendNode;331;11122.77,1368.321;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.NormalVertexDataNode;322;10926.71,996.6466;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.StaticSwitch;183;4461.424,1893.173;Inherit;False;Property;_Keyword1;Keyword 1;21;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;101;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.CommentaryNode;150;8039.025,312.3573;Inherit;False;329;190;Diffuse Color;1;143;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.WireNode;357;11128.01,1131.127;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.Vector3Node;168;4636.924,2031.418;Inherit;False;Constant;_ZNormal;ZNormal;11;0;Create;True;0;0;0;False;0;False;0,0,1;0,0,0;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.DynamicAppendNode;149;7917.663,801.8884;Inherit;False;FLOAT4;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.WireNode;361;11361.17,869.1161;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CustomExpressionNode;291;10864,2592;Inherit;False;if (windQuality <= 0) // WIND_QUALITY_NONE${$    rotatedWindVector = float3(0.0f, 0.0f, 0.0f)@$    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f)@$}$else${$    // compute rotated wind parameters$    if (length(windVector) > 0) {$        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M))@$    } else {$        rotatedWindVector = 0@$    }$$    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w@$};7;False;5;True;windQuality;FLOAT;0;In;;Float;False;True;rotatedWindVector;FLOAT3;0,0,0;Out;;Float;False;True;rotatedBranchAnchor;FLOAT3;0,0,0;Out;;Float;False;True;windVector;FLOAT4;0,0,0,0;In;;Float;False;True;windBranchAnchor;FLOAT4;0,0,0,0;In;;Float;False;Calculate Wind Inputs;False;True;0;6;0;INT;0;False;1;FLOAT;0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;3;INT;0;FLOAT3;3;FLOAT3;4
 Node;AmplifyShaderEditor.CustomExpressionNode;286;11200,1664;Inherit;False;float lodValue = unity_LODFade.x@$VertexPos -= texcoord1.xyz@$$bool isFacingLeaf = ColorAlpha == 0@$if (isFacingLeaf) {$    #ifdef LOD_FADE_PERCENTAGE$        VertexPos *= lerp(1.0, texcoord1.w, lodValue)@$    #endif$    $    // face camera-facing leaf to camera$    float offsetLen = length(VertexPos)@$    VertexPos = mul(VertexPos.xyz, (float3x3) transpose(mul(UNITY_MATRIX_I_M, UNITY_MATRIX_I_V)))@ // inv(MV) * finalPosition$    VertexPos = normalize(VertexPos) * offsetLen@ // make sure the offset vector is still scaled$}$else${$    #ifdef LOD_FADE_PERCENTAGE$        float3 lodPosition = float3(texcoord1.w, texcoord3.x, texcoord3.y)@$        VertexPos = lerp(VertexPos, lodPosition, lodValue)@$    #endif$}$$return VertexPos@;3;False;4;True;VertexPos;FLOAT3;0,0,0;In;;Float;False;True;ColorAlpha;FLOAT;0;In;;Float;False;True;texcoord1;FLOAT3;0,0,0;In;;Float;False;True;texcoord3;FLOAT2;0,0;In;;Float;False;Offset Leaves Vertex;False;True;0;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT3;0,0,0;False;3;FLOAT2;0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;183;4461.424,1893.173;Inherit;False;Property;_Keyword1;Keyword 1;8;0;Create;True;0;0;False;0;0;0;0;True;;Toggle;2;Key0;Key1;Reference;101;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.DynamicAppendNode;331;11122.77,1368.321;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;150;8039.025,312.3573;Inherit;False;329;190;Diffuse Color;1;143;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.WireNode;361;11361.17,869.1161;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.Vector3Node;168;4636.924,2031.418;Inherit;False;Constant;_ZNormal;ZNormal;11;0;Create;True;0;0;False;0;0,0,1;0,0,0;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.WireNode;357;11128.01,1131.127;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.NormalVertexDataNode;322;10926.71,996.6466;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.StaticSwitch;143;8089.025,362.3572;Inherit;False;Property;_EFFECT_HUE_VARIATION;EFFECT_HUE_VARIATION;6;0;Create;True;0;0;False;0;0;0;0;True;;Toggle;2;Key0;Key1;Reference;76;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.WireNode;362;11819.16,886.157;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;437;11686.39,2241.352;Inherit;False;1;0;INT;0;False;1;INT;0
-Node;AmplifyShaderEditor.FunctionNode;578;11440.27,968.5081;Inherit;False;RippleFrondOneSided;35;;297;106e431bb45bb25468718f6ffdc189a5;0;4;2;FLOAT3;0,0,0;False;27;FLOAT3;0,0,0;False;4;FLOAT2;0,0;False;5;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;573;11581.89,1656.719;Inherit;False;LeafWind_TreeLogic;22;;189;8f0295e26413c3f43bd297b99323a157;0;6;40;INT;0;False;6;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;7;FLOAT2;0,0;False;16;FLOAT4;0,0,0,0;False;19;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT3;15
-Node;AmplifyShaderEditor.StaticSwitch;167;4917.403,2077.833;Inherit;False;Property;LIGHTMAP_ON;LIGHTMAP_ON;9;0;Create;False;0;0;False;0;0;0;0;False;LIGHTMAP_ON;Toggle;2;Key0;Key1;Fetch;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;430;10924.24,810.7421;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CommentaryNode;355;12032,1664;Inherit;False;176.2041;155.7649;Re-Adding Anchor Pos;1;354;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.StaticSwitch;343;12000,992;Inherit;False;Property;_Keyword0;Keyword 0;24;0;Create;True;0;0;False;0;0;0;0;False;GEOM_TYPE_FROND;Toggle;2;Key0;Key1;Fetch;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.DynamicAppendNode;151;8716.226,367.3984;Inherit;False;COLOR;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;354;12064,1712;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;197;5118.358,1960.947;Inherit;False;Property;EFFECT_BUMP;EFFECT_BUMP;10;0;Create;False;0;0;False;0;0;0;0;False;;AsIs;2;Key0;Key1;Create;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;358;12336,1408;Inherit;False;437;214;Vertex Normal;1;348;;0.6132076,0.07231221,0.07231221,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;359;12272,960;Inherit;False;437;214;Vertex Position;1;214;;0.8867924,0.09620863,0.09620863,1;0;0
-Node;AmplifyShaderEditor.WireNode;432;11564.73,789.5935;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.StaticSwitch;167;4917.403,2077.833;Inherit;False;Property;LIGHTMAP_ON;LIGHTMAP_ON;9;0;Create;False;0;0;0;False;0;False;0;0;0;False;LIGHTMAP_ON;Toggle;2;Key0;Key1;Fetch;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;362;11819.16,886.157;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;578;11440.27,968.5081;Inherit;False;RippleFrondOneSided;35;;297;106e431bb45bb25468718f6ffdc189a5;0;4;2;FLOAT3;0,0,0;False;27;FLOAT3;0,0,0;False;4;FLOAT2;0,0;False;5;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;573;11581.89,1656.719;Inherit;False;LeafWind_TreeLogic;22;;300;8f0295e26413c3f43bd297b99323a157;0;6;40;INT;0;False;6;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;7;FLOAT2;0,0;False;16;FLOAT4;0,0,0,0;False;19;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT3;15
+Node;AmplifyShaderEditor.StaticSwitch;143;8089.025,362.3572;Inherit;False;Property;_EFFECT_HUE_VARIATION;EFFECT_HUE_VARIATION;20;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;76;True;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.WireNode;282;7122.556,485.6862;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;354;12064,1712;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.DynamicAppendNode;151;8716.226,367.3984;Inherit;False;COLOR;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.CommentaryNode;359;12272,960;Inherit;False;437;214;Vertex Position;1;214;;0.8867924,0.09620863,0.09620863,1;0;0
+Node;AmplifyShaderEditor.StaticSwitch;197;5118.358,1960.947;Inherit;False;Property;EFFECT_BUMP;EFFECT_BUMP;22;0;Create;False;0;0;0;False;0;False;0;0;0;False;;Toggle;2;Key0;Key1;Create;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;343;12000,992;Inherit;False;Property;_Keyword0;Keyword 0;24;0;Create;True;0;0;0;False;0;False;0;0;0;False;GEOM_TYPE_FROND;Toggle;2;Key0;Key1;Fetch;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;436;12152.26,1357.635;Inherit;False;1;0;INT;0;False;1;INT;0
-Node;AmplifyShaderEditor.StaticSwitch;214;12292.93,1001.945;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;False;0;0;0;0;False;;KeywordEnum;4;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;GEOM_TYPE_LEAF;GEOM_TYPE_BRANCH_DETAIL;Create;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;348;12352,1456;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;False;0;0;0;0;False;;KeywordEnum;2;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;Reference;214;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;152;8915.882,429.097;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.WireNode;159;8679.756,528.1684;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.WireNode;132;3998.802,-1619.78;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;133;4030.583,-1654.615;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;358;12336,1408;Inherit;False;437;214;Vertex Normal;1;348;;0.6132076,0.07231221,0.07231221,1;0;0
+Node;AmplifyShaderEditor.WireNode;432;11564.73,789.5935;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.WireNode;431;12288.29,810.7418;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.WireNode;365;9694.519,1945.333;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.WireNode;433;12553.66,2279.469;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;438;12583.96,1282.07;Inherit;False;1;0;INT;0;False;1;INT;0
-Node;AmplifyShaderEditor.WireNode;429;13231.21,1274.066;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;214;12292.93,1001.945;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;0;False;0;False;0;0;0;False;;KeywordEnum;4;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;GEOM_TYPE_LEAF;GEOM_TYPE_BRANCH_DETAIL;Create;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;348;12352,1456;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;0;False;0;False;0;0;0;False;;KeywordEnum;2;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;Reference;214;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;152;8915.882,429.097;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;365;9694.519,1945.333;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;159;8679.756,528.1684;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;433;12553.66,2279.469;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;133;4030.583,-1654.615;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;199;9218.351,-224.3249;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;160;9250.06,535.9683;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.FunctionNode;574;12896,1008;Inherit;False;BranchWind;4;;277;bb8f3536c1fcac84ea1e69e0939b1f77;0;4;24;INT;0;False;3;FLOAT3;0,0,0;False;13;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT3;39
-Node;AmplifyShaderEditor.BreakToComponentsNode;158;9046.688,407.4555;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.CommentaryNode;423;14524,286;Inherit;False;291.9424;130.7191;Custom Cull Mode (Auto-Registered);1;410;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.WireNode;200;9147.241,-143.3185;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;447;13130.16,1539.641;Inherit;False;FetchEternityTime;20;;843;d7f632c075fdb5c4d9e5ed4d5044a640;0;0;1;FLOAT4;0
-Node;AmplifyShaderEditor.WireNode;366;9858.558,700.7548;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.CommentaryNode;423;14524,286;Inherit;False;291.9424;130.7191;Custom Cull Mode (Auto-Registered);1;410;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;158;9046.688,407.4555;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.WireNode;514;13084.04,1894.162;Inherit;False;1;0;INT;0;False;1;INT;0
-Node;AmplifyShaderEditor.Vector4Node;300;11056,3072;Inherit;False;Property;_ST_WindTurbulences;_ST_WindTurbulences;61;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;302;10528,2768;Inherit;False;Property;_ST_WindLeaf1Tumble;_ST_WindLeaf1Tumble;52;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;308;11360,3264;Inherit;False;Property;_ST_WindAnimation;_ST_WindAnimation;58;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;205;13952,640;Inherit;False;Property;_Smoothness;Smoothness;45;0;Create;True;0;0;False;0;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.DynamicAppendNode;155;9420.116,403.6015;Inherit;False;COLOR;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.Vector4Node;576;10784,3072;Inherit;False;Property;_ST_WindFrondRipple;_ST_WindFrondRipple;3;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.IntNode;410;14620,334;Inherit;False;Property;_Cull;Cull;46;1;[Enum];Create;False;0;1;UnityEngine.Rendering.CullMode;True;0;0;0;0;1;INT;0
-Node;AmplifyShaderEditor.Vector4Node;297;11360,3072;Inherit;False;Property;_ST_WindBranchWhip;_ST_WindBranchWhip;57;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.WireNode;245;12022.13,694.215;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector4Node;303;10528,3120;Inherit;False;Property;_ST_WindLeaf1Twitch;_ST_WindLeaf1Twitch;51;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;295;11648,3072;Inherit;False;Property;_ST_WindBranch;_ST_WindBranch;59;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;305;10528,2944;Inherit;False;Property;_ST_WindLeaf2Tumble;_ST_WindLeaf2Tumble;49;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.WireNode;246;12005.12,737.9631;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;368;11645.36,488.5246;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;572;13712,992;Inherit;False;GlobalWind;0;;187;84571097aba34f7448bae49f6418efb3;0;5;129;INT;0;False;111;FLOAT3;0,0,0;False;130;FLOAT3;0,0,0;False;102;FLOAT3;0,0,0;False;125;FLOAT;0;False;1;FLOAT3;138
-Node;AmplifyShaderEditor.Vector4Node;299;10192,3216;Inherit;False;Property;_ST_WindBranchAdherences;_ST_WindBranchAdherences;55;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;304;10784,3280;Inherit;False;Property;_ST_WindLeaf2Ripple;_ST_WindLeaf2Ripple;50;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;306;10528,3312;Inherit;False;Property;_ST_WindLeaf2Twitch;_ST_WindLeaf2Twitch;48;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;301;10240,3408;Inherit;False;Property;_ST_WindLeaf1Ripple;_ST_WindLeaf1Ripple;53;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.FunctionNode;574;12896,1008;Inherit;False;BranchWind;4;;314;bb8f3536c1fcac84ea1e69e0939b1f77;0;4;24;INT;0;False;3;FLOAT3;0,0,0;False;13;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT3;39
+Node;AmplifyShaderEditor.WireNode;429;13231.21,1274.066;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;366;9858.558,700.7548;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.Vector4Node;296;11344,2864;Inherit;False;Property;_ST_WindBranchTwitch;_ST_WindBranchTwitch;54;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;205;13952,640;Inherit;False;Property;_Smoothness;Smoothness;45;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector4Node;303;10528,3120;Inherit;False;Property;_ST_WindLeaf1Twitch;_ST_WindLeaf1Twitch;51;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;304;10784,3280;Inherit;False;Property;_ST_WindLeaf2Ripple;_ST_WindLeaf2Ripple;50;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;295;11648,3072;Inherit;False;Property;_ST_WindBranch;_ST_WindBranch;59;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;305;10528,2944;Inherit;False;Property;_ST_WindLeaf2Tumble;_ST_WindLeaf2Tumble;49;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;301;10240,3408;Inherit;False;Property;_ST_WindLeaf1Ripple;_ST_WindLeaf1Ripple;53;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;306;10528,3312;Inherit;False;Property;_ST_WindLeaf2Twitch;_ST_WindLeaf2Twitch;48;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;297;11360,3072;Inherit;False;Property;_ST_WindBranchWhip;_ST_WindBranchWhip;57;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;451;14104.8,1192.009;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.Vector4Node;296;11344,2864;Inherit;False;Property;_ST_WindBranchTwitch;_ST_WindBranchTwitch;54;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;206;13952,544;Inherit;False;Property;_Metallic;Metallic;44;0;Create;True;0;0;False;0;1;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector4Node;294;11648,3264;Inherit;False;Property;_ST_WindGlobal;_ST_WindGlobal;60;1;[HideInInspector];Create;False;0;0;True;0;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;65;6650.987,3141.61;Inherit;False;Constant;_05;0.5;0;0;Create;True;0;0;False;0;0.5;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;9;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;True;2;False;-1;False;False;False;False;False;True;1;LightMode=Meta;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;8;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPrepass;0;8;TransparentDepthPrepass;1;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPrepass;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;14592,464;Float;False;True;-1;2;SpeedTreeHDRPMaterialInspector;0;2;Nature/SpeedTreeHDRP_ASE;53b46d85872c5b24c8f4f0a1c3fe4c87;True;GBuffer;0;0;GBuffer;35;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;True;0;True;410;False;True;True;0;True;-12;255;False;-1;255;True;-11;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-13;False;True;1;LightMode=GBuffer;False;0;;0;0;Standard;29;Surface Type;0;  Rendering Pass;1;  Refraction Model;0;    Blending Mode;2;    Blend Preserves Specular;1;  Receive Fog;1;  Back Then Front Rendering;0;  Transparent Depth Prepass;0;  Transparent Depth Postpass;0;  Transparent Writes Motion Vector;0;  Distortion;0;    Distortion Mode;0;    Distortion Depth Test;1;  ZWrite;1;  Z Test;4;Double-Sided;0;Alpha Clipping;1;  Use Shadow Threshold;0;Material Type,InvertActionOnDeselection;0;  Energy Conserving Specular;1;  Transmission;1;Receive Decals;1;Receives SSR;1;Specular AA;0;Specular Occlusion Mode;0;Override Baked GI;0;Depth Offset;0;DOTS Instancing;0;Vertex Position;0;0;11;True;True;True;True;True;True;False;False;False;False;True;False;;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;6;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;True;0;True;-23;False;True;True;0;True;-7;255;False;-1;255;True;-8;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;10;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Forward;0;10;Forward;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;True;0;True;-25;False;True;True;0;True;-3;255;False;-1;255;True;-4;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;0;True;-22;True;0;True;-27;False;True;1;LightMode=Forward;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;True;0;True;-23;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;0;;0;0;Standard;0;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;7;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;True;1;False;-1;False;False;True;0;True;-22;True;0;True;-28;False;True;1;LightMode=TransparentBackface;False;0;;0;0;Standard;0;0
+Node;AmplifyShaderEditor.Vector4Node;299;10192,3216;Inherit;False;Property;_ST_WindBranchAdherences;_ST_WindBranchAdherences;55;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.WireNode;580;11530.7,609.1149;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;572;13712,992;Inherit;False;GlobalWind;0;;844;84571097aba34f7448bae49f6418efb3;0;5;129;INT;0;False;111;FLOAT3;0,0,0;False;130;FLOAT3;0,0,0;False;102;FLOAT3;0,0,0;False;125;FLOAT;0;False;1;FLOAT3;138
+Node;AmplifyShaderEditor.IntNode;410;14620,334;Inherit;False;Property;_Cull;Cull;46;1;[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;True;0;False;0;0;False;0;1;INT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;155;9420.116,403.6015;Inherit;False;COLOR;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RangedFloatNode;206;13952,544;Inherit;False;Property;_Metallic;Metallic;44;0;Create;True;0;0;0;False;0;False;1;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.WireNode;368;11645.36,488.5246;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.Vector4Node;300;11056,3072;Inherit;False;Property;_ST_WindTurbulences;_ST_WindTurbulences;61;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;302;10528,2768;Inherit;False;Property;_ST_WindLeaf1Tumble;_ST_WindLeaf1Tumble;52;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;308;11360,3264;Inherit;False;Property;_ST_WindAnimation;_ST_WindAnimation;58;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.WireNode;245;12059.55,624.7175;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector4Node;576;10784,3072;Inherit;False;Property;_ST_WindFrondRipple;_ST_WindFrondRipple;3;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;294;11648,3264;Inherit;False;Property;_ST_WindGlobal;_ST_WindGlobal;60;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;65;6650.987,3141.61;Inherit;False;Constant;_05;0.5;0;0;Create;True;0;0;0;False;0;False;0.5;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;7;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;False;False;False;False;False;False;True;1;False;-1;False;True;True;True;True;True;0;True;-44;False;False;False;True;0;True;-22;True;0;True;-28;False;True;1;LightMode=TransparentBackface;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;False;False;False;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;8;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPrepass;0;8;TransparentDepthPrepass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPrepass;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;14553.3,472.9503;Float;False;True;-1;2;SpeedTreeHDRPMaterialInspector;0;2;Nature/SpeedTreeHDRP_ASE;53b46d85872c5b24c8f4f0a1c3fe4c87;True;GBuffer;0;0;GBuffer;35;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;410;False;False;False;False;True;True;0;True;-12;255;False;-1;255;True;-11;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-13;False;True;1;LightMode=GBuffer;False;0;;0;0;Standard;41;Surface Type;0;  Rendering Pass;1;  Refraction Model;0;    Blending Mode;0;    Blend Preserves Specular;1;  Receive Fog;1;  Back Then Front Rendering;0;  Transparent Depth Prepass;0;  Transparent Depth Postpass;0;  Transparent Writes Motion Vector;0;  Distortion;0;    Distortion Mode;0;    Distortion Depth Test;1;  ZWrite;0;  Z Test;4;Double-Sided;0;Alpha Clipping;1;  Use Shadow Threshold;0;Material Type,InvertActionOnDeselection;0;  Energy Conserving Specular;1;  Transmission;1;Receive Decals;1;Receives SSR;1;Motion Vectors;1;  Add Precomputed Velocity;0;Specular AA;0;Specular Occlusion Mode;1;Override Baked GI;0;Depth Offset;0;DOTS Instancing;0;LOD CrossFade;0;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Vertex Position;0;0;11;True;True;True;True;True;True;False;False;False;False;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;6;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;9;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;10;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Forward;0;10;Forward;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;False;False;False;False;False;False;True;0;True;-25;False;True;True;True;True;True;0;True;-44;False;False;True;True;0;True;-3;255;False;-1;255;True;-4;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;0;True;-22;True;0;True;-27;False;True;1;LightMode=Forward;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;False;False;False;False;True;True;0;True;-7;255;False;-1;255;True;-8;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.CommentaryNode;82;1296.517,-275.5851;Inherit;False;340.5;100;2    detail/seam uv, seam amount, 0;0;Branches;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;360;11390.27,920.2094;Inherit;False;402;233;Frond Wind;0;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;85;1303.667,10.1001;Inherit;False;245.4069;100;2 leaf wind xyz, leaf group;0;Leaves;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;27;2286.292,-1248.058;Inherit;False;100;100;Unused;0;Frond/Leaves;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;83;1298.508,-142.4082;Inherit;False;330.5549;100;2 frond wind xyz, 0;0;Fronds;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;26;2269.89,-1412.674;Inherit;False;340.5;100;0    diffuse uv, branch wind xy;0;Branches;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;426;12864,944;Inherit;False;1211.216;247.4169;Mesh / Leaves managed automatically inside;0;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;26;2269.89,-1412.674;Inherit;False;340.5;100;0    diffuse uv, branch wind xy;0;Branches;1,1,1,1;0;0
 WireConnection;170;0;23;1
 WireConnection;170;1;23;2
 WireConnection;88;0;80;4
@@ -7483,48 +8641,48 @@ WireConnection;88;4;90;0
 WireConnection;86;0;84;1
 WireConnection;86;1;84;2
 WireConnection;86;2;88;0
-WireConnection;91;0;12;0
-WireConnection;91;1;170;0
 WireConnection;69;0;66;1
 WireConnection;69;1;70;1
 WireConnection;69;2;70;2
-WireConnection;64;0;79;0
+WireConnection;91;0;12;0
+WireConnection;91;1;170;0
+WireConnection;67;0;79;0
+WireConnection;98;0;86;0
+WireConnection;68;0;79;0
 WireConnection;93;0;91;4
 WireConnection;93;1;11;4
+WireConnection;64;0;79;0
 WireConnection;71;0;69;0
-WireConnection;68;0;79;0
-WireConnection;98;0;86;0
-WireConnection;67;0;79;0
+WireConnection;92;0;91;0
+WireConnection;92;1;93;0
+WireConnection;92;2;19;0
+WireConnection;62;0;71;0
 WireConnection;99;0;98;0
 WireConnection;99;1;98;1
 WireConnection;61;0;68;4
 WireConnection;61;1;67;4
 WireConnection;61;2;64;4
-WireConnection;62;0;71;0
-WireConnection;92;0;91;0
-WireConnection;92;1;93;0
-WireConnection;92;2;19;0
 WireConnection;72;0;62;0
 WireConnection;72;1;63;0
-WireConnection;121;0;98;2
 WireConnection;73;0;61;0
 WireConnection;103;0;92;0
 WireConnection;97;0;15;0
 WireConnection;97;1;99;0
 WireConnection;111;0;98;2
-WireConnection;75;0;73;0
-WireConnection;75;1;72;0
-WireConnection;104;0;103;0
-WireConnection;104;1;103;1
-WireConnection;104;2;103;2
-WireConnection;108;0;97;1
-WireConnection;108;1;97;2
-WireConnection;108;2;97;3
+WireConnection;121;0;98;2
 WireConnection;109;0;121;0
 WireConnection;109;1;110;0
 WireConnection;109;2;97;4
 WireConnection;109;3;97;4
 WireConnection;109;4;111;0
+WireConnection;104;0;103;0
+WireConnection;104;1;103;1
+WireConnection;104;2;103;2
+WireConnection;75;0;73;0
+WireConnection;75;1;72;0
+WireConnection;108;0;97;1
+WireConnection;108;1;97;2
+WireConnection;108;2;97;3
 WireConnection;78;0;77;4
 WireConnection;78;1;75;0
 WireConnection;102;0;108;0
@@ -7542,11 +8700,11 @@ WireConnection;101;0;106;0
 WireConnection;176;0;76;0
 WireConnection;175;0;126;0
 WireConnection;124;0;101;0
-WireConnection;284;0;175;0
-WireConnection;285;0;176;0
 WireConnection;125;0;124;0
 WireConnection;125;1;124;1
 WireConnection;125;2;124;2
+WireConnection;284;0;175;0
+WireConnection;285;0;176;0
 WireConnection;123;0;125;0
 WireConnection;123;1;284;0
 WireConnection;123;2;285;0
@@ -7558,45 +8716,50 @@ WireConnection;135;1;134;2
 WireConnection;112;0;11;1
 WireConnection;112;1;11;2
 WireConnection;112;2;11;3
+WireConnection;136;0;134;0
+WireConnection;136;1;135;0
 WireConnection;113;0;112;0
 WireConnection;113;1;114;1
 WireConnection;127;0;124;0
 WireConnection;127;1;129;0
-WireConnection;136;0;134;0
-WireConnection;136;1;135;0
 WireConnection;138;0;127;0
 WireConnection;138;1;136;0
 WireConnection;281;0;113;0
 WireConnection;281;3;11;4
 WireConnection;204;0;99;0
+WireConnection;283;0;281;0
 WireConnection;139;0;138;0
 WireConnection;139;1;140;0
-WireConnection;283;0;281;0
+WireConnection;202;0;204;0
 WireConnection;141;0;139;0
 WireConnection;141;1;140;0
 WireConnection;369;0;283;0
 WireConnection;203;0;170;0
-WireConnection;202;0;204;0
-WireConnection;166;0;17;0
-WireConnection;166;1;203;0
-WireConnection;243;0;369;0
-WireConnection;177;0;17;0
-WireConnection;177;1;202;0
-WireConnection;336;0;334;0
-WireConnection;213;0;210;0
 WireConnection;142;0;123;0
 WireConnection;142;1;141;0
+WireConnection;166;0;17;0
+WireConnection;166;1;203;0
+WireConnection;213;0;210;0
+WireConnection;177;0;17;0
+WireConnection;177;1;202;0
+WireConnection;243;0;369;0
+WireConnection;336;0;334;0
 WireConnection;147;0;142;0
+WireConnection;356;0;336;0
 WireConnection;344;1;230;0
 WireConnection;344;5;213;0
-WireConnection;249;0;243;0
-WireConnection;148;0;101;0
 WireConnection;184;0;166;0
 WireConnection;184;1;177;0
 WireConnection;184;2;109;0
-WireConnection;356;0;336;0
+WireConnection;249;0;243;0
+WireConnection;148;0;101;0
+WireConnection;331;0;327;0
+WireConnection;183;1;166;0
+WireConnection;183;0;184;0
+WireConnection;357;0;356;0
 WireConnection;149;0;147;0
 WireConnection;149;3;148;3
+WireConnection;361;0;344;0
 WireConnection;291;1;21;0
 WireConnection;291;4;293;0
 WireConnection;291;5;298;0
@@ -7604,15 +8767,11 @@ WireConnection;286;0;230;0
 WireConnection;286;1;249;3
 WireConnection;286;2;213;0
 WireConnection;286;3;270;0
-WireConnection;183;1;166;0
-WireConnection;183;0;184;0
-WireConnection;331;0;327;0
-WireConnection;361;0;344;0
-WireConnection;357;0;356;0
-WireConnection;143;1;101;0
-WireConnection;143;0;149;0
-WireConnection;362;0;361;0
 WireConnection;437;0;21;0
+WireConnection;430;0;334;0
+WireConnection;167;1;183;0
+WireConnection;167;0;168;0
+WireConnection;362;0;361;0
 WireConnection;578;2;344;0
 WireConnection;578;27;322;0
 WireConnection;578;4;357;0
@@ -7623,19 +8782,20 @@ WireConnection;573;9;322;0
 WireConnection;573;7;213;0
 WireConnection;573;16;327;0
 WireConnection;573;19;291;3
-WireConnection;167;1;183;0
-WireConnection;167;0;168;0
-WireConnection;430;0;334;0
-WireConnection;343;1;362;0
-WireConnection;343;0;578;0
-WireConnection;151;0;143;0
+WireConnection;143;1;101;0
+WireConnection;143;0;149;0
+WireConnection;282;0;281;0
 WireConnection;354;0;213;0
 WireConnection;354;1;573;0
+WireConnection;151;0;143;0
 WireConnection;197;1;168;0
 WireConnection;197;0;167;0
-WireConnection;432;0;430;0
-WireConnection;282;0;281;0
+WireConnection;343;1;362;0
+WireConnection;343;0;578;0
 WireConnection;436;0;437;0
+WireConnection;432;0;430;0
+WireConnection;431;0;432;0
+WireConnection;438;0;436;0
 WireConnection;214;1;343;0
 WireConnection;214;0;343;0
 WireConnection;214;2;354;0
@@ -7646,44 +8806,40 @@ WireConnection;348;2;573;15
 WireConnection;348;3;322;0
 WireConnection;152;0;151;0
 WireConnection;152;1;282;0
-WireConnection;159;0;143;0
-WireConnection;132;0;19;0
-WireConnection;133;0;93;0
-WireConnection;431;0;432;0
 WireConnection;365;0;197;0
+WireConnection;159;0;143;0
 WireConnection;433;0;291;4
-WireConnection;438;0;436;0
-WireConnection;429;0;348;0
+WireConnection;133;0;93;0
 WireConnection;199;0;133;0
 WireConnection;160;0;159;0
+WireConnection;158;0;152;0
+WireConnection;514;0;21;0
 WireConnection;574;24;438;0
 WireConnection;574;3;214;0
 WireConnection;574;13;431;0
 WireConnection;574;15;433;0
-WireConnection;158;0;152;0
-WireConnection;200;0;132;0
+WireConnection;429;0;348;0
 WireConnection;366;0;365;0
-WireConnection;514;0;21;0
-WireConnection;155;0;158;0
-WireConnection;155;1;158;1
-WireConnection;155;2;158;2
-WireConnection;155;3;160;0
-WireConnection;245;0;199;0
-WireConnection;246;0;200;0
-WireConnection;368;0;366;0
+WireConnection;451;0;429;0
+WireConnection;580;0;19;0
 WireConnection;572;129;514;0
 WireConnection;572;111;574;0
 WireConnection;572;130;574;39
 WireConnection;572;102;291;3
 WireConnection;572;125;447;0
-WireConnection;451;0;429;0
+WireConnection;155;0;158;0
+WireConnection;155;1;158;1
+WireConnection;155;2;158;2
+WireConnection;155;3;160;0
+WireConnection;368;0;366;0
+WireConnection;245;0;199;0
 WireConnection;0;0;155;0
 WireConnection;0;1;368;0
 WireConnection;0;4;206;0
 WireConnection;0;7;205;0
 WireConnection;0;9;245;0
-WireConnection;0;10;246;0
+WireConnection;0;10;580;0
 WireConnection;0;11;572;138
 WireConnection;0;12;451;0
 ASEEND*/
-//CHKSM=4D8D635AE1B653A635654F67206AA13ED5F8925F
+//CHKSM=5AAA3827B43F7385F660CFF43BFD5F2550C60825
