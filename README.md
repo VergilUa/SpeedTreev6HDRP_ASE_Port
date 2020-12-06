@@ -9,7 +9,7 @@ Done by using [Amplify Shader Editor](https://assetstore.unity.com/packages/tool
 
 So if you don't have one - you probably won't be able to edit it.
 
-# Requirements:
+# Minimum Requirements:
 - SpeedTree v6; (Other versions of trees untested)
 - HDRP 7.1.8 package+;
 - Unity 2019.3.1.x+;
@@ -56,8 +56,21 @@ Don't expect everything to be 1:1 as in built-in SpeedTree v6 shader.
 Also, use official shaders from SpeedTree once they're released. Or don't.
 Because you know. They don't support custom time :P
 
-# Potential FAQ:
+# FAQ:
 ```
+Q: Tried editing shader via ASE and Alpha Clipping stopped working (hall of mirrors issue)
+A: This is a common regression that comes up sometimes with ASE HDRP Lit template, either modify it to have proper _ALPHATEST_ON define, 
+or just select tree materials with newer inspector. 
+Inspector should have a workaround that automatically adds keyword _ALPHATEST_ON to the material. After that you should be able to re-save shader. 
+Alternatively, using debug mode in inspector and manually adding _ALPHATEST_ON keyword to the material should work.
+Also, after messing around with alpha clipping make sure that output is connected correctly (Alpha Cutoff (_Cutoff) to Alpha Clip Threshold).
+
+Q: Vertex Position is incorrect after editing (trees too large)
+A: Vertex position should be Absolute.Set it manually to Relative, then back to Absolute and update the shader. This is ASE bug.
+
+Q: "As Is" errors in older shader versions.
+A: Safe to ignore, but if in doubt - I've updated shader recently, use that as a base.
+
 Q: Why not Shader Graph?
 A: Because it sucks (compared to ASE) right now
 
