@@ -11,7 +11,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 		[HideInInspector]_ST_WindBranchAdherences("_ST_WindBranchAdherences", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindTurbulences("_ST_WindTurbulences", Vector) = (0,0,0,0)
 		[HideInInspector]_ST_WindBranch("_ST_WindBranch", Vector) = (0,0,0,0)
-		[ASEBegin]_GlobalTimerId("GlobalTimerId", Int) = 0
+		_GlobalTimerId("GlobalTimerId", Int) = 0
 		[HideInInspector]_ST_WindFrondRipple("_ST_WindFrondRipple", Vector) = (0,0,0,0)
 		_MainTex("Base (RGB) Trans (A)", 2D) = "white" {}
 		_Color("Main Color", Color) = (1,1,1,1)
@@ -300,7 +300,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
 			#define HAVE_MESH_MODIFICATION
-			#define ASE_SRP_VERSION 999999
+			#define ASE_SRP_VERSION 100202
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
@@ -335,85 +335,33 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
 			#ifdef DEBUG_DISPLAY
 				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
 			#endif
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_FRAG_NORMAL
-			#define ASE_NEEDS_FRAG_COLOR
-			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
-			#pragma shader_feature_local EFFECT_HUE_VARIATION
-			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
-			#pragma shader_feature_local EFFECT_BUMP
-
-
-			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
-				#define ASE_NEED_CULLFACE 1
-			#endif
-
-			struct AttributesMesh
-			{
-				float3 positionOS : POSITION;
-				float3 normalOS : NORMAL;
-				float4 tangentOS : TANGENT;
-				float4 uv1 : TEXCOORD1;
-				float4 uv2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct PackedVaryingsMeshToPS
-			{
-				float4 positionCS : SV_Position;
-				float3 interp00 : TEXCOORD0;
-				float3 interp01 : TEXCOORD1;
-				float4 interp02 : TEXCOORD2;
-				float4 interp03 : TEXCOORD3;
-				float4 interp04 : TEXCOORD4;
-				float4 ase_texcoord5 : TEXCOORD5;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord6 : TEXCOORD6;
-				float3 ase_normal : NORMAL;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
-				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
-				#endif
-			};
 
 			CBUFFER_START( UnityPerMaterial )
 			float4 _ST_WindBranchTwitch;
 			float4 _ST_WindBranchAnchor;
 			float4 _ST_WindVector;
 			float4 _Color;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindFrondRipple;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindTurbulences;
 			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindBranchWhip;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _ST_WindAnimation;
 			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindBranchWhip;
 			float4 _ST_WindLeaf1Ripple;
 			float4 _ST_WindLeaf2Tumble;
 			float4 _ST_WindBranch;
 			float4 _ST_WindLeaf2Ripple;
 			float4 _ST_WindLeaf1Twitch;
-			float4 _ST_WindBranchAdherences;
-			int _Cull;
+			float4 _ST_WindGlobal;
 			float _Metallic;
+			int _Cull;
 			int _WindQuality;
 			int _GlobalTimerId;
 			float _Cutoff;
@@ -473,25 +421,61 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _BumpMap;
 
 
-			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
+
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_NORMAL
+			#define ASE_NEEDS_FRAG_COLOR
+			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_HUE_VARIATION
+			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_BUMP
+
+
+			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
+				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			struct AttributesMesh
 			{
-				if (windQuality <= 0) // WIND_QUALITY_NONE
-				{
-				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
-				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-				    // compute rotated wind parameters
-				    if (length(windVector) > 0) {
-				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
-				    } else {
-				        rotatedWindVector = 0;
-				    }
-				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
-				}
-			}
-			
+				float3 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
+				float4 uv1 : TEXCOORD1;
+				float4 uv2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct PackedVaryingsMeshToPS
+			{
+				float4 positionCS : SV_Position;
+				float3 interp00 : TEXCOORD0;
+				float3 interp01 : TEXCOORD1;
+				float4 interp02 : TEXCOORD2;
+				float4 interp03 : TEXCOORD3;
+				float4 interp04 : TEXCOORD4;
+				float4 ase_texcoord5 : TEXCOORD5;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord6 : TEXCOORD6;
+				float3 ase_normal : NORMAL;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
+				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
+				#endif
+			};
+
+
 			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
@@ -515,6 +499,25 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    #endif
 				}
 				return VertexPos;
+			}
+			
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			{
+				if (windQuality <= 0) // WIND_QUALITY_NONE
+				{
+				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
+				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
+				}
+				else
+				{
+				    // compute rotated wind parameters
+				    if (length(windVector) > 0) {
+				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
+				    } else {
+				        rotatedWindVector = 0;
+				    }
+				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
+				}
 			}
 			
 			float4 CubicSmooth( float4 vData )
@@ -725,8 +728,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#if HAVE_DECALS
 				if( _EnableDecals )
 				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData(posInput, fragInputs.tangentToWorld[2], surfaceDescription.Alpha);
+					ApplyDecalToSurfaceData(decalSurfaceData, fragInputs.tangentToWorld[2], surfaceData);
 				}
 				#endif
 
@@ -818,20 +821,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 temp_output_344_0 = staticSwitch14_g4;
 				float3 appendResult331 = (float3(inputMesh.uv2.xyz));
 				float2 appendResult336 = (float2(inputMesh.ase_texcoord.xy));
-				float2 break10_g297 = appendResult336;
-				float ifLocalVar11_g297 = 0;
+				float2 break10_g314 = appendResult336;
+				float ifLocalVar11_g314 = 0;
 				UNITY_BRANCH 
-				if( break10_g297.x >= 0.75 )
-				ifLocalVar11_g297 = break10_g297.x;
+				if( break10_g314.x >= 0.75 )
+				ifLocalVar11_g314 = break10_g314.x;
 				else
-				ifLocalVar11_g297 = 0.75;
-				float4 temp_cast_3 = (( ifLocalVar11_g297 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g297.y ) * _ST_WindFrondRipple.z ) )).xxxx;
-				float4 vData7_g299 = temp_cast_3;
-				float4 localTriangleWave7_g299 = TriangleWave( vData7_g299 );
-				float4 vData6_g299 = localTriangleWave7_g299;
-				float4 localCubicSmooth6_g299 = CubicSmooth( vData6_g299 );
+				ifLocalVar11_g314 = 0.75;
+				float4 temp_cast_3 = (( ifLocalVar11_g314 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g314.y ) * _ST_WindFrondRipple.z ) )).xxxx;
+				float4 vData7_g316 = temp_cast_3;
+				float4 localTriangleWave7_g316 = TriangleWave( vData7_g316 );
+				float4 vData6_g316 = localTriangleWave7_g316;
+				float4 localCubicSmooth6_g316 = CubicSmooth( vData6_g316 );
 				#ifdef GEOM_TYPE_FROND
-				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g299 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
+				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g316 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
@@ -1528,7 +1531,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
 			#define HAVE_MESH_MODIFICATION
-			#define ASE_SRP_VERSION 999999
+			#define ASE_SRP_VERSION 100202
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
@@ -1552,80 +1555,33 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
 			#ifdef DEBUG_DISPLAY
 				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
 			#endif
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#define ASE_NEEDS_FRAG_NORMAL
-			#define ASE_NEEDS_FRAG_COLOR
-			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
-			#pragma shader_feature_local EFFECT_HUE_VARIATION
-			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
-			#pragma shader_feature_local EFFECT_BUMP
-
-
-			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
-				#define ASE_NEED_CULLFACE 1
-			#endif
-
-			struct AttributesMesh
-			{
-				float3 positionOS : POSITION;
-				float3 normalOS : NORMAL;
-				float4 tangentOS : TANGENT;
-				float4 uv0 : TEXCOORD0;
-				float4 uv1 : TEXCOORD1;
-				float4 uv2 : TEXCOORD2;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct PackedVaryingsMeshToPS
-			{
-				float4 positionCS : SV_Position;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord2 : TEXCOORD2;
-				float3 ase_normal : NORMAL;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
-				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
-				#endif
-			};
-
+			
 			CBUFFER_START( UnityPerMaterial )
 			float4 _ST_WindBranchTwitch;
 			float4 _ST_WindBranchAnchor;
 			float4 _ST_WindVector;
 			float4 _Color;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindFrondRipple;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindTurbulences;
 			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindBranchWhip;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _ST_WindAnimation;
 			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindBranchWhip;
 			float4 _ST_WindLeaf1Ripple;
 			float4 _ST_WindLeaf2Tumble;
 			float4 _ST_WindBranch;
 			float4 _ST_WindLeaf2Ripple;
 			float4 _ST_WindLeaf1Twitch;
-			float4 _ST_WindBranchAdherences;
-			int _Cull;
+			float4 _ST_WindGlobal;
 			float _Metallic;
+			int _Cull;
 			int _WindQuality;
 			int _GlobalTimerId;
 			float _Cutoff;
@@ -1685,25 +1641,55 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _BumpMap;
 
 
-			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
+
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_FRAG_NORMAL
+			#define ASE_NEEDS_FRAG_COLOR
+			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_HUE_VARIATION
+			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_BUMP
+
+
+			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
+				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			struct AttributesMesh
 			{
-				if (windQuality <= 0) // WIND_QUALITY_NONE
-				{
-				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
-				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-				    // compute rotated wind parameters
-				    if (length(windVector) > 0) {
-				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
-				    } else {
-				        rotatedWindVector = 0;
-				    }
-				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
-				}
-			}
-			
+				float3 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
+				float4 uv0 : TEXCOORD0;
+				float4 uv1 : TEXCOORD1;
+				float4 uv2 : TEXCOORD2;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct PackedVaryingsMeshToPS
+			{
+				float4 positionCS : SV_Position;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float3 ase_normal : NORMAL;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
+				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
+				#endif
+			};
+
 			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
@@ -1727,6 +1713,25 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    #endif
 				}
 				return VertexPos;
+			}
+			
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			{
+				if (windQuality <= 0) // WIND_QUALITY_NONE
+				{
+				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
+				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
+				}
+				else
+				{
+				    // compute rotated wind parameters
+				    if (length(windVector) > 0) {
+				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
+				    } else {
+				        rotatedWindVector = 0;
+				    }
+				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
+				}
 			}
 			
 			float4 CubicSmooth( float4 vData )
@@ -1937,8 +1942,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#if HAVE_DECALS
 				if( _EnableDecals )
 				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData(posInput, fragInputs.tangentToWorld[2], surfaceDescription.Alpha);
+					ApplyDecalToSurfaceData(decalSurfaceData, fragInputs.tangentToWorld[2], surfaceData);
 				}
 				#endif
 
@@ -2030,20 +2035,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 temp_output_344_0 = staticSwitch14_g4;
 				float3 appendResult331 = (float3(inputMesh.uv2.xyz));
 				float2 appendResult336 = (float2(inputMesh.uv0.xy));
-				float2 break10_g297 = appendResult336;
-				float ifLocalVar11_g297 = 0;
+				float2 break10_g314 = appendResult336;
+				float ifLocalVar11_g314 = 0;
 				UNITY_BRANCH 
-				if( break10_g297.x >= 0.75 )
-				ifLocalVar11_g297 = break10_g297.x;
+				if( break10_g314.x >= 0.75 )
+				ifLocalVar11_g314 = break10_g314.x;
 				else
-				ifLocalVar11_g297 = 0.75;
-				float4 temp_cast_3 = (( ifLocalVar11_g297 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g297.y ) * _ST_WindFrondRipple.z ) )).xxxx;
-				float4 vData7_g299 = temp_cast_3;
-				float4 localTriangleWave7_g299 = TriangleWave( vData7_g299 );
-				float4 vData6_g299 = localTriangleWave7_g299;
-				float4 localCubicSmooth6_g299 = CubicSmooth( vData6_g299 );
+				ifLocalVar11_g314 = 0.75;
+				float4 temp_cast_3 = (( ifLocalVar11_g314 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g314.y ) * _ST_WindFrondRipple.z ) )).xxxx;
+				float4 vData7_g316 = temp_cast_3;
+				float4 localTriangleWave7_g316 = TriangleWave( vData7_g316 );
+				float4 vData6_g316 = localTriangleWave7_g316;
+				float4 localCubicSmooth6_g316 = CubicSmooth( vData6_g316 );
 				#ifdef GEOM_TYPE_FROND
-				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g299 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
+				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g316 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
@@ -2720,7 +2725,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
 			#define HAVE_MESH_MODIFICATION
-			#define ASE_SRP_VERSION 999999
+			#define ASE_SRP_VERSION 100202
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
@@ -2744,6 +2749,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			//#define USE_LEGACY_UNITY_MATRIX_VARIABLES
 
@@ -2751,67 +2757,27 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#ifdef DEBUG_DISPLAY
 				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
 			#endif
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
-
-
-			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
-				#define ASE_NEED_CULLFACE 1
-			#endif
-
-			struct AttributesMesh
-			{
-				float3 positionOS : POSITION;
-				float3 normalOS : NORMAL;
-				float4 ase_texcoord1 : TEXCOORD1;
-				float4 ase_texcoord2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct PackedVaryingsMeshToPS
-			{
-				float4 positionCS : SV_Position;
-				float3 interp00 : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
-				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
-				#endif
-			};
 
 			CBUFFER_START( UnityPerMaterial )
 			float4 _ST_WindBranchTwitch;
 			float4 _ST_WindBranchAnchor;
 			float4 _ST_WindVector;
 			float4 _Color;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindFrondRipple;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindTurbulences;
 			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindBranchWhip;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _ST_WindAnimation;
 			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindBranchWhip;
 			float4 _ST_WindLeaf1Ripple;
 			float4 _ST_WindLeaf2Tumble;
 			float4 _ST_WindBranch;
 			float4 _ST_WindLeaf2Ripple;
 			float4 _ST_WindLeaf1Twitch;
-			float4 _ST_WindBranchAdherences;
-			int _Cull;
+			float4 _ST_WindGlobal;
 			float _Metallic;
+			int _Cull;
 			int _WindQuality;
 			int _GlobalTimerId;
 			float _Cutoff;
@@ -2869,25 +2835,47 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
+
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+
+
+			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
+				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			struct AttributesMesh
 			{
-				if (windQuality <= 0) // WIND_QUALITY_NONE
-				{
-				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
-				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-				    // compute rotated wind parameters
-				    if (length(windVector) > 0) {
-				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
-				    } else {
-				        rotatedWindVector = 0;
-				    }
-				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
-				}
-			}
-			
+				float3 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct PackedVaryingsMeshToPS
+			{
+				float4 positionCS : SV_Position;
+				float3 interp00 : TEXCOORD0;
+				float4 ase_texcoord1 : TEXCOORD1;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
+				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
+				#endif
+			};
+
 			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
@@ -2911,6 +2899,25 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    #endif
 				}
 				return VertexPos;
+			}
+			
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			{
+				if (windQuality <= 0) // WIND_QUALITY_NONE
+				{
+				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
+				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
+				}
+				else
+				{
+				    // compute rotated wind parameters
+				    if (length(windVector) > 0) {
+				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
+				    } else {
+				        rotatedWindVector = 0;
+				    }
+				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
+				}
 			}
 			
 			float4 CubicSmooth( float4 vData )
@@ -3082,8 +3089,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#if HAVE_DECALS
 				if( _EnableDecals )
 				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData(posInput, fragInputs.tangentToWorld[2], surfaceDescription.Alpha);
+					ApplyDecalToSurfaceData(decalSurfaceData, fragInputs.tangentToWorld[2], surfaceData);
 				}
 				#endif
 
@@ -3157,20 +3164,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 temp_output_344_0 = staticSwitch14_g4;
 				float3 appendResult331 = (float3(inputMesh.ase_texcoord2.xyz));
 				float2 appendResult336 = (float2(inputMesh.ase_texcoord.xy));
-				float2 break10_g297 = appendResult336;
-				float ifLocalVar11_g297 = 0;
+				float2 break10_g314 = appendResult336;
+				float ifLocalVar11_g314 = 0;
 				UNITY_BRANCH 
-				if( break10_g297.x >= 0.75 )
-				ifLocalVar11_g297 = break10_g297.x;
+				if( break10_g314.x >= 0.75 )
+				ifLocalVar11_g314 = break10_g314.x;
 				else
-				ifLocalVar11_g297 = 0.75;
-				float4 temp_cast_3 = (( ifLocalVar11_g297 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g297.y ) * _ST_WindFrondRipple.z ) )).xxxx;
-				float4 vData7_g299 = temp_cast_3;
-				float4 localTriangleWave7_g299 = TriangleWave( vData7_g299 );
-				float4 vData6_g299 = localTriangleWave7_g299;
-				float4 localCubicSmooth6_g299 = CubicSmooth( vData6_g299 );
+				ifLocalVar11_g314 = 0.75;
+				float4 temp_cast_3 = (( ifLocalVar11_g314 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g314.y ) * _ST_WindFrondRipple.z ) )).xxxx;
+				float4 vData7_g316 = temp_cast_3;
+				float4 localTriangleWave7_g316 = TriangleWave( vData7_g316 );
+				float4 vData6_g316 = localTriangleWave7_g316;
+				float4 localCubicSmooth6_g316 = CubicSmooth( vData6_g316 );
 				#ifdef GEOM_TYPE_FROND
-				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g299 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
+				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g316 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
@@ -3739,7 +3746,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
 			#define HAVE_MESH_MODIFICATION
-			#define ASE_SRP_VERSION 999999
+			#define ASE_SRP_VERSION 100202
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
@@ -3765,75 +3772,33 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
 			#ifdef DEBUG_DISPLAY
 				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
 			#endif
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
-
-
-			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
-				#define ASE_NEED_CULLFACE 1
-			#endif
-
-			struct AttributesMesh
-			{
-				float3 positionOS : POSITION;
-				float3 normalOS : NORMAL;
-				float4 ase_texcoord1 : TEXCOORD1;
-				float4 ase_texcoord2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct PackedVaryingsMeshToPS
-			{
-				float4 positionCS : SV_Position;
-				float3 interp00 : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
-				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
-				#endif
-			};
-
-			int _ObjectId;
-			int _PassValue;
 
 			CBUFFER_START( UnityPerMaterial )
 			float4 _ST_WindBranchTwitch;
 			float4 _ST_WindBranchAnchor;
 			float4 _ST_WindVector;
 			float4 _Color;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindFrondRipple;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindTurbulences;
 			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindBranchWhip;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _ST_WindAnimation;
 			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindBranchWhip;
 			float4 _ST_WindLeaf1Ripple;
 			float4 _ST_WindLeaf2Tumble;
 			float4 _ST_WindBranch;
 			float4 _ST_WindLeaf2Ripple;
 			float4 _ST_WindLeaf1Twitch;
-			float4 _ST_WindBranchAdherences;
-			int _Cull;
+			float4 _ST_WindGlobal;
 			float _Metallic;
+			int _Cull;
 			int _WindQuality;
 			int _GlobalTimerId;
 			float _Cutoff;
@@ -3892,25 +3857,50 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
+
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+
+
+			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
+				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			struct AttributesMesh
 			{
-				if (windQuality <= 0) // WIND_QUALITY_NONE
-				{
-				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
-				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-				    // compute rotated wind parameters
-				    if (length(windVector) > 0) {
-				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
-				    } else {
-				        rotatedWindVector = 0;
-				    }
-				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
-				}
-			}
-			
+				float3 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct PackedVaryingsMeshToPS
+			{
+				float4 positionCS : SV_Position;
+				float3 interp00 : TEXCOORD0;
+				float4 ase_texcoord1 : TEXCOORD1;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
+				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
+				#endif
+			};
+
+			int _ObjectId;
+			int _PassValue;
+
 			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
@@ -3934,6 +3924,25 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    #endif
 				}
 				return VertexPos;
+			}
+			
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			{
+				if (windQuality <= 0) // WIND_QUALITY_NONE
+				{
+				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
+				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
+				}
+				else
+				{
+				    // compute rotated wind parameters
+				    if (length(windVector) > 0) {
+				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
+				    } else {
+				        rotatedWindVector = 0;
+				    }
+				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
+				}
 			}
 			
 			float4 CubicSmooth( float4 vData )
@@ -4105,8 +4114,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#if HAVE_DECALS
 				if( _EnableDecals )
 				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData(posInput, fragInputs.tangentToWorld[2], surfaceDescription.Alpha);
+					ApplyDecalToSurfaceData(decalSurfaceData, fragInputs.tangentToWorld[2], surfaceData);
 				}
 				#endif
 
@@ -4176,20 +4185,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 temp_output_344_0 = staticSwitch14_g4;
 				float3 appendResult331 = (float3(inputMesh.ase_texcoord2.xyz));
 				float2 appendResult336 = (float2(inputMesh.ase_texcoord.xy));
-				float2 break10_g297 = appendResult336;
-				float ifLocalVar11_g297 = 0;
+				float2 break10_g314 = appendResult336;
+				float ifLocalVar11_g314 = 0;
 				UNITY_BRANCH 
-				if( break10_g297.x >= 0.75 )
-				ifLocalVar11_g297 = break10_g297.x;
+				if( break10_g314.x >= 0.75 )
+				ifLocalVar11_g314 = break10_g314.x;
 				else
-				ifLocalVar11_g297 = 0.75;
-				float4 temp_cast_3 = (( ifLocalVar11_g297 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g297.y ) * _ST_WindFrondRipple.z ) )).xxxx;
-				float4 vData7_g299 = temp_cast_3;
-				float4 localTriangleWave7_g299 = TriangleWave( vData7_g299 );
-				float4 vData6_g299 = localTriangleWave7_g299;
-				float4 localCubicSmooth6_g299 = CubicSmooth( vData6_g299 );
+				ifLocalVar11_g314 = 0.75;
+				float4 temp_cast_3 = (( ifLocalVar11_g314 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g314.y ) * _ST_WindFrondRipple.z ) )).xxxx;
+				float4 vData7_g316 = temp_cast_3;
+				float4 localTriangleWave7_g316 = TriangleWave( vData7_g316 );
+				float4 vData6_g316 = localTriangleWave7_g316;
+				float4 localCubicSmooth6_g316 = CubicSmooth( vData6_g316 );
 				#ifdef GEOM_TYPE_FROND
-				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g299 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
+				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g316 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
@@ -4768,7 +4777,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
 			#define HAVE_MESH_MODIFICATION
-			#define ASE_SRP_VERSION 999999
+			#define ASE_SRP_VERSION 100202
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
@@ -4794,79 +4803,33 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
 			#ifdef DEBUG_DISPLAY
 				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
 			#endif
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
-			#pragma shader_feature_local EFFECT_BUMP
-			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
-
-
-			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
-				#define ASE_NEED_CULLFACE 1
-			#endif
-
-			struct AttributesMesh
-			{
-				float3 positionOS : POSITION;
-				float3 normalOS : NORMAL;
-				float4 tangentOS : TANGENT;
-				float4 ase_texcoord1 : TEXCOORD1;
-				float4 ase_texcoord2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct PackedVaryingsMeshToPS
-			{
-				float4 positionCS : SV_Position;
-				float3 interp00 : TEXCOORD0;
-				float3 interp01 : TEXCOORD1;
-				float4 interp02 : TEXCOORD2;
-				float4 ase_texcoord3 : TEXCOORD3;
-				float4 ase_texcoord4 : TEXCOORD4;
-				float4 ase_color : COLOR;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
-				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
-				#endif
-			};
-
+			
 			CBUFFER_START( UnityPerMaterial )
 			float4 _ST_WindBranchTwitch;
 			float4 _ST_WindBranchAnchor;
 			float4 _ST_WindVector;
 			float4 _Color;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindFrondRipple;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindTurbulences;
 			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindBranchWhip;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _ST_WindAnimation;
 			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindBranchWhip;
 			float4 _ST_WindLeaf1Ripple;
 			float4 _ST_WindLeaf2Tumble;
 			float4 _ST_WindBranch;
 			float4 _ST_WindLeaf2Ripple;
 			float4 _ST_WindLeaf1Twitch;
-			float4 _ST_WindBranchAdherences;
-			int _Cull;
+			float4 _ST_WindGlobal;
 			float _Metallic;
+			int _Cull;
 			int _WindQuality;
 			int _GlobalTimerId;
 			float _Cutoff;
@@ -4926,25 +4889,54 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
+
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_BUMP
+			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
+
+
+			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
+				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			struct AttributesMesh
 			{
-				if (windQuality <= 0) // WIND_QUALITY_NONE
-				{
-				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
-				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-				    // compute rotated wind parameters
-				    if (length(windVector) > 0) {
-				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
-				    } else {
-				        rotatedWindVector = 0;
-				    }
-				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
-				}
-			}
-			
+				float3 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+				float4 tangentOS : TANGENT;
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct PackedVaryingsMeshToPS
+			{
+				float4 positionCS : SV_Position;
+				float3 interp00 : TEXCOORD0;
+				float3 interp01 : TEXCOORD1;
+				float4 interp02 : TEXCOORD2;
+				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_color : COLOR;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
+				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
+				#endif
+			};
+
 			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
@@ -4968,6 +4960,25 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    #endif
 				}
 				return VertexPos;
+			}
+			
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			{
+				if (windQuality <= 0) // WIND_QUALITY_NONE
+				{
+				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
+				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
+				}
+				else
+				{
+				    // compute rotated wind parameters
+				    if (length(windVector) > 0) {
+				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
+				    } else {
+				        rotatedWindVector = 0;
+				    }
+				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
+				}
 			}
 			
 			float4 CubicSmooth( float4 vData )
@@ -5141,8 +5152,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#if HAVE_DECALS
 				if( _EnableDecals )
 				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData(posInput, fragInputs.tangentToWorld[2], surfaceDescription.Alpha);
+					ApplyDecalToSurfaceData(decalSurfaceData, fragInputs.tangentToWorld[2], surfaceData);
 				}
 				#endif
 
@@ -5213,20 +5224,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 temp_output_344_0 = staticSwitch14_g4;
 				float3 appendResult331 = (float3(inputMesh.ase_texcoord2.xyz));
 				float2 appendResult336 = (float2(inputMesh.ase_texcoord.xy));
-				float2 break10_g297 = appendResult336;
-				float ifLocalVar11_g297 = 0;
+				float2 break10_g314 = appendResult336;
+				float ifLocalVar11_g314 = 0;
 				UNITY_BRANCH 
-				if( break10_g297.x >= 0.75 )
-				ifLocalVar11_g297 = break10_g297.x;
+				if( break10_g314.x >= 0.75 )
+				ifLocalVar11_g314 = break10_g314.x;
 				else
-				ifLocalVar11_g297 = 0.75;
-				float4 temp_cast_3 = (( ifLocalVar11_g297 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g297.y ) * _ST_WindFrondRipple.z ) )).xxxx;
-				float4 vData7_g299 = temp_cast_3;
-				float4 localTriangleWave7_g299 = TriangleWave( vData7_g299 );
-				float4 vData6_g299 = localTriangleWave7_g299;
-				float4 localCubicSmooth6_g299 = CubicSmooth( vData6_g299 );
+				ifLocalVar11_g314 = 0.75;
+				float4 temp_cast_3 = (( ifLocalVar11_g314 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g314.y ) * _ST_WindFrondRipple.z ) )).xxxx;
+				float4 vData7_g316 = temp_cast_3;
+				float4 localTriangleWave7_g316 = TriangleWave( vData7_g316 );
+				float4 vData6_g316 = localTriangleWave7_g316;
+				float4 localCubicSmooth6_g316 = CubicSmooth( vData6_g316 );
 				#ifdef GEOM_TYPE_FROND
-				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g299 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
+				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g316 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
@@ -5857,7 +5868,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
 			#define HAVE_MESH_MODIFICATION
-			#define ASE_SRP_VERSION 999999
+			#define ASE_SRP_VERSION 100202
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
@@ -5883,84 +5894,34 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
 			#ifdef DEBUG_DISPLAY
 				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
 			#endif
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
-			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
-
-			#define ASE_NEEDS_VERT_POSITION
-			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
-			#pragma shader_feature_local EFFECT_BUMP
-			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
-
-
-			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
-				#define ASE_NEED_CULLFACE 1
-			#endif
-
-
-			struct AttributesMesh
-			{
-				float3 positionOS : POSITION;
-				float3 normalOS : NORMAL;
-				float3 previousPositionOS : TEXCOORD4;
-				#if defined (_ADD_PRECOMPUTED_VELOCITY)
-					float3 precomputedVelocity : TEXCOORD5;
-				#endif
-				float4 ase_texcoord1 : TEXCOORD1;
-				float4 ase_texcoord2 : TEXCOORD2;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_color : COLOR;
-				float4 ase_texcoord3 : TEXCOORD3;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			struct PackedVaryingsMeshToPS
-			{
-				float4 vmeshPositionCS : SV_Position;
-				float3 vmeshInterp00 : TEXCOORD0;
-				float3 vpassInterpolators0 : TEXCOORD1; //interpolators0
-				float3 vpassInterpolators1 : TEXCOORD2; //interpolators1
-				float4 ase_texcoord3 : TEXCOORD3;
-				float4 ase_texcoord4 : TEXCOORD4;
-				float4 ase_color : COLOR;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
-				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
-				#endif
-			};
-
+			
 			CBUFFER_START( UnityPerMaterial )
 			float4 _ST_WindBranchTwitch;
 			float4 _ST_WindBranchAnchor;
 			float4 _ST_WindVector;
 			float4 _Color;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindFrondRipple;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindTurbulences;
 			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindBranchWhip;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _ST_WindAnimation;
 			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindBranchWhip;
 			float4 _ST_WindLeaf1Ripple;
 			float4 _ST_WindLeaf2Tumble;
 			float4 _ST_WindBranch;
 			float4 _ST_WindLeaf2Ripple;
 			float4 _ST_WindLeaf1Twitch;
-			float4 _ST_WindBranchAdherences;
-			int _Cull;
+			float4 _ST_WindGlobal;
 			float _Metallic;
+			int _Cull;
 			int _WindQuality;
 			int _GlobalTimerId;
 			float _Cutoff;
@@ -6020,25 +5981,59 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			sampler2D _MainTex;
 
 
-			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/BuiltinUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Decal/DecalUtilities.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/LitDecalData.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
+
+			#define ASE_NEEDS_VERT_POSITION
+			#define ASE_NEEDS_VERT_NORMAL
+			#pragma shader_feature_local GEOM_TYPE_BRANCH GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_BRANCH_DETAIL
+			#pragma shader_feature_local EFFECT_BUMP
+			#pragma shader_feature_local GEOM_TYPE_BRANCH_DETAIL
+
+
+			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
+				#define ASE_NEED_CULLFACE 1
+			#endif
+
+
+			struct AttributesMesh
 			{
-				if (windQuality <= 0) // WIND_QUALITY_NONE
-				{
-				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
-				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-				    // compute rotated wind parameters
-				    if (length(windVector) > 0) {
-				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
-				    } else {
-				        rotatedWindVector = 0;
-				    }
-				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
-				}
-			}
-			
+				float3 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+				float3 previousPositionOS : TEXCOORD4;
+				#if defined (_ADD_PRECOMPUTED_VELOCITY)
+					float3 precomputedVelocity : TEXCOORD5;
+				#endif
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_color : COLOR;
+				float4 ase_texcoord3 : TEXCOORD3;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
+
+			struct PackedVaryingsMeshToPS
+			{
+				float4 vmeshPositionCS : SV_Position;
+				float3 vmeshInterp00 : TEXCOORD0;
+				float3 vpassInterpolators0 : TEXCOORD1; //interpolators0
+				float3 vpassInterpolators1 : TEXCOORD2; //interpolators1
+				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_color : COLOR;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
+				FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
+				#endif
+			};
+
+
 			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
@@ -6062,6 +6057,25 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    #endif
 				}
 				return VertexPos;
+			}
+			
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			{
+				if (windQuality <= 0) // WIND_QUALITY_NONE
+				{
+				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
+				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
+				}
+				else
+				{
+				    // compute rotated wind parameters
+				    if (length(windVector) > 0) {
+				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
+				    } else {
+				        rotatedWindVector = 0;
+				    }
+				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
+				}
 			}
 			
 			float4 CubicSmooth( float4 vData )
@@ -6235,8 +6249,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#if HAVE_DECALS
 				if( _EnableDecals )
 				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData(posInput, fragInputs.tangentToWorld[2], surfaceDescription.Alpha);
+					ApplyDecalToSurfaceData(decalSurfaceData, fragInputs.tangentToWorld[2], surfaceData);
 				}
 				#endif
 
@@ -6302,20 +6316,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 temp_output_344_0 = staticSwitch14_g4;
 				float3 appendResult331 = (float3(inputMesh.ase_texcoord2.xyz));
 				float2 appendResult336 = (float2(inputMesh.ase_texcoord.xy));
-				float2 break10_g297 = appendResult336;
-				float ifLocalVar11_g297 = 0;
+				float2 break10_g314 = appendResult336;
+				float ifLocalVar11_g314 = 0;
 				UNITY_BRANCH 
-				if( break10_g297.x >= 0.75 )
-				ifLocalVar11_g297 = break10_g297.x;
+				if( break10_g314.x >= 0.75 )
+				ifLocalVar11_g314 = break10_g314.x;
 				else
-				ifLocalVar11_g297 = 0.75;
-				float4 temp_cast_3 = (( ifLocalVar11_g297 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g297.y ) * _ST_WindFrondRipple.z ) )).xxxx;
-				float4 vData7_g299 = temp_cast_3;
-				float4 localTriangleWave7_g299 = TriangleWave( vData7_g299 );
-				float4 vData6_g299 = localTriangleWave7_g299;
-				float4 localCubicSmooth6_g299 = CubicSmooth( vData6_g299 );
+				ifLocalVar11_g314 = 0.75;
+				float4 temp_cast_3 = (( ifLocalVar11_g314 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g314.y ) * _ST_WindFrondRipple.z ) )).xxxx;
+				float4 vData7_g316 = temp_cast_3;
+				float4 localTriangleWave7_g316 = TriangleWave( vData7_g316 );
+				float4 vData6_g316 = localTriangleWave7_g316;
+				float4 localCubicSmooth6_g316 = CubicSmooth( vData6_g316 );
 				#ifdef GEOM_TYPE_FROND
-				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g299 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
+				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g316 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
@@ -7011,7 +7025,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
 			#define ASE_ABSOLUTE_VERTEX_POS 1
 			#define HAVE_MESH_MODIFICATION
-			#define ASE_SRP_VERSION 999999
+			#define ASE_SRP_VERSION 100202
 
 
 			#pragma shader_feature _SURFACE_TYPE_TRANSPARENT
@@ -7047,11 +7061,93 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/NormalSurfaceGradient.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/FragInputs.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPass.cs.hlsl"
+			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
 			#ifdef DEBUG_DISPLAY
 				#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Debug/DebugDisplay.hlsl"
 			#endif
+
+			// CBuffer must be declared before Material.hlsl since it internaly uses _BlendMode now
+			CBUFFER_START( UnityPerMaterial )
+			float4 _ST_WindBranchTwitch;
+			float4 _ST_WindBranchAnchor;
+			float4 _ST_WindVector;
+			float4 _Color;
+			float4 _ST_WindLeaf1Tumble;
+			float4 _ST_WindTurbulences;
+			float4 _ST_WindFrondRipple;
+			float4 _ST_WindBranchAdherences;
+			float4 _ST_WindAnimation;
+			float4 _ST_WindLeaf2Twitch;
+			float4 _ST_WindBranchWhip;
+			float4 _ST_WindLeaf1Ripple;
+			float4 _ST_WindLeaf2Tumble;
+			float4 _ST_WindBranch;
+			float4 _ST_WindLeaf2Ripple;
+			float4 _ST_WindLeaf1Twitch;
+			float4 _ST_WindGlobal;
+			float _Metallic;
+			int _Cull;
+			int _WindQuality;
+			int _GlobalTimerId;
+			float _Cutoff;
+			float _Smoothness;
+			float4 _EmissionColor;
+			float _AlphaCutoff;
+			float _RenderQueueType;
+			#ifdef _ADD_PRECOMPUTED_VELOCITY
+			float _AddPrecomputedVelocity;
+			#endif
+			float _StencilRef;
+			float _StencilWriteMask;
+			float _StencilRefDepth;
+			float _StencilWriteMaskDepth;
+			float _StencilRefMV;
+			float _StencilWriteMaskMV;
+			float _StencilRefDistortionVec;
+			float _StencilWriteMaskDistortionVec;
+			float _StencilWriteMaskGBuffer;
+			float _StencilRefGBuffer;
+			float _ZTestGBuffer;
+			float _RequireSplitLighting;
+			float _ReceivesSSR;
+			float _SurfaceType;
+			float _BlendMode;
+			float _SrcBlend;
+			float _DstBlend;
+			float _AlphaSrcBlend;
+			float _AlphaDstBlend;
+			float _ZWrite;
+			float _TransparentZWrite;
+			float _CullMode;
+			float _TransparentSortPriority;
+			float _EnableFogOnTransparent;
+			float _CullModeForward;
+			float _TransparentCullMode;
+			float _ZTestDepthEqualForOpaque;
+			float _ZTestTransparent;
+			float _TransparentBackfaceEnable;
+			float _AlphaCutoffEnable;
+			float _UseShadowThreshold;
+			float _DoubleSidedEnable;
+			float _DoubleSidedNormalMode;
+			float4 _DoubleSidedConstants;
+			#ifdef TESSELLATION_ON
+				float _TessPhongStrength;
+				float _TessValue;
+				float _TessMin;
+				float _TessMax;
+				float _TessEdgeLength;
+				float _TessMaxDisp;
+			#endif
+			CBUFFER_END
+			float4 _GlobalTimers[100];
+			sampler2D _MainTex;
+			sampler2D _DetailTex;
+			sampler2D _BumpMap;
+
+
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Material.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Lighting/Lighting.hlsl"
 			#define HAS_LIGHTLOOP
@@ -7120,104 +7216,6 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 			};
 
-			CBUFFER_START( UnityPerMaterial )
-			float4 _ST_WindBranchTwitch;
-			float4 _ST_WindBranchAnchor;
-			float4 _ST_WindVector;
-			float4 _Color;
-			float4 _ST_WindGlobal;
-			float4 _ST_WindFrondRipple;
-			float4 _ST_WindAnimation;
-			float4 _ST_WindTurbulences;
-			float4 _ST_WindLeaf1Tumble;
-			float4 _ST_WindBranchWhip;
-			float4 _ST_WindLeaf2Twitch;
-			float4 _ST_WindLeaf1Ripple;
-			float4 _ST_WindLeaf2Tumble;
-			float4 _ST_WindBranch;
-			float4 _ST_WindLeaf2Ripple;
-			float4 _ST_WindLeaf1Twitch;
-			float4 _ST_WindBranchAdherences;
-			int _Cull;
-			float _Metallic;
-			int _WindQuality;
-			int _GlobalTimerId;
-			float _Cutoff;
-			float _Smoothness;
-			float4 _EmissionColor;
-			float _AlphaCutoff;
-			float _RenderQueueType;
-			#ifdef _ADD_PRECOMPUTED_VELOCITY
-			float _AddPrecomputedVelocity;
-			#endif
-			float _StencilRef;
-			float _StencilWriteMask;
-			float _StencilRefDepth;
-			float _StencilWriteMaskDepth;
-			float _StencilRefMV;
-			float _StencilWriteMaskMV;
-			float _StencilRefDistortionVec;
-			float _StencilWriteMaskDistortionVec;
-			float _StencilWriteMaskGBuffer;
-			float _StencilRefGBuffer;
-			float _ZTestGBuffer;
-			float _RequireSplitLighting;
-			float _ReceivesSSR;
-			float _SurfaceType;
-			float _BlendMode;
-			float _SrcBlend;
-			float _DstBlend;
-			float _AlphaSrcBlend;
-			float _AlphaDstBlend;
-			float _ZWrite;
-			float _TransparentZWrite;
-			float _CullMode;
-			float _TransparentSortPriority;
-			float _EnableFogOnTransparent;
-			float _CullModeForward;
-			float _TransparentCullMode;
-			float _ZTestDepthEqualForOpaque;
-			float _ZTestTransparent;
-			float _TransparentBackfaceEnable;
-			float _AlphaCutoffEnable;
-			float _UseShadowThreshold;
-			float _DoubleSidedEnable;
-			float _DoubleSidedNormalMode;
-			float4 _DoubleSidedConstants;
-			#ifdef TESSELLATION_ON
-				float _TessPhongStrength;
-				float _TessValue;
-				float _TessMin;
-				float _TessMax;
-				float _TessEdgeLength;
-				float _TessMaxDisp;
-			#endif
-			CBUFFER_END
-			float4 _GlobalTimers[100];
-			sampler2D _MainTex;
-			sampler2D _DetailTex;
-			sampler2D _BumpMap;
-
-
-			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
-			{
-				if (windQuality <= 0) // WIND_QUALITY_NONE
-				{
-				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
-				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-				    // compute rotated wind parameters
-				    if (length(windVector) > 0) {
-				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
-				    } else {
-				        rotatedWindVector = 0;
-				    }
-				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
-				}
-			}
-			
 			float3 OffsetLeavesVertex( float3 VertexPos, float ColorAlpha, float3 texcoord1, float2 texcoord3 )
 			{
 				float lodValue = unity_LODFade.x;
@@ -7241,6 +7239,25 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				    #endif
 				}
 				return VertexPos;
+			}
+			
+			void CalculateWindInputs( float windQuality, out float3 rotatedWindVector, out float3 rotatedBranchAnchor, float4 windVector, float4 windBranchAnchor )
+			{
+				if (windQuality <= 0) // WIND_QUALITY_NONE
+				{
+				    rotatedWindVector = float3(0.0f, 0.0f, 0.0f);
+				    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f);
+				}
+				else
+				{
+				    // compute rotated wind parameters
+				    if (length(windVector) > 0) {
+				        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M));
+				    } else {
+				        rotatedWindVector = 0;
+				    }
+				    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w;
+				}
 			}
 			
 			float4 CubicSmooth( float4 vData )
@@ -7451,8 +7468,8 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#if HAVE_DECALS
 				if( _EnableDecals )
 				{
-					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData( posInput, surfaceDescription.Alpha );
-					ApplyDecalToSurfaceData( decalSurfaceData, surfaceData );
+					DecalSurfaceData decalSurfaceData = GetDecalSurfaceData(posInput, fragInputs.tangentToWorld[2], surfaceDescription.Alpha);
+					ApplyDecalToSurfaceData(decalSurfaceData, fragInputs.tangentToWorld[2], surfaceData);
 				}
 				#endif
 
@@ -7531,20 +7548,20 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				float3 temp_output_344_0 = staticSwitch14_g4;
 				float3 appendResult331 = (float3(inputMesh.uv2.xyz));
 				float2 appendResult336 = (float2(inputMesh.ase_texcoord.xy));
-				float2 break10_g297 = appendResult336;
-				float ifLocalVar11_g297 = 0;
+				float2 break10_g314 = appendResult336;
+				float ifLocalVar11_g314 = 0;
 				UNITY_BRANCH 
-				if( break10_g297.x >= 0.75 )
-				ifLocalVar11_g297 = break10_g297.x;
+				if( break10_g314.x >= 0.75 )
+				ifLocalVar11_g314 = break10_g314.x;
 				else
-				ifLocalVar11_g297 = 0.75;
-				float4 temp_cast_3 = (( ifLocalVar11_g297 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g297.y ) * _ST_WindFrondRipple.z ) )).xxxx;
-				float4 vData7_g299 = temp_cast_3;
-				float4 localTriangleWave7_g299 = TriangleWave( vData7_g299 );
-				float4 vData6_g299 = localTriangleWave7_g299;
-				float4 localCubicSmooth6_g299 = CubicSmooth( vData6_g299 );
+				ifLocalVar11_g314 = 0.75;
+				float4 temp_cast_3 = (( ifLocalVar11_g314 + ( ( _GlobalTimers[_GlobalTimerId].y + break10_g314.y ) * _ST_WindFrondRipple.z ) )).xxxx;
+				float4 vData7_g316 = temp_cast_3;
+				float4 localTriangleWave7_g316 = TriangleWave( vData7_g316 );
+				float4 vData6_g316 = localTriangleWave7_g316;
+				float4 localCubicSmooth6_g316 = CubicSmooth( vData6_g316 );
 				#ifdef GEOM_TYPE_FROND
-				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g299 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
+				float3 staticSwitch343 = ( temp_output_344_0 + ( appendResult331.y * ( ( localCubicSmooth6_g316 + float4( -0.5,-0.5,-0.5,-0.5 ) ) * float4( 2,2,2,2 ) ).x * _ST_WindFrondRipple.y * inputMesh.normalOS ) );
 				#else
 				float3 staticSwitch343 = temp_output_344_0;
 				#endif
@@ -8314,7 +8331,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#endif
 
 				bool viewMaterial = false;
-				int bufferSize = int(_DebugViewMaterialArray[0]);
+				int bufferSize = int(_DebugViewMaterialArray[0].x);
 				if (bufferSize != 0)
 				{
 					bool needLinearToSRGB = false;
@@ -8322,7 +8339,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 					for (int index = 1; index <= bufferSize; index++)
 					{
-						int indexMaterialProperty = int(_DebugViewMaterialArray[index]);
+						int indexMaterialProperty = int(_DebugViewMaterialArray[index].x);
 
 						if (indexMaterialProperty != 0)
 						{
@@ -8330,7 +8347,7 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 
 							GetPropertiesDataDebug(indexMaterialProperty, result, needLinearToSRGB);
 							GetVaryingsDataDebug(indexMaterialProperty, input, result, needLinearToSRGB);
-							GetBuiltinDataDebug(indexMaterialProperty, builtinData, result, needLinearToSRGB);
+							GetBuiltinDataDebug(indexMaterialProperty, builtinData, posInput, result, needLinearToSRGB);
 							GetSurfaceDataDebug(indexMaterialProperty, surfaceData, result, needLinearToSRGB);
 							GetBSDFDataDebug(indexMaterialProperty, bsdfData, result, needLinearToSRGB);
 						}
@@ -8365,11 +8382,14 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 				#else
 						uint featureFlags = LIGHT_FEATURE_MASK_FLAGS_OPAQUE;
 				#endif
-						float3 diffuseLighting;
-						float3 specularLighting;
+					
+						LightLoopOutput lightLoopOutput;
+						LightLoop(V, posInput, preLightData, bsdfData, builtinData, featureFlags, lightLoopOutput);
 
-						LightLoop(V, posInput, preLightData, bsdfData, builtinData, featureFlags, diffuseLighting, specularLighting);
-
+						// Alias
+						float3 diffuseLighting = lightLoopOutput.diffuseLighting;
+						float3 specularLighting = lightLoopOutput.specularLighting;
+					
 						diffuseLighting *= GetCurrentExposureMultiplier();
 						specularLighting *= GetCurrentExposureMultiplier();
 
@@ -8421,34 +8441,34 @@ Shader "Nature/SpeedTreeHDRP_ASE"
 	
 }
 /*ASEBEGIN
-Version=18712
-2128;152;1322;760;-12888.27;171.6855;1.686025;True;False
+Version=18801
+2019;109;1322;760;-12999.53;195.2898;1.686025;True;False
 Node;AmplifyShaderEditor.CommentaryNode;173;2194.767,-2025.062;Inherit;False;2167.77;991.0375;;10;133;11;91;92;19;93;12;24;115;171;Main Color;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;172;1226.255,-624.801;Inherit;False;2732.474;1494.328;;13;203;15;108;97;186;121;100;88;87;80;89;90;81;Detail Color;0,0.7881474,1,0.6862745;0;0
 Node;AmplifyShaderEditor.CommentaryNode;24;2249.629,-1711.891;Inherit;False;455.2046;611.0229;TexCoord 0;3;27;26;23;UV0;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;81;1276.255,-574.801;Inherit;False;443.4149;713.2007;TexCoord 2 / UV2;4;84;83;82;85;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;23;2283.592,-1670.853;Inherit;True;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;84;1303.255,-526.8008;Inherit;True;2;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.CommentaryNode;57;5620.813,2237.653;Inherit;False;2917.239;1201.42;HueVariationAmount;22;175;176;65;126;76;74;78;75;77;73;72;62;61;63;71;59;60;69;79;58;70;66;;0.8396226,0.3099036,0,0.6862745;0;0
-Node;AmplifyShaderEditor.CommentaryNode;171;2788.396,-1646.913;Inherit;False;211;233;;1;170;MainTexUV;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RangedFloatNode;89;1415.897,458.5242;Inherit;False;Constant;_Zero0;Zero (0);9;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;90;1370.346,192.3052;Inherit;False;Constant;_25fOutofblend;2.5f (Out of blend);9;0;Create;True;0;0;0;False;0;False;2.5;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;89;1415.897,458.5242;Inherit;False;Constant;_Zero0;Zero (0);9;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;171;2788.396,-1646.913;Inherit;False;211;233;;1;170;MainTexUV;1,1,1,1;0;0
 Node;AmplifyShaderEditor.VertexColorNode;80;1403.681,282.6865;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;84;1303.255,-526.8008;Inherit;True;2;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;23;2283.592,-1670.853;Inherit;True;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.CommentaryNode;57;5620.813,2237.653;Inherit;False;2917.239;1201.42;HueVariationAmount;22;175;176;65;126;76;74;78;75;77;73;72;62;61;63;71;59;60;69;79;58;70;66;;0.8396226,0.3099036,0,0.6862745;0;0
 Node;AmplifyShaderEditor.TexturePropertyNode;12;2244.767,-1975.062;Inherit;True;Property;_MainTex;Base (RGB) Trans (A);39;0;Create;False;0;0;0;False;0;False;None;cde82b8d9975adc4fac034c3ab93e838;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.PosVertexDataNode;66;6243.449,2920.815;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.NormalVertexDataNode;70;6244.381,3078.449;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.DynamicAppendNode;170;2838.396,-1596.913;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CommentaryNode;87;1962.104,141.7319;Inherit;False;211;233;Detail / interpolator2;1;86;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.ConditionalIfNode;88;1794.649,221.5802;Inherit;False;True;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;100;2198.421,141.5869;Inherit;False;456.3221;236.7136;Detail UV;2;99;98;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;59;5957.914,2983.298;Inherit;False;186;251;Row2;1;64;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;69;6545.188,2999.21;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;60;5952.414,2715.798;Inherit;False;186;251;Row1;1;67;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.DynamicAppendNode;86;1998.917,201.8755;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.ColorNode;11;3070.872,-1763.529;Inherit;False;Property;_Color;Main Color;40;0;Create;False;0;0;0;False;0;False;1,1,1,1;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;91;3012.186,-1970.513;Inherit;True;Property;_sampler_MainTex;sampler_MainTex;9;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.CommentaryNode;58;5952.414,2454.798;Inherit;False;186;251;Row0;1;68;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.ObjectToWorldMatrixNode;79;5674.062,2766.096;Inherit;False;0;1;FLOAT4x4;0
+Node;AmplifyShaderEditor.SamplerNode;91;3012.186,-1970.513;Inherit;True;Property;_sampler_MainTex;sampler_MainTex;9;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.DynamicAppendNode;86;1998.917,201.8755;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CommentaryNode;58;5952.414,2454.798;Inherit;False;186;251;Row0;1;68;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;69;6545.188,2999.21;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;59;5957.914,2983.298;Inherit;False;186;251;Row2;1;64;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;100;2198.421,141.5869;Inherit;False;456.3221;236.7136;Detail UV;2;99;98;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;60;5952.414,2715.798;Inherit;False;186;251;Row1;1;67;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.VectorFromMatrixNode;67;5973.414,2760.798;Inherit;False;Row;1;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.BreakToComponentsNode;98;2217.913,202.5835;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.VectorFromMatrixNode;68;5974.126,2516.859;Inherit;False;Row;0;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -8456,13 +8476,13 @@ Node;AmplifyShaderEditor.RangedFloatNode;19;3569.288,-1685.841;Inherit;False;Pro
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;93;3585.288,-1797.841;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.VectorFromMatrixNode;64;5978.914,3028.298;Inherit;False;Row;2;1;0;FLOAT4x4;1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.FractNode;71;6690.018,3013.017;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;63;6813.518,3228.818;Inherit;False;Constant;_03;-0.3;9;0;Create;True;0;0;0;False;0;False;-0.3;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;186;3442.062,486.8726;Inherit;False;468.8325;281.7501;Comment;3;109;111;110;Detail Blend (Interpolator2.z);1,1,1,1;0;0
-Node;AmplifyShaderEditor.ClipNode;92;3921.288,-1973.841;Inherit;False;3;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.DynamicAppendNode;99;2532.83,182.5556;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.TexturePropertyNode;15;3152.632,-205.5548;Inherit;True;Property;_DetailTex;Detail;42;0;Create;False;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.SimpleAddOpNode;61;6210.079,2727.939;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;62;6830.487,3126.81;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;61;6210.079,2727.939;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TexturePropertyNode;15;3152.632,-205.5548;Inherit;True;Property;_DetailTex;Detail;42;0;Create;False;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.ClipNode;92;3921.288,-1973.841;Inherit;False;3;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.CommentaryNode;186;3442.062,486.8726;Inherit;False;468.8325;281.7501;Comment;3;109;111;110;Detail Blend (Interpolator2.z);1,1,1,1;0;0
+Node;AmplifyShaderEditor.RangedFloatNode;63;6813.518,3228.818;Inherit;False;Constant;_03;-0.3;9;0;Create;True;0;0;0;False;0;False;-0.3;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;99;2532.83,182.5556;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;72;7013.716,3154.717;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FractNode;73;6385.899,2729.762;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;103;4047.956,-503.7873;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
@@ -8470,11 +8490,11 @@ Node;AmplifyShaderEditor.SamplerNode;97;3408.422,-47.69156;Inherit;True;Property
 Node;AmplifyShaderEditor.RangedFloatNode;110;3492.062,569.3832;Inherit;False;Constant;_20;2.0;10;0;Create;True;0;0;0;False;0;False;2;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SaturateNode;111;3492.386,657.6226;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;121;2667.443,343.7025;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;75;7177.795,3034.794;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;104;4348.097,-529.744;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.ColorNode;77;7118.185,2749.966;Inherit;False;Constant;_HueVariation;HueVariation;2;0;Create;True;0;0;0;False;0;False;1,0.5,0,0.1019608;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ConditionalIfNode;109;3720.895,536.8726;Inherit;False;True;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;108;3768.563,-31.0387;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.DynamicAppendNode;104;4348.097,-529.744;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;75;7177.795,3034.794;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;77;7118.185,2749.966;Inherit;False;Constant;_HueVariation;HueVariation;2;0;Create;True;0;0;0;False;0;False;1,0.5,0,0.1019608;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;78;7341.183,3015.637;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.LerpOp;102;4585.617,-459.3582;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SaturateNode;74;7507.495,3029.713;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
@@ -8483,9 +8503,9 @@ Node;AmplifyShaderEditor.DynamicAppendNode;126;7524.619,2680.196;Inherit;False;F
 Node;AmplifyShaderEditor.CommentaryNode;163;5565.259,262.3572;Inherit;False;4008.559;1589.607;;23;155;160;158;152;159;151;150;149;147;148;142;141;139;138;140;134;137;130;131;125;124;282;285;Detail / Hue Variation / Color / Main Color merge;1,0.3874164,0,1;0;0
 Node;AmplifyShaderEditor.StaticSwitch;76;7775.425,2990.763;Inherit;False;Property;EFFECT_HUE_VARIATION;EFFECT_HUE_VARIATION;20;0;Create;False;0;0;0;False;0;False;0;0;0;False;;Toggle;2;Key0;Key1;Create;True;True;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.StaticSwitch;101;5109.324,-255.8965;Inherit;False;Property;GEOM_TYPE_BRANCH_DETAIL;GEOM_TYPE_BRANCH_DETAIL;21;0;Create;False;0;0;0;False;0;False;0;0;0;False;;Toggle;2;Key0;Key1;Create;True;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.WireNode;176;8436.476,2302.197;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;175;8333.388,2296.366;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;124;5615.259,862.1586;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.WireNode;175;8333.388,2296.366;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;176;8436.476,2302.197;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;125;5872.052,862.4498;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;131;6014.706,1573.679;Inherit;False;232;209;ShiftedColor;1;123;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.WireNode;284;5886.238,1835.386;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -8496,10 +8516,10 @@ Node;AmplifyShaderEditor.CommentaryNode;116;3438.029,-1373.84;Inherit;False;221;
 Node;AmplifyShaderEditor.BreakToComponentsNode;134;6290.765,1434.143;Inherit;False;FLOAT3;1;0;FLOAT3;0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.CommentaryNode;130;6359.237,826.8611;Inherit;False;360.9258;348.3654;Max Base;2;129;127;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;137;6655.351,1253.441;Inherit;False;350.5195;339.6144;New Max Base;2;135;136;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.VertexColorNode;114;3470.029,-1325.84;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleMaxOpNode;129;6409.237,1040.226;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMaxOpNode;135;6705.351,1458.055;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;112;3438.029,-1533.84;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.VertexColorNode;114;3470.029,-1325.84;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMaxOpNode;129;6409.237,1040.226;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMaxOpNode;136;6853.87,1303.441;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;113;3671.844,-1475.353;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMaxOpNode;127;6568.163,876.8608;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
@@ -8507,128 +8527,128 @@ Node;AmplifyShaderEditor.RangedFloatNode;140;7082.527,1145.803;Inherit;False;Con
 Node;AmplifyShaderEditor.SimpleDivideOpNode;138;7041.933,1007.864;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.CommentaryNode;289;10140.54,836.7368;Inherit;False;4049.502;1386.498;;25;426;451;447;429;514;438;359;436;343;358;362;355;360;286;322;357;361;344;356;287;230;328;244;222;335;Vertex Offset + Wind;0,0.6799812,1,1;0;0
 Node;AmplifyShaderEditor.DynamicAppendNode;281;3848.358,-1344.869;Inherit;False;COLOR;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;204;2727.313,913.7491;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;139;7324.831,988.9368;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;283;9675.411,217.5244;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.CommentaryNode;335;10205.95,1094.748;Inherit;False;411.7002;271.2999;;2;334;336;UV0 (TexCoord0);1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;222;10208,1440;Inherit;False;433.8535;257;TexCoord 1;2;213;210;UV1 (TexCoord1);1,1,1,1;0;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;139;7324.831,988.9368;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;204;2727.313,913.7491;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.CommentaryNode;182;3659.828,1858.601;Inherit;False;396.0571;277.584;;1;177;Detail Normal;1,1,1,1;0;0
-Node;AmplifyShaderEditor.WireNode;369;10061.95,1685.337;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;141;7474.696,1035.156;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;244;10224,1728;Inherit;False;416.5674;287.2026;Vert.Out.Color;2;249;243;;1,0.2705882,0,1;0;0
-Node;AmplifyShaderEditor.WireNode;202;2711.112,1885.618;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;210;10256,1488;Inherit;False;1;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.TexCoordVertexDataNode;334;10240.35,1149.948;Inherit;False;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.WireNode;203;2920.113,276.9621;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.TexturePropertyNode;17;2725.198,1498.954;Inherit;True;Property;_BumpMap;Normal Map;43;0;Create;False;0;0;0;False;0;False;None;df175d4e267d9ad4a86121a4c51243a7;True;bump;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.CommentaryNode;174;3207.826,1079.653;Inherit;False;954.8297;519.4311;;1;166;Main Normal;0.1664293,0.189116,0.6415094,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;328;10887.72,1192.563;Inherit;False;377.1025;259.9496;;2;331;327;UV2 (TexCoord2);1,1,1,1;0;0
-Node;AmplifyShaderEditor.SamplerNode;166;3272.843,1288.355;Inherit;True;Property;_sampler_BumpMap;sampler_BumpMap;10;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.CommentaryNode;207;10144,2432;Inherit;False;1773.109;1210.919;;18;306;302;305;304;300;296;303;301;299;294;297;308;295;298;293;21;291;576;Wind;0.4292453,0.6763586,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;287;10752,1936;Inherit;False;270;209;;1;270;UV3 (Texcoord3);1,1,1,1;0;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;142;7615.894,1660.912;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.DynamicAppendNode;213;10464,1488;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SamplerNode;177;3703.953,1909.933;Inherit;True;Property;_TextureSample1;Texture Sample 1;10;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TexturePropertyNode;17;2725.198,1498.954;Inherit;True;Property;_BumpMap;Normal Map;43;0;Create;False;0;0;0;False;0;False;None;df175d4e267d9ad4a86121a4c51243a7;True;bump;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.WireNode;203;2920.113,276.9621;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;210;10256,1488;Inherit;False;1;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.CommentaryNode;182;3659.828,1858.601;Inherit;False;396.0571;277.584;;1;177;Detail Normal;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;244;10224,1728;Inherit;False;416.5674;287.2026;Vert.Out.Color;2;249;243;;1,0.2705882,0,1;0;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;141;7474.696,1035.156;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.WireNode;369;10061.95,1685.337;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;202;2711.112,1885.618;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.DynamicAppendNode;243;10256,1776;Inherit;False;COLOR;4;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.DynamicAppendNode;336;10484.84,1247.025;Inherit;False;FLOAT2;4;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.PosVertexDataNode;230;10390.96,917.5551;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.CommentaryNode;192;4212.457,1843.174;Inherit;False;1258.676;427.3699;Comment;5;168;197;167;183;184;Normal Blend;1,1,1,1;0;0
-Node;AmplifyShaderEditor.SaturateNode;147;7726.354,956.4596;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;270;10800,1984;Inherit;False;3;2;0;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TexCoordVertexDataNode;327;10908.25,1241.847;Inherit;False;2;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;298;10176,2720;Inherit;False;Property;_ST_WindBranchAnchor;_ST_WindBranchAnchor;56;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.PosVertexDataNode;230;10390.96,917.5551;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.DynamicAppendNode;336;10484.84,1247.025;Inherit;False;FLOAT2;4;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.SamplerNode;177;3703.953,1909.933;Inherit;True;Property;_TextureSample1;Texture Sample 1;10;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;142;7615.894,1660.912;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.CommentaryNode;287;10752,1936;Inherit;False;270;209;;1;270;UV3 (Texcoord3);1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;207;10144,2432;Inherit;False;1773.109;1210.919;;18;306;302;305;304;300;296;303;301;299;294;297;308;295;298;293;21;291;576;Wind;0.4292453,0.6763586,1,1;0;0
+Node;AmplifyShaderEditor.SamplerNode;166;3272.843,1288.355;Inherit;True;Property;_sampler_BumpMap;sampler_BumpMap;10;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.CommentaryNode;328;10887.72,1192.563;Inherit;False;377.1025;259.9496;;2;331;327;UV2 (TexCoord2);1,1,1,1;0;0
+Node;AmplifyShaderEditor.DynamicAppendNode;213;10464,1488;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;148;7433.802,709.155;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.IntNode;21;10576,2512;Inherit;False;Property;_WindQuality;Wind Quality;47;1;[Enum];Create;False;0;6;None;0;Fastest;1;Fast;2;Better;3;Best;4;Palm;5;0;True;0;False;0;0;False;0;1;INT;0
-Node;AmplifyShaderEditor.Vector4Node;293;10224,2528;Inherit;False;Property;_ST_WindVector;_ST_WindVector;62;1;[HideInInspector];Create;False;0;0;0;False;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.LerpOp;184;4262.457,2030.375;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.BreakToComponentsNode;249;10432,1824;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.FunctionNode;344;10813.18,888.2999;Inherit;False;LOD_OffsetBranchesAndFronds;-1;;4;bd34f6904df38174191e2d1a96667ec3;0;2;1;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;249;10432,1824;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.LerpOp;184;4262.457,2030.375;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.Vector4Node;293;10224,2528;Inherit;False;Property;_ST_WindVector;_ST_WindVector;62;1;[HideInInspector];Create;False;0;0;0;False;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;298;10176,2720;Inherit;False;Property;_ST_WindBranchAnchor;_ST_WindBranchAnchor;56;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;356;10824,1158.327;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.StaticSwitch;183;4461.424,1893.173;Inherit;False;Property;_Keyword1;Keyword 1;21;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;101;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.WireNode;357;11128.01,1131.127;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.DynamicAppendNode;331;11122.77,1368.321;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;150;8039.025,312.3573;Inherit;False;329;190;Diffuse Color;1;143;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.NormalVertexDataNode;322;10926.71,996.6466;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.DynamicAppendNode;149;7917.663,801.8884;Inherit;False;FLOAT4;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.CustomExpressionNode;286;11200,1664;Inherit;False;float lodValue = unity_LODFade.x@$VertexPos -= texcoord1.xyz@$$bool isFacingLeaf = ColorAlpha == 0@$if (isFacingLeaf) {$    #ifdef LOD_FADE_PERCENTAGE$        VertexPos *= lerp(1.0, texcoord1.w, lodValue)@$    #endif$    $    // face camera-facing leaf to camera$    float offsetLen = length(VertexPos)@$    VertexPos = mul(VertexPos.xyz, (float3x3) transpose(mul(UNITY_MATRIX_I_M, UNITY_MATRIX_I_V)))@ // inv(MV) * finalPosition$    VertexPos = normalize(VertexPos) * offsetLen@ // make sure the offset vector is still scaled$}$else${$    #ifdef LOD_FADE_PERCENTAGE$        float3 lodPosition = float3(texcoord1.w, texcoord3.x, texcoord3.y)@$        VertexPos = lerp(VertexPos, lodPosition, lodValue)@$    #endif$}$$return VertexPos@;3;False;4;True;VertexPos;FLOAT3;0,0,0;In;;Float;False;True;ColorAlpha;FLOAT;0;In;;Float;False;True;texcoord1;FLOAT3;0,0,0;In;;Float;False;True;texcoord3;FLOAT2;0,0;In;;Float;False;Offset Leaves Vertex;False;True;0;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT3;0,0,0;False;3;FLOAT2;0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.WireNode;361;11361.17,869.1161;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;327;10908.25,1241.847;Inherit;False;2;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TexCoordVertexDataNode;270;10800,1984;Inherit;False;3;2;0;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SaturateNode;147;7726.354,956.4596;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.IntNode;21;10576,2512;Inherit;False;Property;_WindQuality;Wind Quality;47;1;[Enum];Create;False;0;6;None;0;Fastest;1;Fast;2;Better;3;Best;4;Palm;5;0;True;0;False;0;0;False;0;1;INT;0
 Node;AmplifyShaderEditor.CustomExpressionNode;291;10864,2592;Inherit;False;if (windQuality <= 0) // WIND_QUALITY_NONE${$    rotatedWindVector = float3(0.0f, 0.0f, 0.0f)@$    rotatedBranchAnchor = float3(0.0f, 0.0f, 0.0f)@$}$else${$    // compute rotated wind parameters$    if (length(windVector) > 0) {$        rotatedWindVector = normalize(mul(windVector.xyz, (float3x3)UNITY_MATRIX_M))@$    } else {$        rotatedWindVector = 0@$    }$$    rotatedBranchAnchor = normalize(mul(windBranchAnchor.xyz, (float3x3)UNITY_MATRIX_M)) * windBranchAnchor.w@$};7;False;5;True;windQuality;FLOAT;0;In;;Float;False;True;rotatedWindVector;FLOAT3;0,0,0;Out;;Float;False;True;rotatedBranchAnchor;FLOAT3;0,0,0;Out;;Float;False;True;windVector;FLOAT4;0,0,0,0;In;;Float;False;True;windBranchAnchor;FLOAT4;0,0,0,0;In;;Float;False;Calculate Wind Inputs;False;True;0;6;0;INT;0;False;1;FLOAT;0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;3;INT;0;FLOAT3;3;FLOAT3;4
+Node;AmplifyShaderEditor.WireNode;361;11361.17,869.1161;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.Vector3Node;168;4636.924,2031.418;Inherit;False;Constant;_ZNormal;ZNormal;11;0;Create;True;0;0;0;False;0;False;0,0,1;0,0,0;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.CustomExpressionNode;286;11200,1664;Inherit;False;float lodValue = unity_LODFade.x@$VertexPos -= texcoord1.xyz@$$bool isFacingLeaf = ColorAlpha == 0@$if (isFacingLeaf) {$    #ifdef LOD_FADE_PERCENTAGE$        VertexPos *= lerp(1.0, texcoord1.w, lodValue)@$    #endif$    $    // face camera-facing leaf to camera$    float offsetLen = length(VertexPos)@$    VertexPos = mul(VertexPos.xyz, (float3x3) transpose(mul(UNITY_MATRIX_I_M, UNITY_MATRIX_I_V)))@ // inv(MV) * finalPosition$    VertexPos = normalize(VertexPos) * offsetLen@ // make sure the offset vector is still scaled$}$else${$    #ifdef LOD_FADE_PERCENTAGE$        float3 lodPosition = float3(texcoord1.w, texcoord3.x, texcoord3.y)@$        VertexPos = lerp(VertexPos, lodPosition, lodValue)@$    #endif$}$$return VertexPos@;3;False;4;True;VertexPos;FLOAT3;0,0,0;In;;Float;False;True;ColorAlpha;FLOAT;0;In;;Float;False;True;texcoord1;FLOAT3;0,0,0;In;;Float;False;True;texcoord3;FLOAT2;0,0;In;;Float;False;Offset Leaves Vertex;False;True;0;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT3;0,0,0;False;3;FLOAT2;0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.DynamicAppendNode;149;7917.663,801.8884;Inherit;False;FLOAT4;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CommentaryNode;150;8039.025,312.3573;Inherit;False;329;190;Diffuse Color;1;143;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.DynamicAppendNode;331;11122.77,1368.321;Inherit;False;FLOAT3;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;357;11128.01,1131.127;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.StaticSwitch;183;4461.424,1893.173;Inherit;False;Property;_Keyword1;Keyword 1;21;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;101;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.NormalVertexDataNode;322;10926.71,996.6466;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.WireNode;430;10924.24,810.7421;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.WireNode;362;11819.16,886.157;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.StaticSwitch;143;8089.025,362.3572;Inherit;False;Property;_EFFECT_HUE_VARIATION;EFFECT_HUE_VARIATION;20;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;76;True;True;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.FunctionNode;573;11581.89,1656.719;Inherit;False;LeafWind_TreeLogic;22;;300;8f0295e26413c3f43bd297b99323a157;0;6;40;INT;0;False;6;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;7;FLOAT2;0,0;False;16;FLOAT4;0,0,0,0;False;19;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT3;15
 Node;AmplifyShaderEditor.StaticSwitch;167;4917.403,2077.833;Inherit;False;Property;LIGHTMAP_ON;LIGHTMAP_ON;9;0;Create;False;0;0;0;False;0;False;0;0;0;False;LIGHTMAP_ON;Toggle;2;Key0;Key1;Fetch;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;437;11686.39,2241.352;Inherit;False;1;0;INT;0;False;1;INT;0
-Node;AmplifyShaderEditor.WireNode;430;10924.24,810.7421;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.FunctionNode;578;11440.27,968.5081;Inherit;False;RippleFrondOneSided;35;;297;106e431bb45bb25468718f6ffdc189a5;0;4;2;FLOAT3;0,0,0;False;27;FLOAT3;0,0,0;False;4;FLOAT2;0,0;False;5;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;578;11440.27,968.5081;Inherit;False;RippleFrondOneSided;35;;314;106e431bb45bb25468718f6ffdc189a5;0;4;2;FLOAT3;0,0,0;False;27;FLOAT3;0,0,0;False;4;FLOAT2;0,0;False;5;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;355;12032,1664;Inherit;False;176.2041;155.7649;Re-Adding Anchor Pos;1;354;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.WireNode;436;12152.26,1357.635;Inherit;False;1;0;INT;0;False;1;INT;0
-Node;AmplifyShaderEditor.StaticSwitch;343;12000,992;Inherit;False;Property;_Keyword0;Keyword 0;24;0;Create;True;0;0;0;False;0;False;0;0;0;False;GEOM_TYPE_FROND;Toggle;2;Key0;Key1;Fetch;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;197;5118.358,1960.947;Inherit;False;Property;EFFECT_BUMP;EFFECT_BUMP;22;0;Create;False;0;0;0;False;0;False;0;0;0;False;;Toggle;2;Key0;Key1;Create;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;358;12336,1408;Inherit;False;437;214;Vertex Normal;1;348;;0.6132076,0.07231221,0.07231221,1;0;0
-Node;AmplifyShaderEditor.DynamicAppendNode;151;8716.226,367.3984;Inherit;False;COLOR;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;354;12064,1712;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;282;7122.556,485.6862;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;354;12064,1712;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.DynamicAppendNode;151;8716.226,367.3984;Inherit;False;COLOR;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.CommentaryNode;359;12272,960;Inherit;False;437;214;Vertex Position;1;214;;0.8867924,0.09620863,0.09620863,1;0;0
+Node;AmplifyShaderEditor.StaticSwitch;197;5118.358,1960.947;Inherit;False;Property;EFFECT_BUMP;EFFECT_BUMP;22;0;Create;False;0;0;0;False;0;False;0;0;0;False;;Toggle;2;Key0;Key1;Create;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;343;12000,992;Inherit;False;Property;_Keyword0;Keyword 0;24;0;Create;True;0;0;0;False;0;False;0;0;0;False;GEOM_TYPE_FROND;Toggle;2;Key0;Key1;Fetch;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;436;12152.26,1357.635;Inherit;False;1;0;INT;0;False;1;INT;0
+Node;AmplifyShaderEditor.CommentaryNode;358;12336,1408;Inherit;False;437;214;Vertex Normal;1;348;;0.6132076,0.07231221,0.07231221,1;0;0
 Node;AmplifyShaderEditor.WireNode;432;11564.73,789.5935;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.WireNode;431;12288.29,810.7418;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.StaticSwitch;348;12352,1456;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;0;False;0;False;0;0;0;False;;KeywordEnum;2;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;Reference;214;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;214;12292.93,1001.945;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;0;False;0;False;0;0;0;False;;KeywordEnum;4;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;GEOM_TYPE_LEAF;GEOM_TYPE_BRANCH_DETAIL;Create;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.WireNode;438;12583.96,1282.07;Inherit;False;1;0;INT;0;False;1;INT;0
+Node;AmplifyShaderEditor.WireNode;433;12553.66,2279.469;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;159;8679.756,528.1684;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.WireNode;365;9694.519,1945.333;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;152;8915.882,429.097;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.WireNode;133;4030.583,-1654.615;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;159;8679.756,528.1684;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.WireNode;433;12553.66,2279.469;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.WireNode;365;9694.519,1945.333;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;447;13130.16,1539.641;Inherit;False;FetchEternityTime;20;;843;d7f632c075fdb5c4d9e5ed4d5044a640;0;0;1;FLOAT4;0
-Node;AmplifyShaderEditor.CommentaryNode;423;14451.4,133.1502;Inherit;False;291.9424;130.7191;Custom Cull Mode (Auto-Registered);1;410;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.WireNode;160;9250.06,535.9683;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.WireNode;429;13231.21,1274.066;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.WireNode;199;9073.401,-584.3734;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;514;13084.04,1894.162;Inherit;False;1;0;INT;0;False;1;INT;0
-Node;AmplifyShaderEditor.FunctionNode;574;12896,1008;Inherit;False;BranchWind;4;;844;bb8f3536c1fcac84ea1e69e0939b1f77;0;4;24;INT;0;False;3;FLOAT3;0,0,0;False;13;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT3;39
+Node;AmplifyShaderEditor.WireNode;438;12583.96,1282.07;Inherit;False;1;0;INT;0;False;1;INT;0
+Node;AmplifyShaderEditor.StaticSwitch;214;12292.93,1001.945;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;0;False;0;False;0;0;0;False;;KeywordEnum;4;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;GEOM_TYPE_LEAF;GEOM_TYPE_BRANCH_DETAIL;Create;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;348;12352,1456;Inherit;False;Property;;GEOM_TYPE;10;0;Create;False;0;0;0;False;0;False;0;0;0;False;;KeywordEnum;2;GEOM_TYPE_BRANCH;GEOM_TYPE_FROND;Reference;214;True;True;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WireNode;431;12288.29,810.7418;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.WireNode;366;9858.558,700.7548;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;574;12896,1008;Inherit;False;BranchWind;4;;844;bb8f3536c1fcac84ea1e69e0939b1f77;0;4;24;INT;0;False;3;FLOAT3;0,0,0;False;13;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT3;39
+Node;AmplifyShaderEditor.WireNode;514;13084.04,1894.162;Inherit;False;1;0;INT;0;False;1;INT;0
+Node;AmplifyShaderEditor.WireNode;199;9073.401,-584.3734;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;158;9046.688,407.4555;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.RangedFloatNode;205;13940.53,349.5856;Inherit;False;Property;_Smoothness;Smoothness;45;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;206;13940.53,249.7643;Inherit;False;Property;_Metallic;Metallic;44;0;Create;True;0;0;0;False;0;False;1;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector4Node;296;11344,2864;Inherit;False;Property;_ST_WindBranchTwitch;_ST_WindBranchTwitch;54;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;303;10528,3120;Inherit;False;Property;_ST_WindLeaf1Twitch;_ST_WindLeaf1Twitch;51;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;304;10784,3280;Inherit;False;Property;_ST_WindLeaf2Ripple;_ST_WindLeaf2Ripple;50;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;295;11648,3072;Inherit;False;Property;_ST_WindBranch;_ST_WindBranch;59;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;305;10528,2944;Inherit;False;Property;_ST_WindLeaf2Tumble;_ST_WindLeaf2Tumble;49;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;301;10240,3408;Inherit;False;Property;_ST_WindLeaf1Ripple;_ST_WindLeaf1Ripple;53;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;297;11360,3072;Inherit;False;Property;_ST_WindBranchWhip;_ST_WindBranchWhip;57;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.WireNode;451;14104.8,1192.009;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;572;13712,992;Inherit;False;GlobalWind;0;;858;84571097aba34f7448bae49f6418efb3;0;5;129;INT;0;False;111;FLOAT3;0,0,0;False;130;FLOAT3;0,0,0;False;102;FLOAT3;0,0,0;False;125;FLOAT;0;False;1;FLOAT3;138
-Node;AmplifyShaderEditor.Vector4Node;306;10528,3312;Inherit;False;Property;_ST_WindLeaf2Twitch;_ST_WindLeaf2Twitch;48;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.WireNode;160;9250.06,535.9683;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.CommentaryNode;423;14451.4,133.1502;Inherit;False;291.9424;130.7191;Custom Cull Mode (Auto-Registered);1;410;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.FunctionNode;447;13130.16,1539.641;Inherit;False;FetchEternityTime;20;;843;d7f632c075fdb5c4d9e5ed4d5044a640;0;0;1;FLOAT4;0
+Node;AmplifyShaderEditor.WireNode;429;13231.21,1274.066;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.DynamicAppendNode;155;9420.116,403.6015;Inherit;False;COLOR;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.Vector4Node;294;11648,3264;Inherit;False;Property;_ST_WindGlobal;_ST_WindGlobal;60;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;299;10192,3216;Inherit;False;Property;_ST_WindBranchAdherences;_ST_WindBranchAdherences;55;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;576;10784,3072;Inherit;False;Property;_ST_WindFrondRipple;_ST_WindFrondRipple;3;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector4Node;308;11360,3264;Inherit;False;Property;_ST_WindAnimation;_ST_WindAnimation;58;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.WireNode;245;12151.77,98.6034;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector4Node;300;11056,3072;Inherit;False;Property;_ST_WindTurbulences;_ST_WindTurbulences;61;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.IntNode;410;14547.4,181.1502;Inherit;False;Property;_Cull;Cull;46;1;[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;True;0;False;0;0;False;0;1;INT;0
-Node;AmplifyShaderEditor.RangedFloatNode;65;6650.987,3141.61;Inherit;False;Constant;_05;0.5;0;0;Create;True;0;0;0;False;0;False;0.5;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector4Node;302;10528,2768;Inherit;False;Property;_ST_WindLeaf1Tumble;_ST_WindLeaf1Tumble;52;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;368;11645.36,488.5246;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.Vector4Node;302;10528,2768;Inherit;False;Property;_ST_WindLeaf1Tumble;_ST_WindLeaf1Tumble;52;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;65;6650.987,3141.61;Inherit;False;Constant;_05;0.5;0;0;Create;True;0;0;0;False;0;False;0.5;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.IntNode;410;14547.4,181.1502;Inherit;False;Property;_Cull;Cull;46;1;[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;True;0;False;0;0;False;0;1;INT;0
+Node;AmplifyShaderEditor.Vector4Node;300;11056,3072;Inherit;False;Property;_ST_WindTurbulences;_ST_WindTurbulences;61;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.WireNode;245;12151.77,98.6034;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector4Node;308;11360,3264;Inherit;False;Property;_ST_WindAnimation;_ST_WindAnimation;58;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;576;10784,3072;Inherit;False;Property;_ST_WindFrondRipple;_ST_WindFrondRipple;3;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;299;10192,3216;Inherit;False;Property;_ST_WindBranchAdherences;_ST_WindBranchAdherences;55;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;294;11648,3264;Inherit;False;Property;_ST_WindGlobal;_ST_WindGlobal;60;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;306;10528,3312;Inherit;False;Property;_ST_WindLeaf2Twitch;_ST_WindLeaf2Twitch;48;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.FunctionNode;572;13712,992;Inherit;False;GlobalWind;0;;858;84571097aba34f7448bae49f6418efb3;0;5;129;INT;0;False;111;FLOAT3;0,0,0;False;130;FLOAT3;0,0,0;False;102;FLOAT3;0,0,0;False;125;FLOAT;0;False;1;FLOAT3;138
+Node;AmplifyShaderEditor.WireNode;451;14104.8,1192.009;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.Vector4Node;297;11360,3072;Inherit;False;Property;_ST_WindBranchWhip;_ST_WindBranchWhip;57;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;301;10240,3408;Inherit;False;Property;_ST_WindLeaf1Ripple;_ST_WindLeaf1Ripple;53;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;305;10528,2944;Inherit;False;Property;_ST_WindLeaf2Tumble;_ST_WindLeaf2Tumble;49;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;295;11648,3072;Inherit;False;Property;_ST_WindBranch;_ST_WindBranch;59;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;304;10784,3280;Inherit;False;Property;_ST_WindLeaf2Ripple;_ST_WindLeaf2Ripple;50;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;303;10528,3120;Inherit;False;Property;_ST_WindLeaf1Twitch;_ST_WindLeaf1Twitch;51;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector4Node;296;11344,2864;Inherit;False;Property;_ST_WindBranchTwitch;_ST_WindBranchTwitch;54;1;[HideInInspector];Create;False;0;0;0;True;0;False;0,0,0,0;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;206;13940.53,249.7643;Inherit;False;Property;_Metallic;Metallic;44;0;Create;True;0;0;0;False;0;False;1;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;205;13940.53,349.5856;Inherit;False;Property;_Smoothness;Smoothness;45;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;False;False;False;False;True;True;0;True;-7;255;False;-1;255;True;-8;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;10;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Forward;0;10;Forward;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;False;False;False;False;False;False;True;0;True;-25;False;True;True;True;True;True;0;True;-44;False;False;True;True;0;True;-3;255;False;-1;255;True;-4;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;0;True;-22;True;0;True;-27;False;True;1;LightMode=Forward;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;14522.21,474.7635;Float;False;True;-1;2;SpeedTreeHDRPMaterialInspector;0;2;Nature/SpeedTreeHDRP_ASE;53b46d85872c5b24c8f4f0a1c3fe4c87;True;GBuffer;0;0;GBuffer;35;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;410;False;False;False;False;True;True;0;True;-12;255;False;-1;255;True;-11;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-13;False;True;1;LightMode=GBuffer;False;0;;0;0;Standard;41;Surface Type;0;  Rendering Pass;1;  Refraction Model;0;    Blending Mode;0;    Blend Preserves Specular;1;  Receive Fog;1;  Back Then Front Rendering;0;  Transparent Depth Prepass;0;  Transparent Depth Postpass;0;  Transparent Writes Motion Vector;0;  Distortion;0;    Distortion Mode;0;    Distortion Depth Test;1;  ZWrite;0;  Z Test;4;Double-Sided;0;Alpha Clipping;1;  Use Shadow Threshold;0;Material Type,InvertActionOnDeselection;0;  Energy Conserving Specular;1;  Transmission;1;Receive Decals;1;Receives SSR;1;Motion Vectors;1;  Add Precomputed Velocity;0;Specular AA;0;Specular Occlusion Mode;1;Override Baked GI;0;Depth Offset;0;DOTS Instancing;0;LOD CrossFade;0;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Vertex Position;0;0;11;True;True;True;True;True;True;False;False;False;False;True;False;;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;9;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;7;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;False;False;False;False;False;False;True;1;False;-1;False;True;True;True;True;True;0;True;-44;False;False;False;True;0;True;-22;True;0;True;-28;False;True;1;LightMode=TransparentBackface;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;8;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPrepass;0;8;TransparentDepthPrepass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPrepass;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;6;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;10;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Forward;0;10;Forward;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;False;False;False;False;False;False;True;0;True;-25;False;True;True;True;True;True;0;True;-44;False;False;True;True;0;True;-3;255;False;-1;255;True;-4;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;0;True;-22;True;0;True;-27;False;True;1;LightMode=Forward;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;False;False;False;False;True;True;0;True;-7;255;False;-1;255;True;-8;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;META;0;1;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;UnityEditor.Rendering.HighDefinition.HDLitGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;False;False;False;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.CommentaryNode;360;11390.27,920.2094;Inherit;False;402;233;Frond Wind;0;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;85;1303.667,10.1001;Inherit;False;245.4069;100;2 leaf wind xyz, leaf group;0;Leaves;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;27;2286.292,-1248.058;Inherit;False;100;100;Unused;0;Frond/Leaves;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;83;1298.508,-142.4082;Inherit;False;330.5549;100;2 frond wind xyz, 0;0;Fronds;1,1,1,1;0;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;8;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPrepass;0;8;TransparentDepthPrepass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPrepass;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;7;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentBackface;0;7;TransparentBackface;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;0;True;-18;0;True;-19;1;0;True;-20;0;True;-21;False;False;False;False;False;False;False;False;True;1;False;-1;False;True;True;True;True;True;0;True;-44;False;False;False;True;0;True;-22;True;0;True;-28;False;True;1;LightMode=TransparentBackface;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;9;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;TransparentDepthPostpass;0;9;TransparentDepthPostpass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;True;0;True;-23;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=TransparentDepthPostpass;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;True;1;LightMode=SceneSelectionPass;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;6;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;Distortion;0;6;Distortion;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-9;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;Rendering.HighDefinition.LitShaderGraphGUI;0;2;New Amplify Shader;53b46d85872c5b24c8f4f0a1c3fe4c87;True;DepthOnly;0;4;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;0;False;False;False;False;False;False;False;False;False;True;0;True;-23;False;False;False;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.CommentaryNode;426;12864,944;Inherit;False;1211.216;247.4169;Mesh / Leaves managed automatically inside;0;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;83;1298.508,-142.4082;Inherit;False;330.5549;100;2 frond wind xyz, 0;0;Fronds;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;26;2269.89,-1412.674;Inherit;False;340.5;100;0    diffuse uv, branch wind xy;0;Branches;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;85;1303.667,10.1001;Inherit;False;245.4069;100;2 leaf wind xyz, leaf group;0;Leaves;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;360;11390.27,920.2094;Inherit;False;402;233;Frond Wind;0;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;27;2286.292,-1248.058;Inherit;False;100;100;Unused;0;Frond/Leaves;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;82;1296.517,-275.5851;Inherit;False;340.5;100;2    detail/seam uv, seam amount, 0;0;Branches;1,1,1,1;0;0
 WireConnection;170;0;23;1
 WireConnection;170;1;23;2
@@ -8637,14 +8657,14 @@ WireConnection;88;1;89;0
 WireConnection;88;2;90;0
 WireConnection;88;3;84;3
 WireConnection;88;4;90;0
-WireConnection;69;0;66;1
-WireConnection;69;1;70;1
-WireConnection;69;2;70;2
+WireConnection;91;0;12;0
+WireConnection;91;1;170;0
 WireConnection;86;0;84;1
 WireConnection;86;1;84;2
 WireConnection;86;2;88;0
-WireConnection;91;0;12;0
-WireConnection;91;1;170;0
+WireConnection;69;0;66;1
+WireConnection;69;1;70;1
+WireConnection;69;2;70;2
 WireConnection;67;0;79;0
 WireConnection;98;0;86;0
 WireConnection;68;0;79;0
@@ -8652,15 +8672,15 @@ WireConnection;93;0;91;4
 WireConnection;93;1;11;4
 WireConnection;64;0;79;0
 WireConnection;71;0;69;0
+WireConnection;62;0;71;0
+WireConnection;61;0;68;4
+WireConnection;61;1;67;4
+WireConnection;61;2;64;4
 WireConnection;92;0;91;0
 WireConnection;92;1;93;0
 WireConnection;92;2;19;0
 WireConnection;99;0;98;0
 WireConnection;99;1;98;1
-WireConnection;61;0;68;4
-WireConnection;61;1;67;4
-WireConnection;61;2;64;4
-WireConnection;62;0;71;0
 WireConnection;72;0;62;0
 WireConnection;72;1;63;0
 WireConnection;73;0;61;0
@@ -8669,6 +8689,11 @@ WireConnection;97;0;15;0
 WireConnection;97;1;99;0
 WireConnection;111;0;98;2
 WireConnection;121;0;98;2
+WireConnection;75;0;73;0
+WireConnection;75;1;72;0
+WireConnection;104;0;103;0
+WireConnection;104;1;103;1
+WireConnection;104;2;103;2
 WireConnection;109;0;121;0
 WireConnection;109;1;110;0
 WireConnection;109;2;97;4
@@ -8677,11 +8702,6 @@ WireConnection;109;4;111;0
 WireConnection;108;0;97;1
 WireConnection;108;1;97;2
 WireConnection;108;2;97;3
-WireConnection;104;0;103;0
-WireConnection;104;1;103;1
-WireConnection;104;2;103;2
-WireConnection;75;0;73;0
-WireConnection;75;1;72;0
 WireConnection;78;0;77;4
 WireConnection;78;1;75;0
 WireConnection;102;0;108;0
@@ -8696,9 +8716,9 @@ WireConnection;126;2;77;3
 WireConnection;76;0;74;0
 WireConnection;101;1;92;0
 WireConnection;101;0;106;0
-WireConnection;176;0;76;0
-WireConnection;175;0;126;0
 WireConnection;124;0;101;0
+WireConnection;175;0;126;0
+WireConnection;176;0;76;0
 WireConnection;125;0;124;0
 WireConnection;125;1;124;1
 WireConnection;125;2;124;2
@@ -8708,13 +8728,13 @@ WireConnection;123;0;125;0
 WireConnection;123;1;284;0
 WireConnection;123;2;285;0
 WireConnection;134;0;123;0
-WireConnection;129;0;124;1
-WireConnection;129;1;124;2
 WireConnection;135;0;134;1
 WireConnection;135;1;134;2
 WireConnection;112;0;11;1
 WireConnection;112;1;11;2
 WireConnection;112;2;11;3
+WireConnection;129;0;124;1
+WireConnection;129;1;124;2
 WireConnection;136;0;134;0
 WireConnection;136;1;135;0
 WireConnection;113;0;112;0
@@ -8725,47 +8745,48 @@ WireConnection;138;0;127;0
 WireConnection;138;1;136;0
 WireConnection;281;0;113;0
 WireConnection;281;3;11;4
-WireConnection;283;0;281;0
+WireConnection;204;0;99;0
 WireConnection;139;0;138;0
 WireConnection;139;1;140;0
-WireConnection;204;0;99;0
-WireConnection;369;0;283;0
+WireConnection;283;0;281;0
+WireConnection;203;0;170;0
 WireConnection;141;0;139;0
 WireConnection;141;1;140;0
+WireConnection;369;0;283;0
 WireConnection;202;0;204;0
-WireConnection;203;0;170;0
-WireConnection;166;0;17;0
-WireConnection;166;1;203;0
-WireConnection;142;0;123;0
-WireConnection;142;1;141;0
-WireConnection;213;0;210;0
-WireConnection;177;0;17;0
-WireConnection;177;1;202;0
 WireConnection;243;0;369;0
 WireConnection;336;0;334;0
-WireConnection;147;0;142;0
+WireConnection;177;0;17;0
+WireConnection;177;1;202;0
+WireConnection;142;0;123;0
+WireConnection;142;1;141;0
+WireConnection;166;0;17;0
+WireConnection;166;1;203;0
+WireConnection;213;0;210;0
 WireConnection;148;0;101;0
+WireConnection;344;1;230;0
+WireConnection;344;5;213;0
+WireConnection;249;0;243;0
 WireConnection;184;0;166;0
 WireConnection;184;1;177;0
 WireConnection;184;2;109;0
-WireConnection;249;0;243;0
-WireConnection;344;1;230;0
-WireConnection;344;5;213;0
 WireConnection;356;0;336;0
-WireConnection;183;1;166;0
-WireConnection;183;0;184;0
-WireConnection;357;0;356;0
-WireConnection;331;0;327;0
-WireConnection;149;0;147;0
-WireConnection;149;3;148;3
+WireConnection;147;0;142;0
+WireConnection;291;1;21;0
+WireConnection;291;4;293;0
+WireConnection;291;5;298;0
+WireConnection;361;0;344;0
 WireConnection;286;0;230;0
 WireConnection;286;1;249;3
 WireConnection;286;2;213;0
 WireConnection;286;3;270;0
-WireConnection;361;0;344;0
-WireConnection;291;1;21;0
-WireConnection;291;4;293;0
-WireConnection;291;5;298;0
+WireConnection;149;0;147;0
+WireConnection;149;3;148;3
+WireConnection;331;0;327;0
+WireConnection;357;0;356;0
+WireConnection;183;1;166;0
+WireConnection;183;0;184;0
+WireConnection;430;0;334;0
 WireConnection;362;0;361;0
 WireConnection;143;1;101;0
 WireConnection;143;0;149;0
@@ -8778,59 +8799,58 @@ WireConnection;573;19;291;3
 WireConnection;167;1;183;0
 WireConnection;167;0;168;0
 WireConnection;437;0;21;0
-WireConnection;430;0;334;0
 WireConnection;578;2;344;0
 WireConnection;578;27;322;0
 WireConnection;578;4;357;0
 WireConnection;578;5;331;0
-WireConnection;436;0;437;0
-WireConnection;343;1;362;0
-WireConnection;343;0;578;0
-WireConnection;197;1;168;0
-WireConnection;197;0;167;0
-WireConnection;151;0;143;0
+WireConnection;282;0;281;0
 WireConnection;354;0;213;0
 WireConnection;354;1;573;0
-WireConnection;282;0;281;0
+WireConnection;151;0;143;0
+WireConnection;197;1;168;0
+WireConnection;197;0;167;0
+WireConnection;343;1;362;0
+WireConnection;343;0;578;0
+WireConnection;436;0;437;0
 WireConnection;432;0;430;0
-WireConnection;431;0;432;0
-WireConnection;348;1;322;0
-WireConnection;348;0;322;0
-WireConnection;348;2;573;15
-WireConnection;348;3;322;0
+WireConnection;433;0;291;4
+WireConnection;159;0;143;0
+WireConnection;365;0;197;0
+WireConnection;152;0;151;0
+WireConnection;152;1;282;0
+WireConnection;133;0;93;0
+WireConnection;438;0;436;0
 WireConnection;214;1;343;0
 WireConnection;214;0;343;0
 WireConnection;214;2;354;0
 WireConnection;214;3;343;0
-WireConnection;438;0;436;0
-WireConnection;152;0;151;0
-WireConnection;152;1;282;0
-WireConnection;133;0;93;0
-WireConnection;159;0;143;0
-WireConnection;433;0;291;4
-WireConnection;365;0;197;0
-WireConnection;160;0;159;0
-WireConnection;429;0;348;0
-WireConnection;199;0;133;0
-WireConnection;514;0;21;0
+WireConnection;348;1;322;0
+WireConnection;348;0;322;0
+WireConnection;348;2;573;15
+WireConnection;348;3;322;0
+WireConnection;431;0;432;0
+WireConnection;366;0;365;0
 WireConnection;574;24;438;0
 WireConnection;574;3;214;0
 WireConnection;574;13;431;0
 WireConnection;574;15;433;0
-WireConnection;366;0;365;0
+WireConnection;514;0;21;0
+WireConnection;199;0;133;0
 WireConnection;158;0;152;0
-WireConnection;451;0;429;0
+WireConnection;160;0;159;0
+WireConnection;429;0;348;0
+WireConnection;155;0;158;0
+WireConnection;155;1;158;1
+WireConnection;155;2;158;2
+WireConnection;155;3;160;0
+WireConnection;368;0;366;0
+WireConnection;245;0;199;0
 WireConnection;572;129;514;0
 WireConnection;572;111;574;0
 WireConnection;572;130;574;39
 WireConnection;572;102;291;3
 WireConnection;572;125;447;0
-WireConnection;155;0;158;0
-WireConnection;155;1;158;1
-WireConnection;155;2;158;2
-WireConnection;155;3;160;0
-WireConnection;245;0;199;0
-WireConnection;368;0;366;0
+WireConnection;451;0;429;0
 WireConnection;0;0;155;0
 WireConnection;0;1;368;0
 WireConnection;0;4;206;0
@@ -8840,4 +8860,4 @@ WireConnection;0;10;19;0
 WireConnection;0;11;572;138
 WireConnection;0;12;451;0
 ASEEND*/
-//CHKSM=0BD1D60699E2744F7AF2EF1D5189EF7739935CF4
+//CHKSM=4362A010290EB9C2AF9816B03F294CE73E42D2D3
