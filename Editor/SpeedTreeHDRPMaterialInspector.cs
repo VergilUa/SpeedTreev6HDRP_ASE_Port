@@ -134,6 +134,7 @@ namespace UnityEditor
             //---------------------------------------------------------------
             var enableHueVariation = targets.Select(t => ((Material)t).shaderKeywords.Contains(EFFECT_HUE_VARIATION));
             var hueVariation = props.Find(prop => prop.name == "_HueVariation");
+            
             if (enableHueVariation != null && hueVariation != null)
             {
                 props.Remove(hueVariation);
@@ -206,7 +207,11 @@ namespace UnityEditor
         {
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = hasMixedEnable;
-            enable = EditorGUI.ToggleLeft(EditorGUILayout.GetControlRect(false, GUILayout.ExpandWidth(false)), prop.displayName, enable);
+
+            Rect controlRect = EditorGUILayout.GetControlRect(false, GUILayout.ExpandWidth(false));
+            controlRect.xMax -= 64;
+            
+            enable = EditorGUI.ToggleLeft(controlRect, prop.displayName, enable);
             EditorGUI.showMixedValue = false;
             bool? retValue = EditorGUI.EndChangeCheck() ? (bool?)enable : null;
 
