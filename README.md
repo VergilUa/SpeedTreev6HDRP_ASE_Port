@@ -1,17 +1,19 @@
 # SpeedTree v6 HDRP port (via Amplify Shader Editor)
 
-(as a temporary replacent for the missing shader solution)
+As a temporary replacent for the HDRP missing shader solution.
+<br>Note that there's SpeedTree v8 support included in HDRP 12 now. 
+<br>Its adviced to use that shader instead if your project is on Unity v2021.2+.
 
 Rationale behind this madness? -- I've needed a SpeedTree v6 shader for my trees to work with HDRP. 
 
-
-Done by using [Amplify Shader Editor](https://assetstore.unity.com/packages/tools/visual-scripting/amplify-shader-editor-68570)
-
-So if you don't have one - you probably won't be able to edit it.
+Done by using [Amplify Shader Editor](https://assetstore.unity.com/packages/tools/visual-scripting/amplify-shader-editor-68570).
+If you don't have one - you probably won't be able to edit the shader.
 
 # Minimum Requirements:
+Currently generated shader HDRP version is 10.5.0.
+<br>Other versions can be potentially supported by re-saving / regenerating shader via Amplify Shader Editor.
 - SpeedTree v6; (Other versions of trees untested)
-- HDRP 7.1.8 package+;
+- HDRP 7.1.8 package+; 
 - Unity 2019.3.1.x+;
 - For the wind to work - don't forget to add ShaderTimeControlExample.cs to the scene;
 - (Optional) Amplify Shader Editor (for editing and tweaking the shader, and potential bugfixes. Also, its amazing)
@@ -24,8 +26,8 @@ So if you don't have one - you probably won't be able to edit it.
 - Most of the code is represented as ASE node graph / functions or custom expression injects. 
 - Time is controlled via ShaderTimeControlExample;
 - Smoothness and Metallic can be tweaked via inspector;
-
-(No mask maps though. Can be added pretty easily, just swap output for the tex sampler)
+- Hue variation does not work correctly, but should not cause any flickering issues anymore.
+- No mask maps. Can be added pretty easily, swap output for the tex sampler.
 
 ASE should (in theory) simplify heavylifting done to port / change shader for other pipelines (e.g. URP)
 
@@ -44,11 +46,10 @@ default Unity's wind time. (if you feel risky)
 
 # Why override SpeedTreeMaterialInspector
 
-Because it contains some parts of the code that doesn't translate to HDRP / ASE well.
+It contains some parts of the code that doesn't translate to HDRP / ASE well.
 
 Plus ASE doesn't have a built-in way to override _CullMode / _CullModeForward properties w/o overring templates atm.
-
-So, if your culling is broken, reapply _Cull property, it should override hidden _CullMode / _CullModeForward
+<br>If your culling is broken, reapply _Cull property, it should override hidden _CullMode / _CullModeForward
 
 # Other points
 Don't expect everything to be 1:1 as in built-in SpeedTree v6 shader. 
@@ -67,7 +68,7 @@ Alternatively, using debug mode in inspector and manually adding _ALPHATEST_ON k
 Also, after messing around with alpha clipping make sure that output is connected correctly (Alpha Cutoff (_Cutoff) to Alpha Clip Threshold).
 
 Q: Vertex Position is incorrect after editing (trees too large)
-A: Vertex position should be Absolute.Set it manually to Relative, then back to Absolute and update the shader. This is ASE bug.
+A: Vertex position should be Absolute. Set it manually to Relative, then back to Absolute and update the shader. This is ASE bug.
 
 Q: "As Is" errors in older shader versions.
 A: Safe to ignore, but if in doubt - I've updated shader recently, use that as a base.
@@ -76,10 +77,8 @@ Q: Why not Shader Graph?
 A: Because it sucks (compared to ASE) right now
 
 Q: Why not port manually via templates and shader code?
-A: I've tried and failed miserably. 
+A: I've tried and failed miserably. As of current time, due to the lack of low-level shader documentation of the HDRP, this task seems more than impossible for a single person to accomplish over short period of time.
 ```
-
-As of current time, due to the lack of low-level shader documentation of the HDRP, this task seems more than impossible for a single person to accomplish over short period of time.
 
 # Packages available @ release section.
 
