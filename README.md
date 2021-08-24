@@ -26,7 +26,7 @@ Currently generated shader HDRP version is 10.5.0.
 - Most of the code is represented as ASE node graph / functions or custom expression injects. 
 - Time is controlled via ShaderTimeControlExample;
 - Smoothness and Metallic can be tweaked via inspector;
-- Hue variation is not included / work, but should not cause any flickering issues anymore.
+- Hue variation does not work (yet).
 - No mask maps. Can be added pretty easily, swap output for the tex sampler.
 
 ASE should (in theory) simplify heavylifting done to port / change shader for other pipelines (e.g. URP)
